@@ -145,7 +145,7 @@ function Lightbox({
       {/* Counter */}
       <p
         className="absolute bottom-6 left-1/2 -translate-x-1/2"
-        style={{ fontFamily: "var(--font-sans)", fontSize: "10px", letterSpacing: "0.2em", color: "rgba(255,255,255,0.3)", textTransform: "uppercase" }}
+        style={{ fontFamily: "var(--font-sans)", fontSize: "12px", letterSpacing: "0.2em", color: "rgba(255,255,255,0.3)", textTransform: "uppercase" }}
       >
         {currentIndex + 1} / {images.length}
       </p>
@@ -294,7 +294,7 @@ export default function Chapter01Page() {
             <p
               className="mb-3"
               style={{
-                fontFamily: "var(--font-sans)", fontSize: "10px", fontWeight: 400,
+                fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 400,
                 letterSpacing: "0.24em", textTransform: "uppercase", color: "var(--gold)",
               }}
             >
@@ -338,7 +338,7 @@ export default function Chapter01Page() {
               <p
                 className="mb-8"
                 style={{
-                  fontFamily: "var(--font-sans)", fontSize: "9px", fontWeight: 400,
+                  fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400,
                   letterSpacing: "0.28em", textTransform: "uppercase", color: "var(--gold)", opacity: 0.7,
                 }}
               >
@@ -394,7 +394,7 @@ export default function Chapter01Page() {
               <p
                 className="mb-6"
                 style={{
-                  fontFamily: "var(--font-sans)", fontSize: "9px", fontWeight: 400,
+                  fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400,
                   letterSpacing: "0.28em", textTransform: "uppercase", color: "var(--gold)", opacity: 0.7,
                 }}
               >
@@ -458,7 +458,7 @@ export default function Chapter01Page() {
           >
             <div className="max-w-5xl mx-auto">
               <FadeIn>
-                <p className="mb-3" style={{ fontFamily: "var(--font-sans)", fontSize: "10px", fontWeight: 400, letterSpacing: "0.22em", textTransform: "uppercase", color: "var(--gold)" }}>
+                <p className="mb-3" style={{ fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 400, letterSpacing: "0.22em", textTransform: "uppercase", color: "var(--gold)" }}>
                   {artifact.lesson} · The Artifact
                 </p>
                 <h2 style={{ fontFamily: "var(--font-hand)", fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 400, color: "var(--text-head)", lineHeight: 1.15 }}>
@@ -535,7 +535,7 @@ export default function Chapter01Page() {
                     >
                       Carry This Chapter — {artifact.priceDisplay}
                     </button>
-                    <p className="mt-3 text-center" style={{ fontFamily: "var(--font-sans)", fontSize: "10px", fontWeight: 300, color: "var(--text-body)", opacity: 0.4, letterSpacing: "0.06em" }}>
+                    <p className="mt-3 text-center" style={{ fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 300, color: "var(--text-body)", opacity: 0.4, letterSpacing: "0.06em" }}>
                       Limited Archive · Ships within 3-5 business days
                     </p>
                   </div>
@@ -551,7 +551,7 @@ export default function Chapter01Page() {
             <FadeIn>
               <div className="flex justify-between items-end mb-8">
                 <div>
-                  <p className="mb-2" style={{ fontFamily: "var(--font-sans)", fontSize: "9px", fontWeight: 400, letterSpacing: "0.24em", textTransform: "uppercase", color: "var(--gold)", opacity: 0.7 }}>
+                  <p className="mb-2" style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400, letterSpacing: "0.24em", textTransform: "uppercase", color: "var(--gold)", opacity: 0.7 }}>
                     The Drop
                   </p>
                   <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "clamp(1.6rem, 3vw, 2.4rem)", fontWeight: 300, color: "var(--beige-light)", lineHeight: 1.1 }}>
@@ -561,7 +561,7 @@ export default function Chapter01Page() {
                 <button
                   onClick={() => openLightbox(0)}
                   className="bg-transparent border-none cursor-pointer"
-                  style={{ fontFamily: "var(--font-sans)", fontSize: "9px", fontWeight: 400, letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--beige)", opacity: 0.4, transition: "opacity 0.3s" }}
+                  style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400, letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--beige)", opacity: 0.4, transition: "opacity 0.3s" }}
                   onMouseOver={(e) => (e.currentTarget.style.opacity = "0.8")}
                   onMouseOut={(e) => (e.currentTarget.style.opacity = "0.4")}
                 >
@@ -594,7 +594,7 @@ export default function Chapter01Page() {
                         <rect x="3" y="14" width="7" height="7" />
                         <rect x="14" y="14" width="7" height="7" />
                       </svg>
-                      <p style={{ fontFamily: "var(--font-sans)", fontSize: "9px", fontWeight: 400, letterSpacing: "0.22em", textTransform: "uppercase", color: "var(--beige-light)", opacity: 0.8 }}>
+                      <p style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400, letterSpacing: "0.22em", textTransform: "uppercase", color: "var(--beige-light)", opacity: 0.8 }}>
                         View Gallery · {LOOKBOOK.length} Photos
                       </p>
                     </div>
@@ -664,7 +664,7 @@ export default function Chapter01Page() {
         <section className="py-32 px-6 md:px-12" style={{ background: "var(--bg-body)" }}>
           <div className="max-w-5xl mx-auto">
             <FadeIn>
-              <p className="mb-3" style={{ fontFamily: "var(--font-sans)", fontSize: "10px", fontWeight: 400, letterSpacing: "0.22em", textTransform: "uppercase", color: "var(--gold)" }}>
+              <p className="mb-3" style={{ fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 400, letterSpacing: "0.22em", textTransform: "uppercase", color: "var(--gold)" }}>
                 Chapter 01 · Before We Knew
               </p>
               <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "clamp(1.8rem, 3.5vw, 2.8rem)", fontWeight: 300, color: "var(--text-head)", lineHeight: 1.1 }}>
@@ -722,7 +722,7 @@ export default function Chapter01Page() {
             {/* Photographer credit */}
             <FadeIn delay={0.2}>
               <div className="mt-8 text-center">
-                <p style={{ fontFamily: "var(--font-sans)", fontSize: "10px", fontWeight: 400, letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--text-body)", opacity: 0.3 }}>
+                <p style={{ fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 400, letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--text-body)", opacity: 0.3 }}>
                   Visual Archive · McRey &amp; Jerick
                 </p>
               </div>
@@ -743,10 +743,12 @@ export default function Chapter01Page() {
                 href="/home"
                 className="inline-block no-underline"
                 style={{
-                  fontFamily: "var(--font-sans)", fontSize: "9px", fontWeight: 400,
-                  letterSpacing: "0.2em", textTransform: "uppercase",
-                  color: "var(--beige)", opacity: 0.4,
+                  fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 400,
+                  letterSpacing: "0.18em", textTransform: "uppercase",
+                  color: "var(--beige)", opacity: 0.6,
                   transition: "opacity 0.3s",
+                  padding: "8px 16px",
+                  border: "1px solid rgba(216,212,206,0.15)",
                 }}
               >
                 ← Return to Maison Gethse
@@ -760,7 +762,7 @@ export default function Chapter01Page() {
       <motion.button
         className="fixed bottom-6 left-6 z-50 flex items-center gap-3 no-underline"
         style={{
-          fontFamily: "var(--font-sans)", fontSize: "10px", fontWeight: 400,
+          fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 400,
           letterSpacing: "0.18em", textTransform: "uppercase",
           color: "var(--white)", background: "var(--green)",
           padding: "14px 24px", border: "none",

@@ -107,7 +107,7 @@ export default function TheLensPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.2, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
           >
-            <p className="mb-6" style={{ fontFamily: "var(--font-sans)", fontSize: "9px", fontWeight: 400, letterSpacing: "0.28em", textTransform: "uppercase", color: "var(--gold)", opacity: 0.7 }}>
+            <p className="mb-6" style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400, letterSpacing: "0.28em", textTransform: "uppercase", color: "var(--gold)", opacity: 0.7 }}>
               The Lens
             </p>
             <h1 style={{ fontFamily: "var(--font-serif)", fontSize: "clamp(2.2rem, 5vw, 3.8rem)", fontWeight: 300, color: "var(--beige-light)", lineHeight: 1.12 }}>
@@ -124,7 +124,7 @@ export default function TheLensPage() {
         <section className="py-20 px-6 md:px-12" style={{ background: "#0a0a0a", borderTop: "1px solid rgba(216,212,206,0.05)" }}>
           <div className="max-w-5xl mx-auto">
             <FadeIn>
-              <p className="mb-8" style={{ fontFamily: "var(--font-sans)", fontSize: "9px", fontWeight: 400, letterSpacing: "0.24em", textTransform: "uppercase", color: "var(--gold)", opacity: 0.5 }}>
+              <p className="mb-8" style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400, letterSpacing: "0.24em", textTransform: "uppercase", color: "var(--gold)", opacity: 0.5 }}>
                 Featured Visual Authors
               </p>
             </FadeIn>
@@ -140,7 +140,7 @@ export default function TheLensPage() {
                       <h3 style={{ fontFamily: "var(--font-serif)", fontSize: "1.3rem", fontWeight: 400, color: "var(--beige-light)" }}>
                         {p.name}
                       </h3>
-                      <span style={{ fontFamily: "var(--font-sans)", fontSize: "9px", fontWeight: 400, letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--beige)", opacity: 0.25 }}>
+                      <span style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400, letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--beige)", opacity: 0.25 }}>
                         Visual Author
                       </span>
                     </div>
@@ -151,7 +151,7 @@ export default function TheLensPage() {
                       {p.chapters.map((ch) => (
                         <span
                           key={ch}
-                          style={{ fontFamily: "var(--font-sans)", fontSize: "9px", fontWeight: 400, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--gold)", opacity: 0.5, padding: "3px 8px", border: "1px solid rgba(200,146,42,0.15)" }}
+                          style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--gold)", opacity: 0.5, padding: "3px 8px", border: "1px solid rgba(200,146,42,0.15)" }}
                         >
                           {ch}
                         </span>
@@ -186,7 +186,7 @@ export default function TheLensPage() {
                       onClick={() => setFilter(tab.key)}
                       className="cursor-pointer px-4 py-2"
                       style={{
-                        fontFamily: "var(--font-sans)", fontSize: "10px", fontWeight: 400,
+                        fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 400,
                         letterSpacing: "0.16em", textTransform: "uppercase",
                         color: filter === tab.key ? "var(--beige-light)" : "rgba(216,212,206,0.3)",
                         background: filter === tab.key ? "rgba(255,255,255,0.06)" : "transparent",
@@ -203,7 +203,7 @@ export default function TheLensPage() {
                   onClick={() => setSubmitOpen(true)}
                   className="cursor-pointer"
                   style={{
-                    fontFamily: "var(--font-sans)", fontSize: "9px", fontWeight: 400,
+                    fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400,
                     letterSpacing: "0.18em", textTransform: "uppercase",
                     color: "var(--beige)", opacity: 0.4, background: "transparent",
                     border: "1px solid rgba(216,212,206,0.12)", padding: "8px 16px",
@@ -239,7 +239,7 @@ export default function TheLensPage() {
                     {/* Hover overlay with museum credit */}
                     <div className="absolute inset-0 flex items-end opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                       <div className="w-full p-3" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 100%)" }}>
-                        <p style={{ fontFamily: "var(--font-sans)", fontSize: "9px", fontWeight: 400, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(255,255,255,0.6)" }}>
+                        <p style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(255,255,255,0.6)" }}>
                           {photo.photographer}{photo.chapter ? ` · ${photo.chapter}` : ""}
                         </p>
                       </div>
@@ -269,7 +269,7 @@ export default function TheLensPage() {
                 It is a growing visual memory system.
               </p>
               <div className="mt-8">
-                <a href="/home" className="no-underline" style={{ fontFamily: "var(--font-sans)", fontSize: "9px", fontWeight: 400, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--beige)", opacity: 0.3 }}>
+                <a href="/home" className="no-underline" style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--beige)", opacity: 0.3 }}>
                   ← Return to Maison Gethse
                 </a>
               </div>
@@ -321,16 +321,16 @@ export default function TheLensPage() {
 
             {/* Museum credit */}
             <div className="absolute bottom-8 left-8" onClick={(e) => e.stopPropagation()}>
-              <p style={{ fontFamily: "var(--font-sans)", fontSize: "10px", fontWeight: 400, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(255,255,255,0.35)" }}>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 400, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(255,255,255,0.35)" }}>
                 {filteredPhotos[lightboxIndex].photographer}
               </p>
-              <p style={{ fontFamily: "var(--font-sans)", fontSize: "9px", fontWeight: 300, letterSpacing: "0.1em", color: "rgba(255,255,255,0.2)", marginTop: "2px" }}>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 300, letterSpacing: "0.1em", color: "rgba(255,255,255,0.2)", marginTop: "2px" }}>
                 {filteredPhotos[lightboxIndex].chapter || "Field Notes"} · {filteredPhotos[lightboxIndex].alt}
               </p>
             </div>
 
             {/* Counter */}
-            <p className="absolute bottom-8 right-8" style={{ fontFamily: "var(--font-sans)", fontSize: "10px", letterSpacing: "0.2em", color: "rgba(255,255,255,0.2)" }}>
+            <p className="absolute bottom-8 right-8" style={{ fontFamily: "var(--font-sans)", fontSize: "12px", letterSpacing: "0.2em", color: "rgba(255,255,255,0.2)" }}>
               {lightboxIndex + 1} / {filteredPhotos.length}
             </p>
 
@@ -393,7 +393,7 @@ export default function TheLensPage() {
                     ×
                   </button>
 
-                  <p className="mb-2" style={{ fontFamily: "var(--font-sans)", fontSize: "9px", fontWeight: 400, letterSpacing: "0.22em", textTransform: "uppercase", color: "var(--gold)", opacity: 0.7 }}>
+                  <p className="mb-2" style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400, letterSpacing: "0.22em", textTransform: "uppercase", color: "var(--gold)", opacity: 0.7 }}>
                     Submit Your Work
                   </p>
                   <h3 className="mb-2" style={{ fontFamily: "var(--font-serif)", fontSize: "1.4rem", fontWeight: 300, color: "var(--text-head)", lineHeight: 1.4 }}>
@@ -405,7 +405,7 @@ export default function TheLensPage() {
 
                   <div className="flex flex-col gap-4">
                     <div className="flex flex-col gap-1">
-                      <label style={{ fontFamily: "var(--font-sans)", fontSize: "10px", fontWeight: 400, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-body)" }}>
+                      <label style={{ fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 400, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-body)" }}>
                         Your Name
                       </label>
                       <input
@@ -415,7 +415,7 @@ export default function TheLensPage() {
                       />
                     </div>
                     <div className="flex flex-col gap-1">
-                      <label style={{ fontFamily: "var(--font-sans)", fontSize: "10px", fontWeight: 400, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-body)" }}>
+                      <label style={{ fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 400, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-body)" }}>
                         Instagram / Portfolio
                       </label>
                       <input
@@ -425,7 +425,7 @@ export default function TheLensPage() {
                       />
                     </div>
                     <div className="flex flex-col gap-1">
-                      <label style={{ fontFamily: "var(--font-sans)", fontSize: "10px", fontWeight: 400, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-body)" }}>
+                      <label style={{ fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 400, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-body)" }}>
                         Caption / Story Behind the Shot
                       </label>
                       <textarea
@@ -435,7 +435,7 @@ export default function TheLensPage() {
                       />
                     </div>
                     <div className="flex flex-col gap-1">
-                      <label style={{ fontFamily: "var(--font-sans)", fontSize: "10px", fontWeight: 400, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-body)" }}>
+                      <label style={{ fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 400, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-body)" }}>
                         Upload Photos
                       </label>
                       <div
@@ -456,7 +456,7 @@ export default function TheLensPage() {
                     <button
                       className="w-full cursor-pointer mt-2"
                       style={{
-                        fontFamily: "var(--font-sans)", fontSize: "10px", fontWeight: 400,
+                        fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 400,
                         letterSpacing: "0.22em", textTransform: "uppercase",
                         color: "var(--white)", background: "var(--green)",
                         border: "none", padding: "16px",
@@ -465,7 +465,7 @@ export default function TheLensPage() {
                     >
                       Submit for Review
                     </button>
-                    <p className="text-center" style={{ fontFamily: "var(--font-sans)", fontSize: "10px", fontWeight: 300, color: "var(--text-body)", opacity: 0.3, lineHeight: 1.7 }}>
+                    <p className="text-center" style={{ fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 300, color: "var(--text-body)", opacity: 0.3, lineHeight: 1.7 }}>
                       Submissions are reviewed for aesthetic and narrative alignment.<br />
                       Access is open. Placement is earned through resonance.
                     </p>

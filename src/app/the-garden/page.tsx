@@ -169,7 +169,7 @@ export default function TheGardenPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.2, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
           >
-            <p className="mb-6" style={{ fontFamily: "var(--font-sans)", fontSize: "9px", fontWeight: 400, letterSpacing: "0.28em", textTransform: "uppercase", color: "var(--gold)", opacity: 0.7 }}>
+            <p className="mb-6" style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400, letterSpacing: "0.28em", textTransform: "uppercase", color: "var(--gold)", opacity: 0.7 }}>
               The Garden
             </p>
 
@@ -187,7 +187,7 @@ export default function TheGardenPage() {
               className="mt-10 cursor-pointer"
               onClick={() => setFormOpen(true)}
               style={{
-                fontFamily: "var(--font-sans)", fontSize: "10px", fontWeight: 400,
+                fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 400,
                 letterSpacing: "0.22em", textTransform: "uppercase",
                 color: "var(--green-deep)", background: "var(--beige-light)",
                 border: "none", padding: "16px 32px",
@@ -232,7 +232,7 @@ export default function TheGardenPage() {
                     transition={{ duration: 0.4 }}
                   >
                     {/* Prompt label */}
-                    <p className="mb-3" style={{ fontFamily: "var(--font-sans)", fontSize: "9px", fontWeight: 400, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--gold)", opacity: 0.4 }}>
+                    <p className="mb-3" style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--gold)", opacity: 0.4 }}>
                       {seed.prompt.length > 40 ? seed.prompt.slice(0, 40) + "..." : seed.prompt}
                     </p>
 
@@ -243,7 +243,7 @@ export default function TheGardenPage() {
 
                     {/* Author */}
                     <div className="mt-4 pt-3" style={{ borderTop: "1px solid rgba(216,212,206,0.05)" }}>
-                      <p style={{ fontFamily: "var(--font-sans)", fontSize: "9px", fontWeight: 400, letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--beige)", opacity: 0.2 }}>
+                      <p style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400, letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--beige)", opacity: 0.2 }}>
                         — {seed.author}
                       </p>
                     </div>
@@ -259,7 +259,7 @@ export default function TheGardenPage() {
                   onClick={() => setFormOpen(true)}
                   className="cursor-pointer"
                   style={{
-                    fontFamily: "var(--font-sans)", fontSize: "10px", fontWeight: 400,
+                    fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 400,
                     letterSpacing: "0.2em", textTransform: "uppercase",
                     color: "var(--beige-light)", background: "var(--green)",
                     border: "none", padding: "16px 32px",
@@ -289,7 +289,7 @@ export default function TheGardenPage() {
                 <a
                   href="/home"
                   className="no-underline"
-                  style={{ fontFamily: "var(--font-sans)", fontSize: "9px", fontWeight: 400, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--beige)", opacity: 0.3, transition: "opacity 0.3s" }}
+                  style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--beige)", opacity: 0.3, transition: "opacity 0.3s" }}
                 >
                   ← Return to Maison Gethse
                 </a>
@@ -355,7 +355,7 @@ export default function TheGardenPage() {
                       ×
                     </button>
 
-                    <p className="mb-2" style={{ fontFamily: "var(--font-sans)", fontSize: "9px", fontWeight: 400, letterSpacing: "0.22em", textTransform: "uppercase", color: "var(--gold)", opacity: 0.7 }}>
+                    <p className="mb-2" style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400, letterSpacing: "0.22em", textTransform: "uppercase", color: "var(--gold)", opacity: 0.7 }}>
                       Plant a Seed
                     </p>
 
@@ -381,7 +381,7 @@ export default function TheGardenPage() {
                     />
 
                     {/* Identity choice */}
-                    <p className="mb-3" style={{ fontFamily: "var(--font-sans)", fontSize: "10px", fontWeight: 400, letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--text-body)" }}>
+                    <p className="mb-3" style={{ fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 400, letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--text-body)" }}>
                       How would you like to appear?
                     </p>
 
@@ -442,7 +442,7 @@ export default function TheGardenPage() {
                       disabled={!seedText.trim()}
                       className="w-full cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
                       style={{
-                        fontFamily: "var(--font-sans)", fontSize: "10px", fontWeight: 400,
+                        fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 400,
                         letterSpacing: "0.22em", textTransform: "uppercase",
                         color: "var(--green-deep)", background: "var(--beige-light)",
                         border: "none", padding: "16px",
@@ -452,7 +452,7 @@ export default function TheGardenPage() {
                       Plant Your Seed
                     </button>
 
-                    <p className="mt-4 text-center" style={{ fontFamily: "var(--font-sans)", fontSize: "10px", fontWeight: 300, color: "var(--text-body)", opacity: 0.3, lineHeight: 1.7 }}>
+                    <p className="mt-4 text-center" style={{ fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 300, color: "var(--text-body)", opacity: 0.3, lineHeight: 1.7 }}>
                       Your story will be reviewed before it enters the archive.<br />
                       This space is curated, not automated.
                     </p>

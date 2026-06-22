@@ -3,6 +3,7 @@ import { Cormorant_Garamond, Jost, Caveat } from "next/font/google";
 import { LenisProvider } from "@/components/LenisProvider";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { AudioProvider } from "@/components/AudioProvider";
+import { CustomCursor } from "@/components/CustomCursor";
 import "./globals.css";
 
 const cormorant = Cormorant_Garamond({
@@ -49,7 +50,10 @@ export default function RootLayout({
       <body>
         <ThemeProvider>
           <AudioProvider>
-            <LenisProvider>{children}</LenisProvider>
+            <LenisProvider>
+              <CustomCursor />
+              {children}
+            </LenisProvider>
           </AudioProvider>
         </ThemeProvider>
       </body>

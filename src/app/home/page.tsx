@@ -49,7 +49,7 @@ export default function HomePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.2, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
           >
-            <p className="mb-6" style={{ fontFamily: "var(--font-sans)", fontSize: "9px", fontWeight: 400, letterSpacing: "0.28em", textTransform: "uppercase", color: "var(--text-body)", opacity: 0.5 }}>
+            <p className="mb-6" style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400, letterSpacing: "0.28em", textTransform: "uppercase", color: "var(--text-body)", opacity: 0.5 }}>
               A Narrative Brand
             </p>
             <h1 style={{ fontFamily: "var(--font-serif)", fontSize: "clamp(2.2rem, 4.5vw, 3.8rem)", fontWeight: 300, color: "var(--text-head)", lineHeight: 1.15, letterSpacing: "0.01em" }}>
@@ -69,7 +69,7 @@ export default function HomePage() {
         <section id="brand" className="py-32 px-6 md:px-12" style={{ background: "var(--bg-surface)", transition: "background 0.5s" }}>
           <div className="max-w-5xl mx-auto">
             <FadeIn>
-              <p className="mb-4" style={{ fontFamily: "var(--font-sans)", fontSize: "10px", fontWeight: 400, letterSpacing: "0.22em", textTransform: "uppercase", color: "var(--gold)" }}>
+              <p className="mb-4" style={{ fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 400, letterSpacing: "0.22em", textTransform: "uppercase", color: "var(--gold)" }}>
                 The Brand
               </p>
               <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "clamp(2rem, 4vw, 3.2rem)", fontWeight: 300, color: "var(--text-head)", lineHeight: 1.1 }}>
@@ -124,7 +124,7 @@ export default function HomePage() {
         <section id="chapters" className="py-32 px-6 md:px-12" style={{ background: "var(--bg-body)", transition: "background 0.5s" }}>
           <div className="max-w-5xl mx-auto">
             <FadeIn>
-              <p className="mb-4" style={{ fontFamily: "var(--font-sans)", fontSize: "10px", fontWeight: 400, letterSpacing: "0.22em", textTransform: "uppercase", color: "var(--gold)" }}>
+              <p className="mb-4" style={{ fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 400, letterSpacing: "0.22em", textTransform: "uppercase", color: "var(--gold)" }}>
                 The Chapters
               </p>
               <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "clamp(2rem, 4vw, 3.2rem)", fontWeight: 300, color: "var(--text-head)", lineHeight: 1.1 }}>
@@ -159,7 +159,7 @@ export default function HomePage() {
                     </div>
                   </div>
                   <div className="p-10 md:p-14 flex flex-col justify-center">
-                    <p style={{ fontFamily: "var(--font-sans)", fontSize: "10px", fontWeight: 400, letterSpacing: "0.22em", textTransform: "uppercase", color: "var(--gold)", marginBottom: "0.5rem" }}>
+                    <p style={{ fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 400, letterSpacing: "0.22em", textTransform: "uppercase", color: "var(--gold)", marginBottom: "0.5rem" }}>
                       Chapter 01
                     </p>
                     <h3 style={{ fontFamily: "var(--font-hand)", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 400, color: "var(--text-head)", lineHeight: 1.2, marginBottom: "1rem" }}>
@@ -169,7 +169,7 @@ export default function HomePage() {
                       We once dreamed without limits. Before life opened our eyes to the weight of reality, there was innocence — a childlike trust in what could be. This chapter honors the space between who we were and who we are becoming.
                     </p>
                     <div className="mt-8 flex items-center gap-3">
-                      <span style={{ fontFamily: "var(--font-sans)", fontSize: "9px", fontWeight: 400, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--text-head)", opacity: 0.5 }}>
+                      <span style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--text-head)", opacity: 0.5 }}>
                         Enter Chapter →
                       </span>
                     </div>
@@ -186,7 +186,7 @@ export default function HomePage() {
         <section id="garden" className="py-32 px-6 md:px-12 relative" style={{ background: "var(--bg-deep)", transition: "background 0.5s" }}>
           <div className="max-w-3xl mx-auto text-center">
             <FadeIn>
-              <p className="mb-4" style={{ fontFamily: "var(--font-sans)", fontSize: "10px", fontWeight: 400, letterSpacing: "0.22em", textTransform: "uppercase", color: "var(--gold)" }}>
+              <p className="mb-4" style={{ fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 400, letterSpacing: "0.22em", textTransform: "uppercase", color: "var(--gold)" }}>
                 The Garden
               </p>
               <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "clamp(2rem, 4vw, 3.2rem)", fontWeight: 300, color: "var(--beige-light)", lineHeight: 1.1 }}>
@@ -217,7 +217,7 @@ export default function HomePage() {
                     <p style={{ fontFamily: "var(--font-hand)", fontSize: "1.15rem", fontWeight: 400, color: "var(--beige-light)", lineHeight: 1.65, opacity: 0.85 }}>
                       &ldquo;{seed.text}&rdquo;
                     </p>
-                    <p className="mt-3" style={{ fontFamily: "var(--font-sans)", fontSize: "9px", fontWeight: 400, letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--beige)", opacity: 0.25 }}>
+                    <p className="mt-3" style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400, letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--beige)", opacity: 0.25 }}>
                       — {seed.author}
                     </p>
                   </div>
@@ -231,7 +231,7 @@ export default function HomePage() {
                 className="inline-block mt-12 no-underline"
                 style={{
                   fontFamily: "var(--font-sans)",
-                  fontSize: "9px",
+                  fontSize: "11px",
                   fontWeight: 400,
                   letterSpacing: "0.2em",
                   textTransform: "uppercase",
@@ -253,7 +253,7 @@ export default function HomePage() {
         <section id="lens" className="py-32 px-6 md:px-12" style={{ background: "var(--bg-body)", transition: "background 0.5s" }}>
           <div className="max-w-5xl mx-auto">
             <FadeIn>
-              <p className="mb-4" style={{ fontFamily: "var(--font-sans)", fontSize: "10px", fontWeight: 400, letterSpacing: "0.22em", textTransform: "uppercase", color: "var(--gold)" }}>
+              <p className="mb-4" style={{ fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 400, letterSpacing: "0.22em", textTransform: "uppercase", color: "var(--gold)" }}>
                 The Lens
               </p>
               <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "clamp(2rem, 4vw, 3.2rem)", fontWeight: 300, color: "var(--text-head)", lineHeight: 1.1 }}>
@@ -300,7 +300,7 @@ export default function HomePage() {
                   className="inline-block no-underline"
                   style={{
                     fontFamily: "var(--font-sans)",
-                    fontSize: "9px",
+                    fontSize: "11px",
                     fontWeight: 400,
                     letterSpacing: "0.2em",
                     textTransform: "uppercase",
@@ -342,7 +342,7 @@ export default function HomePage() {
                     className="flex items-center gap-3 no-underline flex-1 justify-center group"
                     style={{
                       fontFamily: "var(--font-sans)",
-                      fontSize: "10px",
+                      fontSize: "12px",
                       fontWeight: 400,
                       letterSpacing: "0.18em",
                       textTransform: "uppercase",
@@ -392,7 +392,7 @@ export default function HomePage() {
                 { title: "Connect", links: [{ label: "Instagram", href: "https://www.instagram.com/maison.gethse/" }, { label: "Facebook", href: "#" }, { label: "TikTok", href: "https://www.tiktok.com/@maison.gethse" }, { label: "maisongethse@gmail.com", href: "mailto:maisongethse@gmail.com" }] },
               ].map((col) => (
                 <div key={col.title}>
-                  <h5 className="mb-4" style={{ fontFamily: "var(--font-sans)", fontSize: "9px", fontWeight: 400, letterSpacing: "0.22em", textTransform: "uppercase", color: "var(--beige)", opacity: 0.35 }}>
+                  <h5 className="mb-4" style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400, letterSpacing: "0.22em", textTransform: "uppercase", color: "var(--beige)", opacity: 0.35 }}>
                     {col.title}
                   </h5>
                   <ul className="flex flex-col gap-3" style={{ listStyle: "none" }}>
@@ -412,7 +412,7 @@ export default function HomePage() {
               ))}
             </div>
             <div className="flex justify-between items-center flex-wrap gap-4 mt-8">
-              <p style={{ fontFamily: "var(--font-sans)", fontSize: "10px", fontWeight: 300, letterSpacing: "0.1em", color: "var(--beige)", opacity: 0.2 }}>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 300, letterSpacing: "0.1em", color: "var(--beige)", opacity: 0.2 }}>
                 © 2026 Maison Gethse. All rights reserved.
               </p>
               <KeyIcon size={32} className="opacity-[0.2]" />

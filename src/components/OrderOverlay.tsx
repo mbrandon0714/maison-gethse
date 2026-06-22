@@ -91,10 +91,9 @@ export function OrderOverlay({ artifact, isOpen, onClose }: OrderOverlayProps) {
   const handleClose = useCallback(() => {
     onClose();
     lenis.start();
-    document.body.style.overflow = "";
-    document.body.style.position = "";
-    document.body.style.inset = "";
-    document.body.style.width = "";
+    document.body.classList.remove("overlay-open");
+    const scrollY = document.documentElement.style.getPropertyValue("--scroll-y");
+    window.scrollTo(0, parseInt(scrollY || "0") * -1);
     setTimeout(() => {
       setStep("select");
       setSelectedSize("");
@@ -116,17 +115,15 @@ export function OrderOverlay({ artifact, isOpen, onClose }: OrderOverlayProps) {
   useEffect(() => {
     if (isOpen) {
       lenis.stop();
-      document.body.style.overflow = "hidden";
-      document.body.style.position = "fixed";
-      document.body.style.inset = "0";
-      document.body.style.width = "100%";
+      const scrollY = window.scrollY;
+      document.documentElement.style.setProperty("--scroll-y", `-${scrollY}px`);
+      document.body.classList.add("overlay-open");
     }
     return () => {
       lenis.start();
-      document.body.style.overflow = "";
-      document.body.style.position = "";
-      document.body.style.inset = "";
-      document.body.style.width = "";
+      document.body.classList.remove("overlay-open");
+      const scrollY = document.documentElement.style.getPropertyValue("--scroll-y");
+      window.scrollTo(0, parseInt(scrollY || "0") * -1);
     };
   }, [isOpen, lenis]);
 
@@ -205,7 +202,7 @@ function SelectStep({
       </div>
 
       <div className="px-8 md:px-10 pt-6 pb-10">
-        <p className="mb-1" style={{ fontFamily: "var(--font-sans)", fontSize: "9px", fontWeight: 400, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--gold)" }}>{artifact.chapter}</p>
+        <p className="mb-1" style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--gold)" }}>{artifact.chapter}</p>
         <div className="flex items-baseline justify-between mb-8">
           <h3 style={{ fontFamily: "var(--font-serif)", fontSize: "1.6rem", fontWeight: 400, color: "var(--text-head)" }}>{artifact.name}</h3>
           <span style={{ fontFamily: "var(--font-serif)", fontSize: "1.4rem", fontWeight: 300, color: "var(--text-head)" }}>{artifact.priceDisplay}</span>
@@ -228,7 +225,7 @@ function SelectStep({
               }}
             >
               {s.label}
-              <span className="block mt-1" style={{ fontSize: "8px", letterSpacing: "0.08em", textTransform: "uppercase", opacity: 0.5, color: selectedSize === s.label ? "rgba(255,255,255,0.6)" : "var(--text-body)" }}>
+              <span className="block mt-1" style={{ fontSize: "12px", letterSpacing: "0.08em", textTransform: "uppercase", opacity: 0.5, color: selectedSize === s.label ? "rgba(255,255,255,0.6)" : "var(--text-body)" }}>
                 {s.stock === 0 ? "Sold out" : `${s.stock} left`}
               </span>
             </button>
@@ -279,7 +276,7 @@ function SelectStep({
         >
           Continue — {artifact.priceDisplay}
         </button>
-        <p className="mt-3 text-center" style={{ fontFamily: "var(--font-sans)", fontSize: "10px", fontWeight: 300, color: "var(--text-body)", opacity: 0.3 }}>
+        <p className="mt-3 text-center" style={{ fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 300, color: "var(--text-body)", opacity: 0.3 }}>
           Free shipping on orders over ₱1,000
         </p>
       </div>
@@ -298,7 +295,7 @@ function DetailsStep({
 }) {
   return (
     <motion.div className="px-8 md:px-10 pt-6 pb-10" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.3 }}>
-      <button onClick={onBack} className="mb-6 bg-transparent border-none" style={{ fontFamily: "var(--font-sans)", fontSize: "10px", fontWeight: 400, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-body)", opacity: 0.5 }}>← Back</button>
+      <button type="button" onClick={(e) => { e.preventDefault(); e.stopPropagation(); onBack(); }} className="mb-6 bg-transparent border-none py-2 px-1" style={{ fontFamily: "var(--font-sans)", fontSize: "13px", fontWeight: 400, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-body)" }}>← Back</button>
 
       {/* Summary */}
       <div className="flex gap-4 pb-6 mb-6" style={{ borderBottom: "1px solid var(--border-soft)" }}>
@@ -349,7 +346,7 @@ function DetailsStep({
       <button onClick={onSubmit} disabled={!canSubmit} className="w-full py-5 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300" style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400, letterSpacing: "0.22em", textTransform: "uppercase", color: "var(--white)", background: "var(--green)", border: "none" }}>
         Place Order
       </button>
-      <p className="mt-3 text-center" style={{ fontFamily: "var(--font-sans)", fontSize: "10px", fontWeight: 300, color: "var(--text-body)", opacity: 0.35, lineHeight: 1.7 }}>
+      <p className="mt-3 text-center" style={{ fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 300, color: "var(--text-body)", opacity: 0.35, lineHeight: 1.7 }}>
         Secure payment via PayMongo · GCash · Maya · Card
       </p>
     </motion.div>
@@ -370,15 +367,15 @@ function ConfirmationView({ artifact, size, qty, total, onClose }: { artifact: A
       </p>
       <div className="w-full max-w-xs p-5" style={{ background: "var(--bg-mid)", border: "1px solid var(--border-soft)" }}>
         <div className="flex justify-between mb-3">
-          <span style={{ fontFamily: "var(--font-sans)", fontSize: "10px", fontWeight: 400, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-body)", opacity: 0.5 }}>Total</span>
+          <span style={{ fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 400, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-body)", opacity: 0.5 }}>Total</span>
           <span style={{ fontFamily: "var(--font-serif)", fontSize: "1.1rem", fontWeight: 300, color: "var(--text-head)" }}>₱{total.toLocaleString()}</span>
         </div>
         <div className="flex justify-between">
-          <span style={{ fontFamily: "var(--font-sans)", fontSize: "10px", fontWeight: 400, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-body)", opacity: 0.5 }}>Status</span>
+          <span style={{ fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 400, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-body)", opacity: 0.5 }}>Status</span>
           <span style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400, color: "var(--gold)" }}>Processing</span>
         </div>
       </div>
-      <a href="/home" className="mt-8 no-underline" style={{ fontFamily: "var(--font-sans)", fontSize: "10px", fontWeight: 400, letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--text-body)", opacity: 0.4 }}>Continue Exploring →</a>
+      <a href="/home" className="mt-8 no-underline" style={{ fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 400, letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--text-body)", opacity: 0.4 }}>Continue Exploring →</a>
     </motion.div>
   );
 }
@@ -394,7 +391,7 @@ function Field({ label, value, onChange, type = "text", placeholder, autoFocus, 
         onFocus={(e) => { if (!disabled) e.target.style.borderBottomColor = "var(--gold)"; }}
         onBlur={(e) => { e.target.style.borderBottomColor = "var(--border-soft)"; }}
       />
-      {value && <label className="absolute left-0 top-[-2px] pointer-events-none" style={{ fontFamily: "var(--font-sans)", fontSize: "9px", fontWeight: 400, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--gold)", opacity: 0.6 }}>{label}</label>}
+      {value && <label className="absolute left-0 top-[-2px] pointer-events-none" style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--gold)", opacity: 0.6 }}>{label}</label>}
     </div>
   );
 }
@@ -420,7 +417,7 @@ function SearchSelect({ label, value, onChange, options, mapHint }: {
         onFocusCapture={(e) => { e.target.style.borderBottomColor = "var(--gold)"; }}
         onBlurCapture={(e) => { e.target.style.borderBottomColor = "var(--border-soft)"; }}
       />
-      {value && !open && <label className="absolute left-0 top-[-2px] pointer-events-none" style={{ fontFamily: "var(--font-sans)", fontSize: "9px", fontWeight: 400, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--gold)", opacity: 0.6 }}>{label}</label>}
+      {value && !open && <label className="absolute left-0 top-[-2px] pointer-events-none" style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--gold)", opacity: 0.6 }}>{label}</label>}
       <svg className="absolute right-0 top-4 pointer-events-none" width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="var(--text-body)" strokeWidth="1" opacity="0.4" /></svg>
 
       {open && (
