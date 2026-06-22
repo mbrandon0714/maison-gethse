@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useEffect, useMemo } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+
 import { useLenis } from "./LenisProvider";
 
 interface Artifact {
@@ -128,49 +128,48 @@ export function OrderOverlay({ artifact, isOpen, onClose }: OrderOverlayProps) {
   }, [isOpen, lenis]);
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <>
-          <motion.div
-            className="fixed inset-0 z-[400]"
-            style={{ background: "rgba(0,0,0,0.6)" }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={handleClose}
-          />
+    <>
+      {/* Backdrop — CSS transition, no Framer Motion */}
+      <div
+        className="fixed inset-0 z-[400] transition-opacity duration-300"
+        style={{
+          background: "rgba(0,0,0,0.6)",
+          opacity: isOpen ? 1 : 0,
+          pointerEvents: isOpen ? "auto" : "none",
+        }}
+        onClick={handleClose}
+      />
 
-          <motion.div
-            className="fixed top-0 right-0 bottom-0 z-[401] w-full max-w-[520px]"
-            initial={{ x: "100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: "100%" }}
-            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <div className="order-overlay-scroll" onWheel={(e) => e.stopPropagation()}>
-              {/* Close */}
-              <button
-                onClick={handleClose}
-                className="absolute top-3 right-4 z-20 w-10 h-10 flex items-center justify-center border-none"
-                style={{ background: "var(--bg-surface)", borderRadius: "50%", fontFamily: "var(--font-serif)", fontSize: "1.8rem", fontWeight: 300, color: "var(--text-body)", lineHeight: 1 }}
-              >
-                ×
-              </button>
+      {/* Panel — CSS transform, NO Framer Motion (Framer eats touch events on iOS) */}
+      <div
+        className="fixed top-0 right-0 bottom-0 z-[401] w-full max-w-[520px] order-overlay-scroll"
+        style={{
+          transform: isOpen ? "translateX(0)" : "translateX(100%)",
+          transition: "transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+          visibility: isOpen ? "visible" : "hidden",
+        }}
+      >
+        {/* Close */}
+        <button
+          type="button"
+          onClick={handleClose}
+          className="sticky top-3 float-right mr-4 z-20 w-10 h-10 flex items-center justify-center border-none"
+          style={{ background: "var(--bg-surface)", borderRadius: "50%", fontFamily: "var(--font-serif)", fontSize: "1.8rem", fontWeight: 300, color: "var(--text-body)", lineHeight: 1 }}
+        >
+          ×
+        </button>
 
-              <AnimatePresence mode="wait">
-                {step === "confirmed" ? (
-                  <ConfirmationView key="c" artifact={artifact} size={selectedSize} qty={quantity} total={total} onClose={handleClose} />
-                ) : step === "select" ? (
-                  <SelectStep key="s" artifact={artifact} selectedSize={selectedSize} setSelectedSize={(s) => { setSelectedSize(s); setQuantity(1); }} quantity={quantity} setQuantity={setQuantity} maxStock={maxStock} onContinue={() => setStep("details")} />
-                ) : (
-                  <DetailsStep key="d" artifact={artifact} selectedSize={selectedSize} quantity={quantity} subtotal={subtotal} total={total} form={form} updateField={updateField} canSubmit={!!canSubmit} onBack={() => setStep("select")} onSubmit={() => setStep("confirmed")} />
-                )}
-              </AnimatePresence>
-            </div>
-          </motion.div>
-        </>
-      )}
-    </AnimatePresence>
+        <div className="clear-both">
+          {step === "confirmed" ? (
+            <ConfirmationView artifact={artifact} size={selectedSize} qty={quantity} total={total} onClose={handleClose} />
+          ) : step === "select" ? (
+            <SelectStep artifact={artifact} selectedSize={selectedSize} setSelectedSize={(s) => { setSelectedSize(s); setQuantity(1); }} quantity={quantity} setQuantity={setQuantity} maxStock={maxStock} onContinue={() => setStep("details")} />
+          ) : (
+            <DetailsStep artifact={artifact} selectedSize={selectedSize} quantity={quantity} subtotal={subtotal} total={total} form={form} updateField={updateField} canSubmit={!!canSubmit} onBack={() => setStep("select")} onSubmit={() => setStep("confirmed")} />
+          )}
+        </div>
+      </div>
+    </>
   );
 }
 
@@ -184,14 +183,14 @@ function SelectStep({
   const [activeImg, setActiveImg] = useState(0);
 
   return (
-    <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.3 }}>
+    <div>
       {/* Image gallery */}
       <div className="relative aspect-[4/5] overflow-hidden" style={{ background: "var(--bg-mid)" }}>
-        <AnimatePresence mode="wait">
-          <motion.div key={activeImg} className="absolute inset-0" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.4 }}>
-            <Image src={PRODUCT_IMAGES[activeImg].src} alt={PRODUCT_IMAGES[activeImg].alt} fill className="object-cover" sizes="520px" />
-          </motion.div>
-        </AnimatePresence>
+        {PRODUCT_IMAGES.map((img, i) => (
+          <div key={i} className="absolute inset-0 transition-opacity duration-500" style={{ opacity: activeImg === i ? 1 : 0 }}>
+            <Image src={img.src} alt={img.alt} fill className="object-cover" sizes="520px" />
+          </div>
+        ))}
         <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
           {PRODUCT_IMAGES.map((_, i) => (
             <button key={i} onClick={() => setActiveImg(i)} className="border-none p-0 transition-all duration-300" style={{ width: activeImg === i ? "24px" : "6px", height: "6px", borderRadius: "3px", background: activeImg === i ? "var(--gold)" : "rgba(255,255,255,0.4)", cursor: "pointer" }} />
@@ -267,6 +266,9 @@ function SelectStep({
           </div>
         )}
 
+        {/* Size chart */}
+        <SizeChart />
+
         {/* Continue */}
         <button
           onClick={onContinue}
@@ -276,11 +278,11 @@ function SelectStep({
         >
           Continue — {artifact.priceDisplay}
         </button>
-        <p className="mt-3 text-center" style={{ fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 300, color: "var(--text-body)", opacity: 0.3 }}>
+        <p className="mt-4 text-center" style={{ fontFamily: "var(--font-sans)", fontSize: "14px", fontWeight: 500, color: "var(--gold)", letterSpacing: "0.04em" }}>
           Free shipping on orders over ₱1,000
         </p>
       </div>
-    </motion.div>
+    </div>
   );
 }
 
@@ -294,7 +296,7 @@ function DetailsStep({
   canSubmit: boolean; onBack: () => void; onSubmit: () => void;
 }) {
   return (
-    <motion.div className="px-8 md:px-10 pt-6 pb-10" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.3 }}>
+    <div className="px-8 md:px-10 pt-6 pb-10">
       <button type="button" onClick={(e) => { e.preventDefault(); e.stopPropagation(); onBack(); }} className="mb-6 bg-transparent border-none py-2 px-1" style={{ fontFamily: "var(--font-sans)", fontSize: "13px", fontWeight: 400, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-body)" }}>← Back</button>
 
       {/* Summary */}
@@ -346,17 +348,17 @@ function DetailsStep({
       <button onClick={onSubmit} disabled={!canSubmit} className="w-full py-5 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300" style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400, letterSpacing: "0.22em", textTransform: "uppercase", color: "var(--white)", background: "var(--green)", border: "none" }}>
         Place Order
       </button>
-      <p className="mt-3 text-center" style={{ fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 300, color: "var(--text-body)", opacity: 0.35, lineHeight: 1.7 }}>
+      <p className="mt-4 text-center" style={{ fontFamily: "var(--font-sans)", fontSize: "13px", fontWeight: 400, color: "var(--text-body)", opacity: 0.6, lineHeight: 1.7 }}>
         Secure payment via PayMongo · GCash · Maya · Card
       </p>
-    </motion.div>
+    </div>
   );
 }
 
 /* ═══ CONFIRMATION ═══ */
 function ConfirmationView({ artifact, size, qty, total, onClose }: { artifact: Artifact; size: string; qty: number; total: number; onClose: () => void }) {
   return (
-    <motion.div className="flex flex-col items-center justify-center min-h-[80vh] text-center px-8" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }}>
+    <div className="flex flex-col items-center justify-center min-h-[80vh] text-center px-8">
       <div className="mb-6 relative" style={{ width: "48px", height: "80px" }}>
         <Image src="/images/mg-key-transparent.png" alt="Key" fill style={{ objectFit: "contain", opacity: 0.3 }} />
       </div>
@@ -376,7 +378,62 @@ function ConfirmationView({ artifact, size, qty, total, onClose }: { artifact: A
         </div>
       </div>
       <a href="/home" className="mt-8 no-underline" style={{ fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 400, letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--text-body)", opacity: 0.4 }}>Continue Exploring →</a>
-    </motion.div>
+    </div>
+  );
+}
+
+/* ═══ SIZE CHART ═══ */
+function SizeChart() {
+  const [open, setOpen] = useState(false);
+  const sizes = [
+    { size: "XS", chest: "34\"", length: "26\"", shoulder: "16\"" },
+    { size: "S", chest: "36\"", length: "27\"", shoulder: "17\"" },
+    { size: "M", chest: "38\"", length: "28\"", shoulder: "18\"" },
+    { size: "L", chest: "40\"", length: "29\"", shoulder: "19\"" },
+    { size: "XL", chest: "42\"", length: "30\"", shoulder: "20\"" },
+    { size: "2XL", chest: "44\"", length: "31\"", shoulder: "21\"" },
+  ];
+
+  return (
+    <div className="mb-6">
+      <button
+        type="button"
+        onClick={() => setOpen(!open)}
+        className="bg-transparent border-none flex items-center gap-2"
+        style={{ fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 400, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--gold)", textDecoration: "underline", textUnderlineOffset: "3px" }}
+      >
+        {open ? "Hide" : "View"} Size Chart
+      </button>
+
+      {open && (
+        <div className="mt-4 overflow-x-auto" style={{ border: "1px solid var(--border-soft)" }}>
+          <table className="w-full" style={{ borderCollapse: "collapse", fontFamily: "var(--font-sans)" }}>
+            <thead>
+              <tr>
+                {["Size", "Chest", "Length", "Shoulder"].map((h) => (
+                  <th key={h} className="text-left px-4 py-3" style={{ fontSize: "11px", fontWeight: 500, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--text-body)", borderBottom: "1px solid var(--border-soft)" }}>
+                    {h}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {sizes.map((row) => (
+                <tr key={row.size}>
+                  <td className="px-4 py-3" style={{ fontSize: "14px", fontWeight: 500, color: "var(--text-head)", borderBottom: "1px solid var(--border-soft)" }}>{row.size}</td>
+                  <td className="px-4 py-3" style={{ fontSize: "14px", fontWeight: 300, color: "var(--text-body)", borderBottom: "1px solid var(--border-soft)" }}>{row.chest}</td>
+                  <td className="px-4 py-3" style={{ fontSize: "14px", fontWeight: 300, color: "var(--text-body)", borderBottom: "1px solid var(--border-soft)" }}>{row.length}</td>
+                  <td className="px-4 py-3" style={{ fontSize: "14px", fontWeight: 300, color: "var(--text-body)", borderBottom: "1px solid var(--border-soft)" }}>{row.shoulder}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <p className="px-4 py-2" style={{ fontSize: "11px", fontWeight: 300, color: "var(--text-body)", opacity: 0.4 }}>
+            Measurements in inches. Oversized fit — size down for a regular fit.
+          </p>
+        </div>
+      )}
+    </div>
   );
 }
 

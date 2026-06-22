@@ -102,6 +102,7 @@ const SAMPLE_SEEDS = [
 
 export default function TheGardenPage() {
   const [formOpen, setFormOpen] = useState(false);
+  const [previewSeed, setPreviewSeed] = useState<typeof SAMPLE_SEEDS[0] | null>(null);
   const [submitted, setSubmitted] = useState(false);
   const [identityType, setIdentityType] = useState<"anonymous" | "penname" | "name">("anonymous");
   const [displayName, setDisplayName] = useState("");
@@ -215,7 +216,8 @@ export default function TheGardenPage() {
               {SAMPLE_SEEDS.map((seed, i) => (
                 <FadeIn key={seed.id} delay={0.08 * i}>
                   <motion.div
-                    className="max-w-[320px] p-6 relative"
+                    className="max-w-[320px] p-6 relative cursor-pointer"
+                    onClick={() => setPreviewSeed(seed)}
                     style={{
                       background: "rgba(255,255,255,0.02)",
                       border: "1px solid rgba(216,212,206,0.06)",
@@ -298,6 +300,60 @@ export default function TheGardenPage() {
           </div>
         </section>
       </main>
+
+      {/* ═══ SEED PREVIEW ═══ */}
+      <AnimatePresence>
+        {previewSeed && (
+          <>
+            <motion.div
+              className="fixed inset-0 z-[400]"
+              style={{ background: "rgba(0,0,0,0.8)" }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setPreviewSeed(null)}
+            />
+            <motion.div
+              className="fixed inset-0 z-[401] flex items-center justify-center p-6"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setPreviewSeed(null)}
+            >
+              <motion.div
+                className="w-full max-w-md p-10 relative text-center"
+                style={{ background: "#141a14", border: "1px solid rgba(216,212,206,0.1)", borderRadius: "24px" }}
+                initial={{ y: 20, scale: 0.97 }}
+                animate={{ y: 0, scale: 1 }}
+                exit={{ y: 20, scale: 0.97 }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <button
+                  onClick={() => setPreviewSeed(null)}
+                  className="absolute top-4 right-5 bg-transparent border-none"
+                  style={{ fontFamily: "var(--font-serif)", fontSize: "1.6rem", fontWeight: 300, color: "var(--beige)", opacity: 0.4, lineHeight: 1 }}
+                >
+                  ×
+                </button>
+
+                <p className="mb-4" style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400, letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--gold)", opacity: 0.6 }}>
+                  {previewSeed.prompt}
+                </p>
+
+                <p style={{ fontFamily: "var(--font-hand)", fontSize: "clamp(1.3rem, 3vw, 1.8rem)", fontWeight: 400, color: "#f4f1ec", lineHeight: 1.7, opacity: 0.9 }}>
+                  &ldquo;{previewSeed.text}&rdquo;
+                </p>
+
+                <div className="w-[1px] h-[20px] mx-auto my-6" style={{ background: "var(--beige)", opacity: 0.1 }} />
+
+                <p style={{ fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 400, letterSpacing: "0.16em", textTransform: "uppercase", color: "#d8d4ce", opacity: 0.3 }}>
+                  — {previewSeed.author}
+                </p>
+              </motion.div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
       {/* ═══ SUBMISSION OVERLAY ═══ */}
       <AnimatePresence>

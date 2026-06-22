@@ -54,7 +54,7 @@ export function CustomCursor() {
         width: hovering ? 32 : 12,
         height: hovering ? 32 : 12,
       }}
-      transition={{ type: "spring", stiffness: 500, damping: 30, mass: 0.5 }}
+      transition={{ type: "spring", stiffness: 1200, damping: 40, mass: 0.2 }}
       style={{
         borderRadius: "50%",
         background: hovering ? "transparent" : "var(--gold)",
