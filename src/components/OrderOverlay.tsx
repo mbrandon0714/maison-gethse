@@ -92,6 +92,9 @@ export function OrderOverlay({ artifact, isOpen, onClose }: OrderOverlayProps) {
     onClose();
     lenis.start();
     document.body.style.overflow = "";
+    document.body.style.position = "";
+    document.body.style.inset = "";
+    document.body.style.width = "";
     setTimeout(() => {
       setStep("select");
       setSelectedSize("");
@@ -114,10 +117,16 @@ export function OrderOverlay({ artifact, isOpen, onClose }: OrderOverlayProps) {
     if (isOpen) {
       lenis.stop();
       document.body.style.overflow = "hidden";
+      document.body.style.position = "fixed";
+      document.body.style.inset = "0";
+      document.body.style.width = "100%";
     }
     return () => {
       lenis.start();
       document.body.style.overflow = "";
+      document.body.style.position = "";
+      document.body.style.inset = "";
+      document.body.style.width = "";
     };
   }, [isOpen, lenis]);
 
@@ -135,38 +144,38 @@ export function OrderOverlay({ artifact, isOpen, onClose }: OrderOverlayProps) {
           />
 
           <motion.aside
-            className="fixed top-0 right-0 h-full z-[401] w-full max-w-[520px]"
-            style={{ background: "var(--bg-surface)" }}
+            className="fixed top-0 right-0 bottom-0 z-[401] w-full max-w-[520px]"
+            style={{
+              background: "var(--bg-surface)",
+              overflowY: "scroll",
+              WebkitOverflowScrolling: "touch",
+              touchAction: "pan-y",
+              overscrollBehavior: "contain",
+            }}
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            onWheel={(e) => e.stopPropagation()}
           >
-            <div
-              style={{ height: "100%", overflowY: "auto", WebkitOverflowScrolling: "touch" }}
-              onWheel={(e) => e.stopPropagation()}
+            {/* Close */}
+            <button
+              onClick={handleClose}
+              className="absolute top-3 right-4 z-20 w-10 h-10 flex items-center justify-center border-none"
+              style={{ background: "var(--bg-surface)", borderRadius: "50%", fontFamily: "var(--font-serif)", fontSize: "1.8rem", fontWeight: 300, color: "var(--text-body)", lineHeight: 1 }}
             >
-              {/* Close */}
-              <button
-                onClick={handleClose}
-                className="sticky top-0 float-right z-20 mt-3 mr-4 w-10 h-10 flex items-center justify-center border-none"
-                style={{ background: "var(--bg-surface)", borderRadius: "50%", fontFamily: "var(--font-serif)", fontSize: "1.8rem", fontWeight: 300, color: "var(--text-body)", lineHeight: 1 }}
-              >
-                ×
-              </button>
+              ×
+            </button>
 
-              <div className="clear-both">
-                <AnimatePresence mode="wait">
-                  {step === "confirmed" ? (
-                    <ConfirmationView key="c" artifact={artifact} size={selectedSize} qty={quantity} total={total} onClose={handleClose} />
-                  ) : step === "select" ? (
-                    <SelectStep key="s" artifact={artifact} selectedSize={selectedSize} setSelectedSize={(s) => { setSelectedSize(s); setQuantity(1); }} quantity={quantity} setQuantity={setQuantity} maxStock={maxStock} onContinue={() => setStep("details")} />
-                  ) : (
-                    <DetailsStep key="d" artifact={artifact} selectedSize={selectedSize} quantity={quantity} subtotal={subtotal} total={total} form={form} updateField={updateField} canSubmit={!!canSubmit} onBack={() => setStep("select")} onSubmit={() => setStep("confirmed")} />
-                  )}
-                </AnimatePresence>
-              </div>
-            </div>
+            <AnimatePresence mode="wait">
+              {step === "confirmed" ? (
+                <ConfirmationView key="c" artifact={artifact} size={selectedSize} qty={quantity} total={total} onClose={handleClose} />
+              ) : step === "select" ? (
+                <SelectStep key="s" artifact={artifact} selectedSize={selectedSize} setSelectedSize={(s) => { setSelectedSize(s); setQuantity(1); }} quantity={quantity} setQuantity={setQuantity} maxStock={maxStock} onContinue={() => setStep("details")} />
+              ) : (
+                <DetailsStep key="d" artifact={artifact} selectedSize={selectedSize} quantity={quantity} subtotal={subtotal} total={total} form={form} updateField={updateField} canSubmit={!!canSubmit} onBack={() => setStep("select")} onSubmit={() => setStep("confirmed")} />
+              )}
+            </AnimatePresence>
           </motion.aside>
         </>
       )}
