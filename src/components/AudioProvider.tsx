@@ -27,7 +27,7 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
   const getHowl = useCallback(() => {
     if (!howlRef.current) {
       howlRef.current = new Howl({
-        src: ["/audio/ambient.mp3"],
+        src: ["/audio/ambient.wav"],
         loop: true,
         volume: 0.15,
         html5: true,
