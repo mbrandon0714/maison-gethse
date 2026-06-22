@@ -104,14 +104,14 @@ export function OrderOverlay({ artifact, isOpen, onClose }: OrderOverlayProps) {
 
           {/* Panel */}
           <motion.div
-            className="fixed top-0 right-0 bottom-0 z-[401] w-full max-w-[580px] overflow-y-auto"
+            className="fixed top-0 right-0 bottom-0 z-[401] w-full max-w-[580px] overflow-y-auto overscroll-contain"
             style={{ background: "var(--bg-surface)", transition: "background 0.35s" }}
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div className="p-8 md:p-10 min-h-full flex flex-col">
+            <div className="p-8 md:p-10 pb-12 flex flex-col">
               {/* Close */}
               <button
                 onClick={handleClose}

@@ -280,7 +280,7 @@ export default function TheGardenPage() {
         <section className="py-20 px-6" style={{ background: "var(--bg-deep)" }}>
           <div className="max-w-xl mx-auto text-center">
             <FadeIn>
-              <KeyIcon size={24} className="mx-auto mb-6 opacity-15" />
+              <KeyIcon size={36} className="mx-auto mb-6 opacity-20" />
               <p style={{ fontFamily: "var(--font-serif)", fontSize: "1.15rem", fontWeight: 300, fontStyle: "italic", color: "var(--beige-light)", lineHeight: 1.6, opacity: 0.5 }}>
                 Every seed planted here is proof that someone else<br />
                 has walked through a season like yours.

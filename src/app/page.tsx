@@ -45,7 +45,7 @@ export default function CoverPage() {
           />
 
           <motion.div
-            className="relative z-10 flex flex-col items-center gap-8"
+            className="relative z-10 flex flex-col items-center gap-10"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.5, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
@@ -55,7 +55,7 @@ export default function CoverPage() {
               className="text-center"
               style={{
                 fontFamily: "var(--font-serif)",
-                fontSize: "clamp(1.4rem, 3.5vw, 2.2rem)",
+                fontSize: "clamp(1.8rem, 4.5vw, 3rem)",
                 fontWeight: 300,
                 color: "var(--beige-light)",
                 letterSpacing: "0.22em",
@@ -70,16 +70,16 @@ export default function CoverPage() {
               className="w-[1px]"
               style={{ background: "var(--beige)", opacity: 0.15 }}
               initial={{ height: 0 }}
-              animate={{ height: 48 }}
+              animate={{ height: 60 }}
               transition={{ duration: 1.2, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
             />
 
             {/* Tagline */}
             <motion.p
-              className="text-center max-w-[340px] px-6"
+              className="text-center max-w-[440px] px-6"
               style={{
                 fontFamily: "var(--font-serif)",
-                fontSize: "clamp(0.95rem, 2vw, 1.15rem)",
+                fontSize: "clamp(1.1rem, 2.5vw, 1.4rem)",
                 fontWeight: 300,
                 fontStyle: "italic",
                 color: "var(--beige)",
@@ -87,7 +87,7 @@ export default function CoverPage() {
                 letterSpacing: "0.03em",
               }}
               initial={{ opacity: 0 }}
-              animate={{ opacity: 0.5 }}
+              animate={{ opacity: 0.55 }}
               transition={{ duration: 1.5, delay: 1.2 }}
             >
               Work unlocks what we carry.<br />
@@ -96,7 +96,7 @@ export default function CoverPage() {
 
             {/* The Key */}
             <motion.div
-              className="mt-4 flex flex-col items-center gap-4"
+              className="mt-6 flex flex-col items-center gap-5"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 1.5, delay: 1.8 }}
@@ -117,19 +117,19 @@ export default function CoverPage() {
                       }
                 }
               >
-                <KeyIcon size={36} gold />
+                <KeyIcon size={64} gold />
               </motion.div>
 
               <motion.span
                 style={{
                   fontFamily: "var(--font-sans)",
-                  fontSize: "8px",
+                  fontSize: "12px",
                   fontWeight: 400,
                   color: "var(--beige)",
-                  letterSpacing: "0.3em",
+                  letterSpacing: "0.35em",
                   textTransform: "uppercase",
                 }}
-                animate={{ opacity: [0.2, 0.4, 0.2] }}
+                animate={{ opacity: [0.25, 0.5, 0.25] }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
               >
                 Enter
@@ -142,14 +142,14 @@ export default function CoverPage() {
             className="absolute bottom-8 text-center"
             style={{
               fontFamily: "var(--font-sans)",
-              fontSize: "8px",
+              fontSize: "11px",
               fontWeight: 300,
               letterSpacing: "0.2em",
               color: "var(--beige)",
               textTransform: "uppercase",
             }}
             initial={{ opacity: 0 }}
-            animate={{ opacity: 0.15 }}
+            animate={{ opacity: 0.2 }}
             transition={{ duration: 1, delay: 2.5 }}
           >
             Stories · Chapters · Becoming

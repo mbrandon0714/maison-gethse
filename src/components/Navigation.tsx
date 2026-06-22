@@ -1,15 +1,16 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { useTheme } from "./ThemeProvider";
 import { KeyIcon } from "./KeyIcon";
 
 const NAV_ITEMS = [
-  { id: "brand", label: "The Brand" },
-  { id: "chapters", label: "Chapters" },
-  { id: "garden", label: "The Garden" },
-  { id: "lens", label: "The Lens" },
+  { id: "brand", label: "The Brand", href: "/home#brand" },
+  { id: "chapters", label: "Chapters", href: "/home#chapters" },
+  { id: "garden", label: "The Garden", href: "/the-garden" },
+  { id: "lens", label: "The Lens", href: "/the-lens" },
 ];
 
 export function Navigation() {
@@ -17,6 +18,8 @@ export function Navigation() {
   const [activeSection, setActiveSection] = useState("");
   const [mobileOpen, setMobileOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
+  const pathname = usePathname();
+  const router = useRouter();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
@@ -44,13 +47,19 @@ export function Navigation() {
     return () => observer.disconnect();
   }, []);
 
-  const scrollTo = useCallback((id: string) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
-      setMobileOpen(false);
+  const navigateTo = useCallback((item: typeof NAV_ITEMS[0]) => {
+    setMobileOpen(false);
+    if (item.href.startsWith("/the-")) {
+      router.push(item.href);
+      return;
     }
-  }, []);
+    if (pathname === "/home") {
+      const el = document.getElementById(item.id);
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    } else {
+      router.push(item.href);
+    }
+  }, [pathname, router]);
 
   return (
     <>
@@ -73,7 +82,7 @@ export function Navigation() {
           className="flex items-center gap-3 no-underline"
           style={{ color: "var(--text-head)" }}
         >
-          <KeyIcon size={24} />
+          <KeyIcon size={36} />
           <span
             style={{
               fontFamily: "var(--font-serif)",
@@ -89,10 +98,10 @@ export function Navigation() {
 
         {/* Desktop nav */}
         <ul className="hidden md:flex items-center gap-10 list-none">
-          {NAV_ITEMS.map(({ id, label }) => (
-            <li key={id}>
+          {NAV_ITEMS.map((item) => (
+            <li key={item.id}>
               <button
-                onClick={() => scrollTo(id)}
+                onClick={() => navigateTo(item)}
                 className="relative bg-transparent border-none cursor-pointer"
                 style={{
                   fontFamily: "var(--font-sans)",
@@ -100,12 +109,12 @@ export function Navigation() {
                   fontWeight: 400,
                   letterSpacing: "0.18em",
                   textTransform: "uppercase",
-                  color: activeSection === id ? "var(--gold)" : "var(--text-head)",
+                  color: activeSection === item.id ? "var(--gold)" : "var(--text-head)",
                   transition: "color 0.3s",
                 }}
               >
-                {label}
-                {activeSection === id && (
+                {item.label}
+                {activeSection === item.id && (
                   <motion.div
                     layoutId="nav-indicator"
                     className="absolute -bottom-1 left-0 right-0 h-[1px]"
@@ -182,21 +191,21 @@ export function Navigation() {
         transition={{ duration: 0.4 }}
       >
         <ul className="flex flex-col items-center gap-8 list-none">
-          {NAV_ITEMS.map(({ id, label }) => (
-            <li key={id}>
+          {NAV_ITEMS.map((item) => (
+            <li key={item.id}>
               <button
-                onClick={() => scrollTo(id)}
+                onClick={() => navigateTo(item)}
                 className="bg-transparent border-none cursor-pointer"
                 style={{
                   fontFamily: "var(--font-serif)",
                   fontSize: "1.4rem",
                   fontWeight: 300,
                   letterSpacing: "0.1em",
-                  color: activeSection === id ? "var(--gold)" : "var(--text-head)",
+                  color: activeSection === item.id ? "var(--gold)" : "var(--text-head)",
                   transition: "color 0.3s",
                 }}
               >
-                {label}
+                {item.label}
               </button>
             </li>
           ))}

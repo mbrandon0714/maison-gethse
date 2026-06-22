@@ -69,10 +69,15 @@ body {
   color: var(--text-body);
   background: var(--bg-body);
   overflow-x: hidden;
+  cursor: url('/images/cursor-key.png') 12 0, auto;
   transition: background var(--duration-slow) var(--ease-out),
               color var(--duration-med) var(--ease-out);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+a, button, [role="button"], input[type="submit"], .cursor-pointer {
+  cursor: url('/images/cursor-key-pointer.png') 14 0, pointer;
 }
 
 ::selection {

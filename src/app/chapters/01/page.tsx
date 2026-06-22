@@ -36,10 +36,12 @@ function ParallaxImage({
   src,
   alt,
   className = "",
+  objectPosition = "center",
 }: {
   src: string;
   alt: string;
   className?: string;
+  objectPosition?: string;
 }) {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({
@@ -56,7 +58,7 @@ function ParallaxImage({
           alt={alt}
           fill
           className="object-cover"
-          style={{ filter: "saturate(0.9) brightness(0.95)" }}
+          style={{ filter: "saturate(0.9) brightness(0.95)", objectPosition }}
           sizes="100vw"
         />
       </motion.div>
@@ -382,6 +384,7 @@ export default function Chapter01Page() {
           src="/images/ch01/ch1_0878.jpg"
           alt="Three friends laughing under golden trees"
           className="h-[50vh] md:h-[70vh]"
+          objectPosition="center 25%"
         />
 
         {/* ═══ THE PERSON ═══ */}
@@ -731,7 +734,7 @@ export default function Chapter01Page() {
         <section className="py-24 px-6 md:px-12" style={{ background: "var(--bg-deep)" }}>
           <div className="max-w-2xl mx-auto text-center">
             <FadeIn>
-              <KeyIcon size={28} className="mx-auto mb-6 opacity-20" />
+              <KeyIcon size={40} className="mx-auto mb-6 opacity-25" />
               <p style={{ fontFamily: "var(--font-serif)", fontSize: "1.3rem", fontWeight: 300, fontStyle: "italic", color: "var(--beige-light)", lineHeight: 1.6, opacity: 0.7 }}>
                 &ldquo;You are not buying a shirt.<br />You are carrying a chapter.&rdquo;
               </p>

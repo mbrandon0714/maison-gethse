@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import Image from "next/image";
 import { motion, useInView } from "framer-motion";
 import { Navigation } from "@/components/Navigation";
 import { MuteToggle } from "@/components/MuteToggle";
@@ -31,21 +32,6 @@ function FadeIn({
   );
 }
 
-function SectionDivider() {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true });
-
-  return (
-    <motion.div
-      ref={ref}
-      className="w-[1px] mx-auto"
-      style={{ background: "var(--text-body)", opacity: 0.15 }}
-      initial={{ height: 0 }}
-      animate={inView ? { height: 80 } : {}}
-      transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-    />
-  );
-}
 
 export default function HomePage() {
   return (
@@ -157,10 +143,15 @@ export default function HomePage() {
                 style={{ background: "var(--bg-surface)", transition: "background 0.5s" }}
               >
                 <div className="grid md:grid-cols-2">
-                  <div className="aspect-[4/5] md:aspect-auto relative overflow-hidden" style={{ background: "var(--bg-mid)" }}>
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <p style={{ fontFamily: "var(--font-serif)", fontSize: "6rem", fontWeight: 300, color: "var(--text-head)", opacity: 0.04 }}>01</p>
-                    </div>
+                  <div className="aspect-[4/5] md:aspect-auto relative overflow-hidden" style={{ background: "var(--bg-mid)", minHeight: "300px" }}>
+                    <Image
+                      src="/images/ch01/ch1_running.jpg"
+                      alt="Chapter 01 — three boys running barefoot"
+                      fill
+                      className="object-cover"
+                      style={{ objectPosition: "center 30%" }}
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                    />
                     <div className="absolute top-6 left-6">
                       <span style={{ fontFamily: "var(--font-sans)", fontSize: "8px", fontWeight: 400, letterSpacing: "0.24em", textTransform: "uppercase", color: "var(--beige-light)", background: "var(--green)", padding: "5px 12px" }}>
                         Current Chapter
@@ -276,18 +267,27 @@ export default function HomePage() {
             {/* Photo grid placeholder */}
             <FadeIn delay={0.2}>
               <div className="mt-12 grid grid-cols-2 md:grid-cols-3 gap-[3px]">
-                {Array.from({ length: 6 }).map((_, i) => (
+                {[
+                  { src: "/images/ch01/ch1_8216.jpg", alt: "Boy with teddy bear", aspect: "3/4" },
+                  { src: "/images/ch01/ch1_0655.jpg", alt: "Paper boat in puddle", aspect: "1/1" },
+                  { src: "/images/ch01/ch1_0878.jpg", alt: "Friends under golden trees", aspect: "4/5" },
+                  { src: "/images/ch01/ch1_0733.jpg", alt: "Kids in a tree", aspect: "4/5" },
+                  { src: "/images/ch01/ch1_5863.jpg", alt: "Overgrown playground", aspect: "1/1" },
+                  { src: "/images/ch01/ch1_talipapa.jpg", alt: "Boys at talipapa market", aspect: "3/4" },
+                ].map((photo, i) => (
                   <div
                     key={i}
-                    className="relative overflow-hidden group"
-                    style={{
-                      background: "rgba(48,61,48,0.08)",
-                      aspectRatio: i === 0 ? "3/4" : i % 2 === 0 ? "4/5" : "1/1",
-                    }}
+                    className="relative overflow-hidden cursor-pointer group"
+                    style={{ aspectRatio: photo.aspect }}
                   >
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <KeyIcon size={20} className="opacity-[0.06]" />
-                    </div>
+                    <Image
+                      src={photo.src}
+                      alt={photo.alt}
+                      fill
+                      className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                      style={{ filter: "saturate(0.85) contrast(1.05) brightness(0.95)" }}
+                      sizes="(max-width: 768px) 50vw, 33vw"
+                    />
                   </div>
                 ))}
               </div>
@@ -330,7 +330,7 @@ export default function HomePage() {
               </p>
               <div className="flex gap-4 justify-center flex-wrap">
                 <a
-                  href="https://instagram.com/maisongethse"
+                  href="https://www.instagram.com/maison.gethse/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 no-underline"
@@ -349,7 +349,7 @@ export default function HomePage() {
                   Instagram
                 </a>
                 <a
-                  href="#"
+                  href="https://www.facebook.com/maison.gethse/"
                   className="flex items-center gap-2 no-underline"
                   style={{
                     fontFamily: "var(--font-sans)",
@@ -367,7 +367,7 @@ export default function HomePage() {
                   Facebook
                 </a>
                 <a
-                  href="https://tiktok.com/@maisongethse"
+                  href="https://www.tiktok.com/@maison.gethse"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 no-underline"
@@ -406,7 +406,7 @@ export default function HomePage() {
               {[
                 { title: "Navigate", links: [{ label: "The Brand", href: "#brand" }, { label: "Chapters", href: "#chapters" }, { label: "The Garden", href: "/the-garden" }, { label: "The Lens", href: "/the-lens" }] },
                 { title: "Chapters", links: [{ label: "01 — Before We Knew", href: "/chapters/01" }] },
-                { title: "Connect", links: [{ label: "Instagram", href: "https://instagram.com/maisongethse" }, { label: "Facebook", href: "#" }, { label: "TikTok", href: "https://tiktok.com/@maisongethse" }, { label: "maisongethse@gmail.com", href: "mailto:maisongethse@gmail.com" }] },
+                { title: "Connect", links: [{ label: "Instagram", href: "https://www.instagram.com/maison.gethse/" }, { label: "Facebook", href: "#" }, { label: "TikTok", href: "https://www.tiktok.com/@maison.gethse" }, { label: "maisongethse@gmail.com", href: "mailto:maisongethse@gmail.com" }] },
               ].map((col) => (
                 <div key={col.title}>
                   <h5 className="mb-4" style={{ fontFamily: "var(--font-sans)", fontSize: "9px", fontWeight: 400, letterSpacing: "0.22em", textTransform: "uppercase", color: "var(--beige)", opacity: 0.35 }}>
@@ -432,7 +432,7 @@ export default function HomePage() {
               <p style={{ fontFamily: "var(--font-sans)", fontSize: "10px", fontWeight: 300, letterSpacing: "0.1em", color: "var(--beige)", opacity: 0.2 }}>
                 © 2026 Maison Gethse. All rights reserved.
               </p>
-              <KeyIcon size={18} className="opacity-[0.15]" />
+              <KeyIcon size={32} className="opacity-[0.2]" />
             </div>
           </div>
         </footer>

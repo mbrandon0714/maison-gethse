@@ -263,7 +263,7 @@ export default function TheLensPage() {
         <section className="py-20 px-6" style={{ background: "#070a07" }}>
           <div className="max-w-xl mx-auto text-center">
             <FadeIn>
-              <KeyIcon size={24} className="mx-auto mb-6 opacity-15" />
+              <KeyIcon size={36} className="mx-auto mb-6 opacity-20" />
               <p style={{ fontFamily: "var(--font-serif)", fontSize: "1.15rem", fontWeight: 300, fontStyle: "italic", color: "var(--beige-light)", lineHeight: 1.6, opacity: 0.5 }}>
                 Photography is not a content section.<br />
                 It is a growing visual memory system.
