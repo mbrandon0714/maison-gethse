@@ -68,7 +68,7 @@ export function OrderOverlay({ artifact, isOpen, onClose }: OrderOverlayProps) {
   const [size, setSize] = useState("");
   const [qty, setQty] = useState(1);
   const [img, setImg] = useState(0);
-  const [chart, setChart] = useState(false);
+  const [chartOpen, setChartOpen] = useState(false);
   const [cityOpen, setCityOpen] = useState(false);
   const [citySearch, setCitySearch] = useState("");
   const [form, setForm] = useState({ firstName: "", lastName: "", email: "", phone: "", address: "", city: "", province: "", zip: "" });
@@ -86,7 +86,7 @@ export function OrderOverlay({ artifact, isOpen, onClose }: OrderOverlayProps) {
   }, [citySearch]);
 
   const reset = useCallback(() => {
-    setStep("select"); setSize(""); setQty(1); setImg(0); setChart(false);
+    setStep("select"); setSize(""); setQty(1); setImg(0); setChartOpen(false);
     setForm({ firstName: "", lastName: "", email: "", phone: "", address: "", city: "", province: "", zip: "" });
   }, []);
 
@@ -125,7 +125,8 @@ export function OrderOverlay({ artifact, isOpen, onClose }: OrderOverlayProps) {
       {/* Modal */}
       <div
         ref={scrollRef}
-        className="relative z-10 w-full max-w-lg max-h-[90vh] overflow-y-auto bg-[var(--bg-surface)] shadow-2xl"
+        data-lenis-prevent
+        className="relative z-10 w-full max-w-2xl max-h-[92vh] overflow-y-auto bg-[var(--bg-surface)] shadow-2xl"
         style={{ WebkitOverflowScrolling: "touch" }}
       >
         {/* Close */}
@@ -137,9 +138,57 @@ export function OrderOverlay({ artifact, isOpen, onClose }: OrderOverlayProps) {
 
         <div className="clear-both">
           {step === "done" ? renderDone(artifact, size, qty, total, close) :
-           step === "select" ? renderSelect(artifact, size, setSize, qty, setQty, stock, img, setImg, chart, setChart, () => setStep("details")) :
+           step === "select" ? renderSelect(artifact, size, setSize, qty, setQty, stock, img, setImg, chartOpen, setChartOpen, () => setStep("details")) :
            renderDetails(artifact, size, qty, subtotal, total, form, setField, !!canSubmit, () => setStep("select"), () => setStep("done"), cityOpen, setCityOpen, citySearch, setCitySearch, filteredCities, (c: string) => { setField("city", c); setCitySearch(""); setCityOpen(false); })}
         </div>
+      </div>
+    </div>
+  );
+}
+
+function AutoSlideGallery({ img, setImg }: { img: number; setImg: (n: number) => void }) {
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setImg((img + 1) % PRODUCT_IMAGES.length);
+    }, 3500);
+    return () => clearInterval(timer);
+  }, [img, setImg]);
+
+  return (
+    <div style={{ position: "relative", aspectRatio: "3/4", overflow: "hidden", background: "var(--bg-mid)" }}>
+      {PRODUCT_IMAGES.map((p, i) => (
+        <div key={i} style={{ position: "absolute", inset: 0, opacity: img === i ? 1 : 0, transition: "opacity 0.8s ease", transform: img === i ? "scale(1)" : "scale(1.05)", transitionProperty: "opacity, transform" }}>
+          <Image src={p.src} alt={p.alt} fill style={{ objectFit: "cover" }} sizes="700px" />
+        </div>
+      ))}
+      <div style={{ position: "absolute", bottom: 16, left: "50%", transform: "translateX(-50%)", display: "flex", gap: 8, zIndex: 2 }}>
+        {PRODUCT_IMAGES.map((_, i) => (
+          <button key={i} onClick={() => setImg(i)} style={{ width: img === i ? 28 : 8, height: 8, borderRadius: 4, background: img === i ? "var(--gold)" : "rgba(255,255,255,0.35)", border: "none", cursor: "pointer", transition: "all 0.4s", padding: 0 }} />
+        ))}
+      </div>
+      <button style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: "33%", background: "transparent", border: "none" }} onClick={() => setImg((img - 1 + PRODUCT_IMAGES.length) % PRODUCT_IMAGES.length)} />
+      <button style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: "33%", background: "transparent", border: "none" }} onClick={() => setImg((img + 1) % PRODUCT_IMAGES.length)} />
+      {/* Image counter */}
+      <div style={{ position: "absolute", top: 16, left: 20, fontFamily: "var(--font-sans)", fontSize: 11, letterSpacing: "0.1em", color: "rgba(255,255,255,0.5)", zIndex: 2 }}>
+        {img + 1} / {PRODUCT_IMAGES.length}
+      </div>
+    </div>
+  );
+}
+
+function SizeChartPopup({ open, onClose }: { open: boolean; onClose: () => void }) {
+  if (!open) return null;
+  return (
+    <div className="fixed inset-0 z-[600] flex items-center justify-center p-4" onClick={onClose}>
+      <div className="absolute inset-0 bg-black/70" />
+      <div data-lenis-prevent className="relative z-10 w-full max-w-md bg-[var(--bg-surface)] p-6 overflow-y-auto max-h-[80vh]" onClick={e => e.stopPropagation()}>
+        <button type="button" onClick={onClose} className="absolute top-3 right-4 bg-transparent border-none" style={{ fontFamily: "var(--font-serif)", fontSize: "1.6rem", fontWeight: 300, color: "var(--text-body)", lineHeight: 1 }}>×</button>
+        <h4 style={{ fontFamily: "var(--font-serif)", fontSize: "1.3rem", fontWeight: 300, color: "var(--text-head)", marginBottom: 4 }}>Size Chart</h4>
+        <p style={{ fontFamily: "var(--font-sans)", fontSize: 12, color: "var(--text-body)", opacity: 0.5, marginBottom: 16 }}>Measurements in inches · Oversized fit — size down for regular</p>
+        <table style={{ width: "100%", borderCollapse: "collapse", fontFamily: "var(--font-sans)" }}>
+          <thead><tr>{["Size","Chest","Length","Shoulder"].map(h=><th key={h} style={{ textAlign:"left", padding:"12px 16px", fontSize:12, fontWeight:500, color:"var(--text-body)", borderBottom:"2px solid var(--border-soft)", textTransform:"uppercase", letterSpacing:"0.1em" }}>{h}</th>)}</tr></thead>
+          <tbody>{SIZE_CHART.map(r=><tr key={r.size}><td style={{padding:"14px 16px",fontSize:15,fontWeight:500,color:"var(--text-head)",borderBottom:"1px solid var(--border-soft)"}}>{r.size}</td><td style={{padding:"14px 16px",fontSize:15,fontWeight:300,color:"var(--text-body)",borderBottom:"1px solid var(--border-soft)"}}>{r.chest}</td><td style={{padding:"14px 16px",fontSize:15,fontWeight:300,color:"var(--text-body)",borderBottom:"1px solid var(--border-soft)"}}>{r.length}</td><td style={{padding:"14px 16px",fontSize:15,fontWeight:300,color:"var(--text-body)",borderBottom:"1px solid var(--border-soft)"}}>{r.shoulder}</td></tr>)}</tbody>
+        </table>
       </div>
     </div>
   );
@@ -150,74 +199,55 @@ function renderSelect(
   size: string, setSize: (s: string) => void,
   qty: number, setQty: (n: number) => void, stock: number,
   img: number, setImg: (n: number) => void,
-  chart: boolean, setChart: (b: boolean) => void,
+  chartOpen: boolean, setChartOpen: (b: boolean) => void,
   onContinue: () => void,
 ) {
   return (
     <>
-      {/* Gallery */}
-      <div style={{ position: "relative", aspectRatio: "4/5", overflow: "hidden", background: "var(--bg-mid)" }}>
-        {PRODUCT_IMAGES.map((p, i) => (
-          <div key={i} style={{ position: "absolute", inset: 0, opacity: img === i ? 1 : 0, transition: "opacity 0.5s" }}>
-            <Image src={p.src} alt={p.alt} fill style={{ objectFit: "cover" }} sizes="520px" />
-          </div>
-        ))}
-        <div style={{ position: "absolute", bottom: 16, left: "50%", transform: "translateX(-50%)", display: "flex", gap: 8, zIndex: 2 }}>
-          {PRODUCT_IMAGES.map((_, i) => (
-            <button key={i} onClick={() => setImg(i)} style={{ width: img === i ? 24 : 6, height: 6, borderRadius: 3, background: img === i ? "var(--gold)" : "rgba(255,255,255,0.4)", border: "none", cursor: "pointer", transition: "all 0.3s", padding: 0 }} />
-          ))}
-        </div>
-        <button style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: "33%", background: "transparent", border: "none" }} onClick={() => setImg((img - 1 + PRODUCT_IMAGES.length) % PRODUCT_IMAGES.length)} />
-        <button style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: "33%", background: "transparent", border: "none" }} onClick={() => setImg((img + 1) % PRODUCT_IMAGES.length)} />
-      </div>
+      <AutoSlideGallery img={img} setImg={setImg} />
 
-      <div style={{ padding: "24px 28px 40px" }}>
+      <div style={{ padding: "24px 32px 40px" }}>
         <p style={{ fontFamily: "var(--font-sans)", fontSize: 11, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--gold)", marginBottom: 4 }}>{artifact.chapter}</p>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 24 }}>
-          <h3 style={{ fontFamily: "var(--font-serif)", fontSize: "1.5rem", fontWeight: 400, color: "var(--text-head)" }}>{artifact.name}</h3>
-          <span style={{ fontFamily: "var(--font-serif)", fontSize: "1.3rem", fontWeight: 300, color: "var(--text-head)" }}>{artifact.priceDisplay}</span>
+          <h3 style={{ fontFamily: "var(--font-serif)", fontSize: "1.6rem", fontWeight: 400, color: "var(--text-head)" }}>{artifact.name}</h3>
+          <span style={{ fontFamily: "var(--font-serif)", fontSize: "1.4rem", fontWeight: 300, color: "var(--text-head)" }}>{artifact.priceDisplay}</span>
         </div>
 
-        <p style={{ fontFamily: "var(--font-sans)", fontSize: 12, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--text-body)", marginBottom: 12 }}>Select size</p>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8, marginBottom: 16 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+          <p style={{ fontFamily: "var(--font-sans)", fontSize: 12, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--text-body)" }}>Select size</p>
+          <button type="button" onClick={() => setChartOpen(true)} style={{ background: "none", border: "none", fontFamily: "var(--font-sans)", fontSize: 12, color: "var(--gold)", textDecoration: "underline", textUnderlineOffset: 3, cursor: "pointer", padding: 0 }}>
+            Size Chart
+          </button>
+        </div>
+
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8, marginBottom: 20 }}>
           {artifact.sizes.map(s => (
             <button key={s.label} disabled={s.stock === 0} onClick={() => { setSize(s.label); setQty(1); }}
-              style={{ padding: "12px 0", fontFamily: "var(--font-sans)", fontSize: 14, fontWeight: size === s.label ? 500 : 300, color: size === s.label ? "#fff" : "var(--text-head)", background: size === s.label ? "var(--green)" : "transparent", border: size === s.label ? "1px solid var(--green)" : "1px solid var(--border-soft)", opacity: s.stock === 0 ? 0.2 : 1, cursor: s.stock === 0 ? "not-allowed" : "pointer" }}>
-              {s.label}<span style={{ display: "block", fontSize: 10, opacity: 0.5, marginTop: 2 }}>{s.stock === 0 ? "Sold out" : `${s.stock} left`}</span>
+              style={{ padding: "14px 0", fontFamily: "var(--font-sans)", fontSize: 14, fontWeight: size === s.label ? 500 : 300, color: size === s.label ? "#fff" : "var(--text-head)", background: size === s.label ? "var(--green)" : "transparent", border: size === s.label ? "1px solid var(--green)" : "1px solid var(--border-soft)", opacity: s.stock === 0 ? 0.2 : 1, cursor: s.stock === 0 ? "not-allowed" : "pointer", transition: "all 0.2s" }}>
+              {s.label}<span style={{ display: "block", fontSize: 10, opacity: 0.5, marginTop: 3 }}>{s.stock === 0 ? "Sold out" : `${s.stock} left`}</span>
             </button>
           ))}
         </div>
-
-        <button type="button" onClick={() => setChart(!chart)} style={{ background: "none", border: "none", fontFamily: "var(--font-sans)", fontSize: 12, color: "var(--gold)", textDecoration: "underline", textUnderlineOffset: 3, cursor: "pointer", marginBottom: 16, padding: 0 }}>
-          {chart ? "Hide" : "View"} Size Chart
-        </button>
-        {chart && (
-          <div style={{ border: "1px solid var(--border-soft)", marginBottom: 16, overflowX: "auto" }}>
-            <table style={{ width: "100%", borderCollapse: "collapse", fontFamily: "var(--font-sans)" }}>
-              <thead><tr>{["Size","Chest","Length","Shoulder"].map(h=><th key={h} style={{ textAlign:"left", padding:"10px 14px", fontSize:11, fontWeight:500, color:"var(--text-body)", borderBottom:"1px solid var(--border-soft)", textTransform:"uppercase", letterSpacing:"0.1em" }}>{h}</th>)}</tr></thead>
-              <tbody>{SIZE_CHART.map(r=><tr key={r.size}><td style={{padding:"10px 14px",fontSize:14,fontWeight:500,color:"var(--text-head)",borderBottom:"1px solid var(--border-soft)"}}>{r.size}</td><td style={{padding:"10px 14px",fontSize:14,fontWeight:300,color:"var(--text-body)",borderBottom:"1px solid var(--border-soft)"}}>{r.chest}</td><td style={{padding:"10px 14px",fontSize:14,fontWeight:300,color:"var(--text-body)",borderBottom:"1px solid var(--border-soft)"}}>{r.length}</td><td style={{padding:"10px 14px",fontSize:14,fontWeight:300,color:"var(--text-body)",borderBottom:"1px solid var(--border-soft)"}}>{r.shoulder}</td></tr>)}</tbody>
-            </table>
-            <p style={{padding:"8px 14px",fontSize:11,color:"var(--text-body)",opacity:0.4}}>Inches. Oversized — size down for regular fit.</p>
-          </div>
-        )}
 
         {size && (
           <div style={{ marginBottom: 24 }}>
             <p style={{ fontFamily: "var(--font-sans)", fontSize: 12, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--text-body)", marginBottom: 10 }}>Quantity</p>
             <div style={{ display: "flex", alignItems: "center" }}>
-              <button onClick={() => setQty(Math.max(1, qty-1))} style={{ width:44,height:44,display:"flex",alignItems:"center",justifyContent:"center",background:"var(--input-bg)",border:"1px solid var(--border-soft)",fontSize:18,fontWeight:300,color:"var(--text-head)",cursor:"pointer",fontFamily:"var(--font-sans)" }}>−</button>
-              <div style={{ width:52,height:44,display:"flex",alignItems:"center",justifyContent:"center",borderTop:"1px solid var(--border-soft)",borderBottom:"1px solid var(--border-soft)",background:"var(--input-bg)",fontSize:15,fontWeight:400,color:"var(--text-head)",fontFamily:"var(--font-sans)" }}>{qty}</div>
-              <button onClick={() => { if(qty<stock) setQty(qty+1); }} disabled={qty>=stock} style={{ width:44,height:44,display:"flex",alignItems:"center",justifyContent:"center",background:"var(--input-bg)",border:"1px solid var(--border-soft)",fontSize:18,fontWeight:300,color:"var(--text-head)",cursor:qty>=stock?"not-allowed":"pointer",opacity:qty>=stock?0.3:1,fontFamily:"var(--font-sans)" }}>+</button>
-              {qty>=stock && <span style={{marginLeft:12,fontSize:11,color:"var(--gold)",fontFamily:"var(--font-sans)"}}>Max stock</span>}
+              <button onClick={() => setQty(Math.max(1, qty-1))} style={{ width:48,height:48,display:"flex",alignItems:"center",justifyContent:"center",background:"var(--input-bg)",border:"1px solid var(--border-soft)",fontSize:18,fontWeight:300,color:"var(--text-head)",cursor:"pointer",fontFamily:"var(--font-sans)" }}>−</button>
+              <div style={{ width:56,height:48,display:"flex",alignItems:"center",justifyContent:"center",borderTop:"1px solid var(--border-soft)",borderBottom:"1px solid var(--border-soft)",background:"var(--input-bg)",fontSize:16,fontWeight:400,color:"var(--text-head)",fontFamily:"var(--font-sans)" }}>{qty}</div>
+              <button onClick={() => { if(qty<stock) setQty(qty+1); }} disabled={qty>=stock} style={{ width:48,height:48,display:"flex",alignItems:"center",justifyContent:"center",background:"var(--input-bg)",border:"1px solid var(--border-soft)",fontSize:18,fontWeight:300,color:"var(--text-head)",cursor:qty>=stock?"not-allowed":"pointer",opacity:qty>=stock?0.3:1,fontFamily:"var(--font-sans)" }}>+</button>
+              {qty>=stock && <span style={{marginLeft:12,fontSize:12,color:"var(--gold)",fontFamily:"var(--font-sans)"}}>Max stock</span>}
             </div>
           </div>
         )}
 
-        <button onClick={onContinue} disabled={!size} style={{ width:"100%",padding:"18px 0",fontFamily:"var(--font-sans)",fontSize:12,fontWeight:400,letterSpacing:"0.2em",textTransform:"uppercase",color:"#fff",background:"var(--green)",border:"none",cursor:size?"pointer":"not-allowed",opacity:size?1:0.3 }}>
+        <button onClick={onContinue} disabled={!size} style={{ width:"100%",padding:"18px 0",fontFamily:"var(--font-sans)",fontSize:12,fontWeight:400,letterSpacing:"0.2em",textTransform:"uppercase",color:"#fff",background:"var(--green)",border:"none",cursor:size?"pointer":"not-allowed",opacity:size?1:0.3,transition:"opacity 0.3s" }}>
           Continue — {artifact.priceDisplay}
         </button>
         <p style={{ marginTop:14,textAlign:"center",fontFamily:"var(--font-sans)",fontSize:14,fontWeight:500,color:"var(--gold)" }}>Free shipping on orders over ₱1,000</p>
       </div>
+
+      <SizeChartPopup open={chartOpen} onClose={() => setChartOpen(false)} />
     </>
   );
 }
@@ -270,7 +300,7 @@ function renderDetails(
             className="checkout-input" />
           {form.city&&!cityOpen&&<span className="checkout-label">City</span>}
           {cityOpen&&(
-            <div className="checkout-dropdown">
+            <div className="checkout-dropdown" data-lenis-prevent>
               {filteredCities.length===0?<div style={{padding:"12px 14px",fontSize:13,color:"var(--text-body)",opacity:0.5}}>No results</div>:
                 filteredCities.map(c=>(
                   <button key={c} onMouseDown={()=>selectCity(c)} className="checkout-dropdown-item">
