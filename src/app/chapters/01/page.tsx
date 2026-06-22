@@ -207,12 +207,12 @@ const ARTIFACTS = [
       },
     ],
     sizes: [
-      { label: "XS", available: true },
-      { label: "S", available: true },
-      { label: "M", available: true },
-      { label: "L", available: true },
-      { label: "XL", available: true },
-      { label: "2XL", available: false },
+      { label: "XS", stock: 5 },
+      { label: "S", stock: 6 },
+      { label: "M", stock: 6 },
+      { label: "L", stock: 6 },
+      { label: "XL", stock: 5 },
+      { label: "2XL", stock: 0 },
     ],
     status: "available" as const,
   },
@@ -755,6 +755,25 @@ export default function Chapter01Page() {
           </div>
         </section>
       </main>
+
+      {/* Floating shop button */}
+      <motion.button
+        className="fixed bottom-6 left-6 z-50 flex items-center gap-3 no-underline"
+        style={{
+          fontFamily: "var(--font-sans)", fontSize: "10px", fontWeight: 400,
+          letterSpacing: "0.18em", textTransform: "uppercase",
+          color: "var(--white)", background: "var(--green)",
+          padding: "14px 24px", border: "none",
+          boxShadow: "0 4px 20px rgba(0,0,0,0.3)",
+        }}
+        onClick={() => { setOrderArtifact(ARTIFACTS[0]); setOrderOpen(true); }}
+        initial={{ y: 80, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 2, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        whileHover={{ scale: 1.03 }}
+      >
+        Carry This Chapter — {ARTIFACTS[0].priceDisplay}
+      </motion.button>
 
       {/* Order Overlay */}
       <OrderOverlay
