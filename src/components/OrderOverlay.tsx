@@ -72,6 +72,7 @@ export function OrderOverlay({ artifact, isOpen, onClose }: OrderOverlayProps) {
   const [cityOpen, setCityOpen] = useState(false);
   const [citySearch, setCitySearch] = useState("");
   const [form, setForm] = useState({ firstName: "", lastName: "", email: "", phone: "", address: "", city: "", province: "", zip: "" });
+  const [loading, setLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const lenis = useLenis();
 
@@ -85,8 +86,35 @@ export function OrderOverlay({ artifact, isOpen, onClose }: OrderOverlayProps) {
     return CITIES.filter(c => c.toLowerCase().includes(citySearch.toLowerCase())).slice(0, 25);
   }, [citySearch]);
 
+  const handleCheckout = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: artifact.name,
+          price: artifact.price,
+          quantity: qty,
+          size,
+          customer: form,
+        }),
+      });
+      const data = await res.json();
+      if (data.checkout_url) {
+        window.location.href = data.checkout_url;
+      } else {
+        alert(data.error || "Something went wrong. Please try again.");
+        setLoading(false);
+      }
+    } catch {
+      alert("Connection error. Please try again.");
+      setLoading(false);
+    }
+  }, [artifact, qty, size, form]);
+
   const reset = useCallback(() => {
-    setStep("select"); setSize(""); setQty(1); setImg(0); setChartOpen(false);
+    setStep("select"); setSize(""); setQty(1); setImg(0); setChartOpen(false); setLoading(false);
     setForm({ firstName: "", lastName: "", email: "", phone: "", address: "", city: "", province: "", zip: "" });
   }, []);
 
@@ -139,7 +167,7 @@ export function OrderOverlay({ artifact, isOpen, onClose }: OrderOverlayProps) {
         <div className="clear-both">
           {step === "done" ? renderDone(artifact, size, qty, total, close) :
            step === "select" ? renderSelect(artifact, size, setSize, qty, setQty, stock, img, setImg, chartOpen, setChartOpen, () => setStep("details")) :
-           renderDetails(artifact, size, qty, subtotal, total, form, setField, !!canSubmit, () => setStep("select"), () => setStep("done"), cityOpen, setCityOpen, citySearch, setCitySearch, filteredCities, (c: string) => { setField("city", c); setCitySearch(""); setCityOpen(false); })}
+           renderDetails(artifact, size, qty, subtotal, total, form, setField, !!canSubmit, loading, () => setStep("select"), handleCheckout, cityOpen, setCityOpen, citySearch, setCitySearch, filteredCities, (c: string) => { setField("city", c); setCitySearch(""); setCityOpen(false); })}
         </div>
       </div>
     </div>
@@ -258,7 +286,7 @@ function renderDetails(
   form: Record<string, string>,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setField: (k: any, v: string) => void,
-  canSubmit: boolean, onBack: () => void, onSubmit: () => void,
+  canSubmit: boolean, loading: boolean, onBack: () => void, onSubmit: () => void,
   cityOpen: boolean, setCityOpen: (b: boolean) => void,
   citySearch: string, setCitySearch: (s: string) => void,
   filteredCities: string[], selectCity: (c: string) => void,
@@ -324,8 +352,8 @@ function renderDetails(
         <div style={{ display:"flex",justifyContent:"space-between",paddingTop:8,borderTop:"1px solid var(--border-soft)",fontFamily:"var(--font-serif)",fontSize:"1.2rem",fontWeight:400,color:"var(--text-head)" }}><span>Total</span><span>₱{total.toLocaleString()}</span></div>
       </div>
 
-      <button onClick={()=>{if(canSubmit)onSubmit();}} disabled={!canSubmit} style={{ width:"100%",padding:"18px 0",marginTop:24,fontFamily:"var(--font-sans)",fontSize:12,fontWeight:400,letterSpacing:"0.2em",textTransform:"uppercase",color:"#fff",background:"var(--green)",border:"none",cursor:canSubmit?"pointer":"not-allowed",opacity:canSubmit?1:0.3 }}>
-        Place Order
+      <button onClick={()=>{if(canSubmit&&!loading)onSubmit();}} disabled={!canSubmit||loading} style={{ width:"100%",padding:"18px 0",marginTop:24,fontFamily:"var(--font-sans)",fontSize:12,fontWeight:400,letterSpacing:"0.2em",textTransform:"uppercase",color:"#fff",background:"var(--green)",border:"none",cursor:(canSubmit&&!loading)?"pointer":"not-allowed",opacity:(canSubmit&&!loading)?1:0.5 }}>
+        {loading ? "Redirecting to payment..." : "Place Order"}
       </button>
       <p style={{ marginTop:14,textAlign:"center",fontFamily:"var(--font-sans)",fontSize:13,fontWeight:400,color:"var(--text-body)",opacity:0.6 }}>Secure payment via PayMongo · GCash · Maya · Card</p>
     </div>
