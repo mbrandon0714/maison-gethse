@@ -1,9 +1,7 @@
 "use client";
 
-import { useState, useCallback, useEffect, useMemo } from "react";
+import { useState, useCallback, useEffect, useMemo, useRef } from "react";
 import Image from "next/image";
-
-import { useLenis } from "./LenisProvider";
 
 interface Artifact {
   name: string;
@@ -29,473 +27,293 @@ const CITY_PROVINCE_MAP: Record<string, string> = {
   "Muntinlupa": "Metro Manila", "Caloocan": "Metro Manila", "Malabon": "Metro Manila",
   "Navotas": "Metro Manila", "Valenzuela": "Metro Manila", "San Juan": "Metro Manila",
   "Pasay": "Metro Manila", "Pateros": "Metro Manila",
-  "Antipolo": "Rizal", "Cainta": "Rizal", "Taytay": "Rizal", "Angono": "Rizal", "Binangonan": "Rizal",
-  "San Mateo": "Rizal", "Rodriguez": "Rizal", "Tanay": "Rizal",
+  "Antipolo": "Rizal", "Cainta": "Rizal", "Taytay": "Rizal", "Angono": "Rizal",
   "Bacoor": "Cavite", "Imus": "Cavite", "Dasmariñas": "Cavite", "General Trias": "Cavite",
-  "Cavite City": "Cavite", "Rosario": "Cavite", "Silang": "Cavite", "Tagaytay": "Cavite",
-  "San Pedro": "Laguna", "Biñan": "Laguna", "Santa Rosa": "Laguna", "Calamba": "Laguna",
-  "Cabuyao": "Laguna", "Los Baños": "Laguna", "San Pablo": "Laguna",
-  "Meycauayan": "Bulacan", "Marilao": "Bulacan", "San Jose del Monte": "Bulacan",
-  "Malolos": "Bulacan", "Obando": "Bulacan", "Bocaue": "Bulacan", "Baliwag": "Bulacan",
-  "San Fernando": "Pampanga", "Angeles City": "Pampanga", "Clark": "Pampanga",
-  "Olongapo": "Zambales", "Subic": "Zambales",
-  "Batangas City": "Batangas", "Lipa": "Batangas", "Tanauan": "Batangas",
-  "Baguio": "Benguet", "La Trinidad": "Benguet",
-  "Dagupan": "Pangasinan", "Urdaneta": "Pangasinan",
-  "Laoag": "Ilocos Norte", "Vigan": "Ilocos Sur", "San Fernando City": "La Union",
-  "Tuguegarao": "Cagayan", "Santiago": "Isabela", "Cauayan": "Isabela",
-  "Naga": "Camarines Sur", "Legazpi": "Albay", "Sorsogon City": "Sorsogon",
-  "Iloilo City": "Iloilo", "Roxas City": "Capiz", "Kalibo": "Aklan",
-  "Bacolod": "Negros Occidental", "Silay": "Negros Occidental", "Dumaguete": "Negros Oriental",
-  "Cebu City": "Cebu", "Mandaue": "Cebu", "Lapu-Lapu": "Cebu", "Talisay": "Cebu",
-  "Tacloban": "Leyte", "Ormoc": "Leyte",
-  "Tagbilaran": "Bohol", "Panglao": "Bohol",
-  "Davao City": "Davao del Sur", "Tagum": "Davao del Norte", "Digos": "Davao del Sur",
-  "General Santos": "South Cotabato", "Koronadal": "South Cotabato",
-  "Cagayan de Oro": "Misamis Oriental", "Iligan": "Lanao del Norte",
-  "Butuan": "Agusan del Norte", "Surigao City": "Surigao del Norte",
-  "Zamboanga City": "Zamboanga del Sur", "Dipolog": "Zamboanga del Norte",
-  "Puerto Princesa": "Palawan", "Calapan": "Oriental Mindoro",
+  "Tagaytay": "Cavite", "San Pedro": "Laguna", "Biñan": "Laguna", "Santa Rosa": "Laguna",
+  "Calamba": "Laguna", "Los Baños": "Laguna", "San Jose del Monte": "Bulacan",
+  "Malolos": "Bulacan", "Meycauayan": "Bulacan", "Angeles City": "Pampanga",
+  "San Fernando": "Pampanga", "Olongapo": "Zambales", "Batangas City": "Batangas",
+  "Lipa": "Batangas", "Baguio": "Benguet", "Dagupan": "Pangasinan",
+  "Laoag": "Ilocos Norte", "Vigan": "Ilocos Sur", "Tuguegarao": "Cagayan",
+  "Naga": "Camarines Sur", "Legazpi": "Albay", "Iloilo City": "Iloilo",
+  "Bacolod": "Negros Occidental", "Dumaguete": "Negros Oriental",
+  "Cebu City": "Cebu", "Mandaue": "Cebu", "Lapu-Lapu": "Cebu",
+  "Tacloban": "Leyte", "Tagbilaran": "Bohol", "Davao City": "Davao del Sur",
+  "General Santos": "South Cotabato", "Cagayan de Oro": "Misamis Oriental",
+  "Zamboanga City": "Zamboanga del Sur", "Butuan": "Agusan del Norte",
+  "Puerto Princesa": "Palawan",
 };
-
 const CITIES = Object.keys(CITY_PROVINCE_MAP).sort();
 
 const PRODUCT_IMAGES = [
-  { src: "/images/ch01/Copy of IMG_0910.jpg", alt: "Back print — teddy bear in paper boat" },
-  { src: "/images/ch01/Copy of IMG_0926.jpg", alt: "Front view — golden sunset" },
-  { src: "/images/ch01/Copy of IMG_0933.jpg", alt: "Hanging on tree — golden hour" },
-  { src: "/images/ch01/Copy of IMG_0963.jpg", alt: "Close-up — bear detail" },
-  { src: "/images/ch01/Copy of IMG_0917.jpg", alt: "Maison Gethse stamp" },
+  { src: "/images/ch01/Copy of IMG_0910.jpg", alt: "Back print" },
+  { src: "/images/ch01/Copy of IMG_0926.jpg", alt: "Front view" },
+  { src: "/images/ch01/Copy of IMG_0933.jpg", alt: "Golden hour" },
+  { src: "/images/ch01/Copy of IMG_0963.jpg", alt: "Detail" },
+  { src: "/images/ch01/Copy of IMG_0917.jpg", alt: "Stamp" },
 ];
 
-type Step = "select" | "details" | "confirmed";
+const SIZE_CHART = [
+  { size: "XS", chest: '34"', length: '26"', shoulder: '16"' },
+  { size: "S", chest: '36"', length: '27"', shoulder: '17"' },
+  { size: "M", chest: '38"', length: '28"', shoulder: '18"' },
+  { size: "L", chest: '40"', length: '29"', shoulder: '19"' },
+  { size: "XL", chest: '42"', length: '30"', shoulder: '20"' },
+  { size: "2XL", chest: '44"', length: '31"', shoulder: '21"' },
+];
 
 export function OrderOverlay({ artifact, isOpen, onClose }: OrderOverlayProps) {
-  const [step, setStep] = useState<Step>("select");
-  const [selectedSize, setSelectedSize] = useState("");
-  const [quantity, setQuantity] = useState(1);
-  const [form, setForm] = useState({
-    firstName: "", lastName: "", email: "", phone: "",
-    address: "", city: "", province: "", zip: "",
-  });
-  const lenis = useLenis();
+  const [step, setStep] = useState<"select" | "details" | "done">("select");
+  const [size, setSize] = useState("");
+  const [qty, setQty] = useState(1);
+  const [img, setImg] = useState(0);
+  const [chart, setChart] = useState(false);
+  const [cityOpen, setCityOpen] = useState(false);
+  const [citySearch, setCitySearch] = useState("");
+  const [form, setForm] = useState({ firstName: "", lastName: "", email: "", phone: "", address: "", city: "", province: "", zip: "" });
+  const scrollRef = useRef<HTMLDivElement>(null);
 
-  const maxStock = useMemo(() => {
-    const size = artifact.sizes.find((s) => s.label === selectedSize);
-    return size?.stock ?? 0;
-  }, [artifact.sizes, selectedSize]);
-
-  const subtotal = artifact.price * quantity;
+  const stock = useMemo(() => artifact.sizes.find(s => s.label === size)?.stock ?? 0, [artifact.sizes, size]);
+  const subtotal = artifact.price * qty;
   const total = subtotal + SHIPPING_FEE;
-
-  const handleClose = useCallback(() => {
-    onClose();
-    lenis.start();
-    document.body.classList.remove("overlay-open");
-    const scrollY = document.documentElement.style.getPropertyValue("--scroll-y");
-    window.scrollTo(0, parseInt(scrollY || "0") * -1);
-    setTimeout(() => {
-      setStep("select");
-      setSelectedSize("");
-      setQuantity(1);
-      setForm({ firstName: "", lastName: "", email: "", phone: "", address: "", city: "", province: "", zip: "" });
-    }, 400);
-  }, [onClose, lenis]);
-
-  const updateField = (key: keyof typeof form, value: string) => {
-    const updates = { ...form, [key]: value };
-    if (key === "city" && CITY_PROVINCE_MAP[value]) {
-      updates.province = CITY_PROVINCE_MAP[value];
-    }
-    setForm(updates);
-  };
-
   const canSubmit = form.firstName && form.lastName && form.email && form.phone && form.address && form.city && form.province;
 
+  const filteredCities = useMemo(() => {
+    if (!citySearch) return CITIES.slice(0, 25);
+    return CITIES.filter(c => c.toLowerCase().includes(citySearch.toLowerCase())).slice(0, 25);
+  }, [citySearch]);
+
+  const reset = useCallback(() => {
+    setStep("select"); setSize(""); setQty(1); setImg(0); setChart(false);
+    setForm({ firstName: "", lastName: "", email: "", phone: "", address: "", city: "", province: "", zip: "" });
+  }, []);
+
+  const close = useCallback(() => { onClose(); setTimeout(reset, 400); }, [onClose, reset]);
+
+  const setField = (k: keyof typeof form, v: string) => {
+    const f = { ...form, [k]: v };
+    if (k === "city" && CITY_PROVINCE_MAP[v]) f.province = CITY_PROVINCE_MAP[v];
+    setForm(f);
+  };
+
+  const selectCity = (c: string) => {
+    setField("city", c);
+    setCitySearch("");
+    setCityOpen(false);
+  };
+
   useEffect(() => {
-    if (isOpen) {
-      lenis.stop();
-      const scrollY = window.scrollY;
-      document.documentElement.style.setProperty("--scroll-y", `-${scrollY}px`);
-      document.body.classList.add("overlay-open");
-    }
-    return () => {
-      lenis.start();
-      document.body.classList.remove("overlay-open");
-      const scrollY = document.documentElement.style.getPropertyValue("--scroll-y");
-      window.scrollTo(0, parseInt(scrollY || "0") * -1);
-    };
-  }, [isOpen, lenis]);
+    if (scrollRef.current) scrollRef.current.scrollTop = 0;
+  }, [step]);
+
+  if (!isOpen) return null;
 
   return (
     <>
-      {/* Backdrop — CSS transition, no Framer Motion */}
-      <div
-        className="fixed inset-0 z-[400] transition-opacity duration-300"
-        style={{
-          background: "rgba(0,0,0,0.6)",
-          opacity: isOpen ? 1 : 0,
-          pointerEvents: isOpen ? "auto" : "none",
-        }}
-        onClick={handleClose}
-      />
+      {/* Backdrop */}
+      <div className="checkout-backdrop" onClick={close} />
 
-      {/* Panel — CSS transform, NO Framer Motion (Framer eats touch events on iOS) */}
-      <div
-        className="fixed top-0 right-0 bottom-0 z-[401] w-full max-w-[520px] order-overlay-scroll"
-        style={{
-          transform: isOpen ? "translateX(0)" : "translateX(100%)",
-          transition: "transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
-          visibility: isOpen ? "visible" : "hidden",
-        }}
-      >
+      {/* Panel */}
+      <div className="checkout-panel" ref={scrollRef}>
         {/* Close */}
-        <button
-          type="button"
-          onClick={handleClose}
-          className="sticky top-3 float-right mr-4 z-20 w-10 h-10 flex items-center justify-center border-none"
-          style={{ background: "var(--bg-surface)", borderRadius: "50%", fontFamily: "var(--font-serif)", fontSize: "1.8rem", fontWeight: 300, color: "var(--text-body)", lineHeight: 1 }}
-        >
-          ×
-        </button>
+        <button type="button" onClick={close} className="checkout-close">×</button>
 
-        <div className="clear-both">
-          {step === "confirmed" ? (
-            <ConfirmationView artifact={artifact} size={selectedSize} qty={quantity} total={total} onClose={handleClose} />
-          ) : step === "select" ? (
-            <SelectStep artifact={artifact} selectedSize={selectedSize} setSelectedSize={(s) => { setSelectedSize(s); setQuantity(1); }} quantity={quantity} setQuantity={setQuantity} maxStock={maxStock} onContinue={() => setStep("details")} />
-          ) : (
-            <DetailsStep artifact={artifact} selectedSize={selectedSize} quantity={quantity} subtotal={subtotal} total={total} form={form} updateField={updateField} canSubmit={!!canSubmit} onBack={() => setStep("select")} onSubmit={() => setStep("confirmed")} />
-          )}
-        </div>
+        {step === "done" ? (
+          <div className="checkout-content" style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "70vh", textAlign: "center" }}>
+            <div style={{ width: 48, height: 80, position: "relative", marginBottom: 24 }}>
+              <Image src="/images/mg-key-transparent.png" alt="Key" fill style={{ objectFit: "contain", opacity: 0.3 }} />
+            </div>
+            <h3 style={{ fontFamily: "var(--font-serif)", fontSize: "1.6rem", fontWeight: 300, fontStyle: "italic", color: "var(--text-head)", lineHeight: 1.4, marginBottom: 8 }}>You now carry a chapter.</h3>
+            <div style={{ width: 1, height: 24, background: "var(--text-body)", opacity: 0.12, margin: "16px auto" }} />
+            <p style={{ fontFamily: "var(--font-sans)", fontSize: 14, fontWeight: 300, lineHeight: 1.9, color: "var(--text-body)", maxWidth: 320, marginBottom: 24 }}>
+              <strong style={{ fontWeight: 500, color: "var(--text-head)" }}>{artifact.name}</strong> · Size {size} × {qty}<br/>A confirmation will be sent to your email.
+            </p>
+            <div style={{ width: "100%", maxWidth: 280, padding: 20, background: "var(--bg-mid)", border: "1px solid var(--border-soft)" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 12, fontFamily: "var(--font-sans)", fontSize: 12, color: "var(--text-body)" }}>
+                <span style={{ opacity: 0.5, textTransform: "uppercase", letterSpacing: "0.12em" }}>Total</span>
+                <span style={{ fontFamily: "var(--font-serif)", fontSize: "1.1rem", color: "var(--text-head)" }}>₱{total.toLocaleString()}</span>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between", fontFamily: "var(--font-sans)", fontSize: 12, color: "var(--text-body)" }}>
+                <span style={{ opacity: 0.5, textTransform: "uppercase", letterSpacing: "0.12em" }}>Status</span>
+                <span style={{ color: "var(--gold)", fontWeight: 500 }}>Processing</span>
+              </div>
+            </div>
+            <a href="/home" style={{ marginTop: 32, fontFamily: "var(--font-sans)", fontSize: 12, fontWeight: 400, letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--text-body)", opacity: 0.5, textDecoration: "none" }}>Continue Exploring →</a>
+          </div>
+        ) : step === "select" ? (
+          <div>
+            {/* Gallery */}
+            <div style={{ position: "relative", aspectRatio: "4/5", overflow: "hidden", background: "var(--bg-mid)" }}>
+              {PRODUCT_IMAGES.map((p, i) => (
+                <div key={i} style={{ position: "absolute", inset: 0, opacity: img === i ? 1 : 0, transition: "opacity 0.5s" }}>
+                  <Image src={p.src} alt={p.alt} fill style={{ objectFit: "cover" }} sizes="520px" />
+                </div>
+              ))}
+              <div style={{ position: "absolute", bottom: 16, left: "50%", transform: "translateX(-50%)", display: "flex", gap: 8, zIndex: 2 }}>
+                {PRODUCT_IMAGES.map((_, i) => (
+                  <button key={i} onClick={() => setImg(i)} style={{ width: img === i ? 24 : 6, height: 6, borderRadius: 3, background: img === i ? "var(--gold)" : "rgba(255,255,255,0.4)", border: "none", cursor: "pointer", transition: "all 0.3s", padding: 0 }} />
+                ))}
+              </div>
+              <button style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: "33%", background: "transparent", border: "none" }} onClick={() => setImg(p => (p - 1 + PRODUCT_IMAGES.length) % PRODUCT_IMAGES.length)} />
+              <button style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: "33%", background: "transparent", border: "none" }} onClick={() => setImg(p => (p + 1) % PRODUCT_IMAGES.length)} />
+            </div>
+
+            <div className="checkout-content">
+              {/* Info */}
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: 11, fontWeight: 400, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--gold)", marginBottom: 4 }}>{artifact.chapter}</p>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 24 }}>
+                <h3 style={{ fontFamily: "var(--font-serif)", fontSize: "1.6rem", fontWeight: 400, color: "var(--text-head)" }}>{artifact.name}</h3>
+                <span style={{ fontFamily: "var(--font-serif)", fontSize: "1.4rem", fontWeight: 300, color: "var(--text-head)" }}>{artifact.priceDisplay}</span>
+              </div>
+
+              {/* Sizes */}
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: 12, fontWeight: 400, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--text-body)", marginBottom: 12 }}>Select your size</p>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8, marginBottom: 16 }}>
+                {artifact.sizes.map(s => (
+                  <button key={s.label} disabled={s.stock === 0} onClick={() => { setSize(s.label); setQty(1); }}
+                    style={{ padding: "14px 0", textAlign: "center", fontFamily: "var(--font-sans)", fontSize: 14, fontWeight: size === s.label ? 500 : 300, color: size === s.label ? "#fff" : "var(--text-head)", background: size === s.label ? "var(--green)" : "transparent", border: size === s.label ? "1px solid var(--green)" : "1px solid var(--border-soft)", opacity: s.stock === 0 ? 0.2 : 1, cursor: s.stock === 0 ? "not-allowed" : "pointer", transition: "all 0.2s" }}>
+                    {s.label}
+                    <span style={{ display: "block", marginTop: 4, fontSize: 10, opacity: 0.5 }}>{s.stock === 0 ? "Sold out" : `${s.stock} left`}</span>
+                  </button>
+                ))}
+              </div>
+
+              {/* Size chart */}
+              <button type="button" onClick={() => setChart(!chart)} style={{ background: "none", border: "none", fontFamily: "var(--font-sans)", fontSize: 12, fontWeight: 400, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--gold)", textDecoration: "underline", textUnderlineOffset: 3, cursor: "pointer", marginBottom: 16, padding: 0 }}>
+                {chart ? "Hide" : "View"} Size Chart
+              </button>
+              {chart && (
+                <div style={{ border: "1px solid var(--border-soft)", marginBottom: 16, overflowX: "auto" }}>
+                  <table style={{ width: "100%", borderCollapse: "collapse", fontFamily: "var(--font-sans)" }}>
+                    <thead>
+                      <tr>{["Size", "Chest", "Length", "Shoulder"].map(h => <th key={h} style={{ textAlign: "left", padding: "10px 14px", fontSize: 11, fontWeight: 500, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--text-body)", borderBottom: "1px solid var(--border-soft)" }}>{h}</th>)}</tr>
+                    </thead>
+                    <tbody>
+                      {SIZE_CHART.map(r => <tr key={r.size}><td style={{ padding: "10px 14px", fontSize: 14, fontWeight: 500, color: "var(--text-head)", borderBottom: "1px solid var(--border-soft)" }}>{r.size}</td><td style={{ padding: "10px 14px", fontSize: 14, fontWeight: 300, color: "var(--text-body)", borderBottom: "1px solid var(--border-soft)" }}>{r.chest}</td><td style={{ padding: "10px 14px", fontSize: 14, fontWeight: 300, color: "var(--text-body)", borderBottom: "1px solid var(--border-soft)" }}>{r.length}</td><td style={{ padding: "10px 14px", fontSize: 14, fontWeight: 300, color: "var(--text-body)", borderBottom: "1px solid var(--border-soft)" }}>{r.shoulder}</td></tr>)}
+                    </tbody>
+                  </table>
+                  <p style={{ padding: "8px 14px", fontSize: 11, color: "var(--text-body)", opacity: 0.4 }}>Measurements in inches. Oversized fit — size down for regular.</p>
+                </div>
+              )}
+
+              {/* Quantity */}
+              {size && (
+                <div style={{ marginBottom: 24 }}>
+                  <p style={{ fontFamily: "var(--font-sans)", fontSize: 12, fontWeight: 400, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--text-body)", marginBottom: 10 }}>Quantity</p>
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <button onClick={() => setQty(Math.max(1, qty - 1))} style={{ width: 44, height: 44, display: "flex", alignItems: "center", justifyContent: "center", background: "var(--input-bg)", border: "1px solid var(--border-soft)", fontFamily: "var(--font-sans)", fontSize: 18, fontWeight: 300, color: "var(--text-head)", cursor: "pointer" }}>−</button>
+                    <div style={{ width: 52, height: 44, display: "flex", alignItems: "center", justifyContent: "center", borderTop: "1px solid var(--border-soft)", borderBottom: "1px solid var(--border-soft)", background: "var(--input-bg)", fontFamily: "var(--font-sans)", fontSize: 15, fontWeight: 400, color: "var(--text-head)" }}>{qty}</div>
+                    <button onClick={() => { if (qty < stock) setQty(qty + 1); }} disabled={qty >= stock} style={{ width: 44, height: 44, display: "flex", alignItems: "center", justifyContent: "center", background: "var(--input-bg)", border: "1px solid var(--border-soft)", fontFamily: "var(--font-sans)", fontSize: 18, fontWeight: 300, color: "var(--text-head)", cursor: qty >= stock ? "not-allowed" : "pointer", opacity: qty >= stock ? 0.3 : 1 }}>+</button>
+                    {qty >= stock && <span style={{ marginLeft: 12, fontFamily: "var(--font-sans)", fontSize: 11, color: "var(--gold)" }}>Max stock</span>}
+                  </div>
+                </div>
+              )}
+
+              {/* Continue */}
+              <button onClick={() => { if (size) { setStep("details"); } }} disabled={!size}
+                style={{ width: "100%", padding: "18px 0", fontFamily: "var(--font-sans)", fontSize: 12, fontWeight: 400, letterSpacing: "0.2em", textTransform: "uppercase", color: "#fff", background: "var(--green)", border: "none", cursor: size ? "pointer" : "not-allowed", opacity: size ? 1 : 0.3, transition: "opacity 0.3s" }}>
+                Continue — {artifact.priceDisplay}
+              </button>
+              <p style={{ marginTop: 14, textAlign: "center", fontFamily: "var(--font-sans)", fontSize: 14, fontWeight: 500, color: "var(--gold)" }}>
+                Free shipping on orders over ₱1,000
+              </p>
+            </div>
+          </div>
+        ) : (
+          <div className="checkout-content">
+            {/* Back */}
+            <button type="button" onClick={() => setStep("select")} style={{ background: "none", border: "none", fontFamily: "var(--font-sans)", fontSize: 13, fontWeight: 400, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--text-body)", cursor: "pointer", padding: "4px 0", marginBottom: 20 }}>← Back</button>
+
+            {/* Summary */}
+            <div style={{ display: "flex", gap: 16, paddingBottom: 20, marginBottom: 20, borderBottom: "1px solid var(--border-soft)" }}>
+              <div style={{ width: 60, height: 75, position: "relative", overflow: "hidden", flexShrink: 0, background: "var(--bg-mid)" }}>
+                <Image src={artifact.image} alt={artifact.name} fill style={{ objectFit: "cover" }} sizes="60px" />
+              </div>
+              <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <div>
+                  <p style={{ fontFamily: "var(--font-serif)", fontSize: "1rem", fontWeight: 400, color: "var(--text-head)" }}>{artifact.name}</p>
+                  <p style={{ fontFamily: "var(--font-sans)", fontSize: 12, fontWeight: 300, color: "var(--text-body)", marginTop: 2 }}>Size {size} · Qty {qty}</p>
+                </div>
+                <p style={{ fontFamily: "var(--font-serif)", fontSize: "1.1rem", fontWeight: 300, color: "var(--text-head)" }}>{artifact.priceDisplay}</p>
+              </div>
+            </div>
+
+            {/* Form */}
+            <p style={{ fontFamily: "var(--font-sans)", fontSize: 12, fontWeight: 400, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--text-body)", marginBottom: 20 }}>Where should we send it?</p>
+
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 12 }}>
+              <UnderlineInput label="First name" value={form.firstName} onChange={v => setField("firstName", v)} />
+              <UnderlineInput label="Last name" value={form.lastName} onChange={v => setField("lastName", v)} />
+            </div>
+            <UnderlineInput label="Email" value={form.email} onChange={v => setField("email", v)} type="email" />
+            <UnderlineInput label="Phone" value={form.phone} onChange={v => setField("phone", v)} type="tel" placeholder="09XX XXX XXXX" />
+            <div style={{ height: 8 }} />
+            <UnderlineInput label="Street address" value={form.address} onChange={v => setField("address", v)} />
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 12, position: "relative" }}>
+              <div>
+                <input
+                  type="text"
+                  value={cityOpen ? citySearch : form.city}
+                  placeholder="City / Municipality"
+                  onFocus={() => { setCityOpen(true); setCitySearch(""); }}
+                  onBlur={() => setTimeout(() => setCityOpen(false), 200)}
+                  onChange={e => setCitySearch(e.target.value)}
+                  className="checkout-input"
+                />
+                {form.city && !cityOpen && <span className="checkout-label">City</span>}
+                {cityOpen && (
+                  <div className="checkout-dropdown">
+                    {filteredCities.length === 0 ? <div style={{ padding: "12px 14px", fontSize: 13, color: "var(--text-body)", opacity: 0.5 }}>No results</div> :
+                      filteredCities.map(c => (
+                        <button key={c} onMouseDown={() => selectCity(c)} className="checkout-dropdown-item">
+                          {c} <span style={{ marginLeft: 8, fontSize: 11, opacity: 0.4 }}>{CITY_PROVINCE_MAP[c]}</span>
+                        </button>
+                      ))
+                    }
+                  </div>
+                )}
+              </div>
+              <div>
+                <input type="text" value={form.province} placeholder="Province" disabled className="checkout-input" style={{ opacity: 0.5 }} />
+                {form.province && <span className="checkout-label">Province</span>}
+              </div>
+            </div>
+            <UnderlineInput label="ZIP code" value={form.zip} onChange={v => setField("zip", v)} />
+
+            {/* Totals */}
+            <div style={{ marginTop: 24, paddingTop: 16, borderTop: "1px solid var(--border-soft)", display: "flex", flexDirection: "column", gap: 8 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", fontFamily: "var(--font-sans)", fontSize: 13, fontWeight: 300, color: "var(--text-body)" }}>
+                <span>Subtotal ({qty}×)</span><span>₱{subtotal.toLocaleString()}</span>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between", fontFamily: "var(--font-sans)", fontSize: 13, fontWeight: 300, color: "var(--text-body)" }}>
+                <span>Shipping</span><span>₱{SHIPPING_FEE}</span>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between", paddingTop: 8, borderTop: "1px solid var(--border-soft)", fontFamily: "var(--font-serif)", fontSize: "1.2rem", fontWeight: 400, color: "var(--text-head)" }}>
+                <span>Total</span><span>₱{total.toLocaleString()}</span>
+              </div>
+            </div>
+
+            <button onClick={() => { if (canSubmit) setStep("done"); }} disabled={!canSubmit}
+              style={{ width: "100%", padding: "18px 0", marginTop: 24, fontFamily: "var(--font-sans)", fontSize: 12, fontWeight: 400, letterSpacing: "0.2em", textTransform: "uppercase", color: "#fff", background: "var(--green)", border: "none", cursor: canSubmit ? "pointer" : "not-allowed", opacity: canSubmit ? 1 : 0.3, transition: "opacity 0.3s" }}>
+              Place Order
+            </button>
+            <p style={{ marginTop: 14, textAlign: "center", fontFamily: "var(--font-sans)", fontSize: 13, fontWeight: 400, color: "var(--text-body)", opacity: 0.6 }}>
+              Secure payment via PayMongo · GCash · Maya · Card
+            </p>
+          </div>
+        )}
       </div>
     </>
   );
 }
 
-/* ═══ STEP 1 — Size + Quantity + Gallery ═══ */
-function SelectStep({
-  artifact, selectedSize, setSelectedSize, quantity, setQuantity, maxStock, onContinue,
-}: {
-  artifact: Artifact; selectedSize: string; setSelectedSize: (s: string) => void;
-  quantity: number; setQuantity: (n: number) => void; maxStock: number; onContinue: () => void;
-}) {
-  const [activeImg, setActiveImg] = useState(0);
-
-  return (
-    <div>
-      {/* Image gallery */}
-      <div className="relative aspect-[4/5] overflow-hidden" style={{ background: "var(--bg-mid)" }}>
-        {PRODUCT_IMAGES.map((img, i) => (
-          <div key={i} className="absolute inset-0 transition-opacity duration-500" style={{ opacity: activeImg === i ? 1 : 0 }}>
-            <Image src={img.src} alt={img.alt} fill className="object-cover" sizes="520px" />
-          </div>
-        ))}
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
-          {PRODUCT_IMAGES.map((_, i) => (
-            <button key={i} onClick={() => setActiveImg(i)} className="border-none p-0 transition-all duration-300" style={{ width: activeImg === i ? "24px" : "6px", height: "6px", borderRadius: "3px", background: activeImg === i ? "var(--gold)" : "rgba(255,255,255,0.4)", cursor: "pointer" }} />
-          ))}
-        </div>
-        <button className="absolute left-0 top-0 bottom-0 w-1/3 bg-transparent border-none" onClick={() => setActiveImg((p) => (p - 1 + PRODUCT_IMAGES.length) % PRODUCT_IMAGES.length)} />
-        <button className="absolute right-0 top-0 bottom-0 w-1/3 bg-transparent border-none" onClick={() => setActiveImg((p) => (p + 1) % PRODUCT_IMAGES.length)} />
-      </div>
-
-      <div className="px-8 md:px-10 pt-6 pb-10">
-        <p className="mb-1" style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--gold)" }}>{artifact.chapter}</p>
-        <div className="flex items-baseline justify-between mb-8">
-          <h3 style={{ fontFamily: "var(--font-serif)", fontSize: "1.6rem", fontWeight: 400, color: "var(--text-head)" }}>{artifact.name}</h3>
-          <span style={{ fontFamily: "var(--font-serif)", fontSize: "1.4rem", fontWeight: 300, color: "var(--text-head)" }}>{artifact.priceDisplay}</span>
-        </div>
-
-        {/* Size */}
-        <p className="mb-3" style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-body)" }}>Select your size</p>
-        <div className="grid grid-cols-3 gap-2 mb-6">
-          {artifact.sizes.map((s) => (
-            <button
-              key={s.label}
-              disabled={s.stock === 0}
-              onClick={() => setSelectedSize(s.label)}
-              className="py-3 text-center disabled:opacity-20 disabled:cursor-not-allowed transition-all duration-200"
-              style={{
-                fontFamily: "var(--font-sans)", fontSize: "14px", fontWeight: selectedSize === s.label ? 500 : 300,
-                color: selectedSize === s.label ? "var(--white)" : "var(--text-head)",
-                background: selectedSize === s.label ? "var(--green)" : "transparent",
-                border: selectedSize === s.label ? "1px solid var(--green)" : "1px solid var(--border-soft)",
-              }}
-            >
-              {s.label}
-              <span className="block mt-1" style={{ fontSize: "12px", letterSpacing: "0.08em", textTransform: "uppercase", opacity: 0.5, color: selectedSize === s.label ? "rgba(255,255,255,0.6)" : "var(--text-body)" }}>
-                {s.stock === 0 ? "Sold out" : `${s.stock} left`}
-              </span>
-            </button>
-          ))}
-        </div>
-
-        {/* Quantity */}
-        {selectedSize && (
-          <div className="mb-8">
-            <p className="mb-3" style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-body)" }}>Quantity</p>
-            <div className="flex items-center gap-0">
-              <button
-                onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                className="w-12 h-12 flex items-center justify-center border-none"
-                style={{ background: "var(--input-bg)", border: "1px solid var(--border-soft)", fontFamily: "var(--font-sans)", fontSize: "18px", fontWeight: 300, color: "var(--text-head)" }}
-              >
-                −
-              </button>
-              <div className="w-14 h-12 flex items-center justify-center" style={{ borderTop: "1px solid var(--border-soft)", borderBottom: "1px solid var(--border-soft)", background: "var(--input-bg)", fontFamily: "var(--font-sans)", fontSize: "15px", fontWeight: 400, color: "var(--text-head)" }}>
-                {quantity}
-              </div>
-              <button
-                onClick={() => {
-                  if (quantity >= maxStock) return;
-                  setQuantity(quantity + 1);
-                }}
-                disabled={quantity >= maxStock}
-                className="w-12 h-12 flex items-center justify-center border-none disabled:opacity-30 disabled:cursor-not-allowed"
-                style={{ background: "var(--input-bg)", border: "1px solid var(--border-soft)", fontFamily: "var(--font-sans)", fontSize: "18px", fontWeight: 300, color: "var(--text-head)" }}
-              >
-                +
-              </button>
-              {quantity >= maxStock && (
-                <span className="ml-3" style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 300, color: "var(--gold)", opacity: 0.7 }}>
-                  Max stock reached
-                </span>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* Size chart */}
-        <SizeChart />
-
-        {/* Continue */}
-        <button
-          onClick={onContinue}
-          disabled={!selectedSize}
-          className="w-full py-5 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300"
-          style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400, letterSpacing: "0.22em", textTransform: "uppercase", color: "var(--white)", background: "var(--green)", border: "none" }}
-        >
-          Continue — {artifact.priceDisplay}
-        </button>
-        <p className="mt-4 text-center" style={{ fontFamily: "var(--font-sans)", fontSize: "14px", fontWeight: 500, color: "var(--gold)", letterSpacing: "0.04em" }}>
-          Free shipping on orders over ₱1,000
-        </p>
-      </div>
-    </div>
-  );
-}
-
-/* ═══ STEP 2 — Details ═══ */
-function DetailsStep({
-  artifact, selectedSize, quantity, subtotal, total, form, updateField, canSubmit, onBack, onSubmit,
-}: {
-  artifact: Artifact; selectedSize: string; quantity: number; subtotal: number; total: number;
-  form: { firstName: string; lastName: string; email: string; phone: string; address: string; city: string; province: string; zip: string };
-  updateField: (key: keyof typeof form, value: string) => void;
-  canSubmit: boolean; onBack: () => void; onSubmit: () => void;
+function UnderlineInput({ label, value, onChange, type = "text", placeholder }: {
+  label: string; value: string; onChange: (v: string) => void; type?: string; placeholder?: string;
 }) {
   return (
-    <div className="px-8 md:px-10 pt-6 pb-10">
-      <button type="button" onClick={(e) => { e.preventDefault(); e.stopPropagation(); onBack(); }} className="mb-6 bg-transparent border-none py-2 px-1" style={{ fontFamily: "var(--font-sans)", fontSize: "13px", fontWeight: 400, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-body)" }}>← Back</button>
-
-      {/* Summary */}
-      <div className="flex gap-4 pb-6 mb-6" style={{ borderBottom: "1px solid var(--border-soft)" }}>
-        <div className="w-16 h-20 relative overflow-hidden flex-shrink-0" style={{ background: "var(--bg-mid)" }}>
-          <Image src={artifact.image} alt={artifact.name} fill className="object-cover" sizes="64px" />
-        </div>
-        <div className="flex-1 flex items-center justify-between">
-          <div>
-            <p style={{ fontFamily: "var(--font-serif)", fontSize: "1rem", fontWeight: 400, color: "var(--text-head)" }}>{artifact.name}</p>
-            <p style={{ fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 300, color: "var(--text-body)", marginTop: "2px" }}>Size {selectedSize} · Qty {quantity}</p>
-          </div>
-          <p style={{ fontFamily: "var(--font-serif)", fontSize: "1.1rem", fontWeight: 300, color: "var(--text-head)" }}>{artifact.priceDisplay}</p>
-        </div>
-      </div>
-
-      {/* Form */}
-      <p className="mb-5" style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-body)" }}>Where should we send it?</p>
-
-      <div className="flex flex-col gap-4">
-        <div className="grid grid-cols-2 gap-3">
-          <Field label="First name" value={form.firstName} onChange={(v) => updateField("firstName", v)} autoFocus />
-          <Field label="Last name" value={form.lastName} onChange={(v) => updateField("lastName", v)} />
-        </div>
-        <Field label="Email" value={form.email} onChange={(v) => updateField("email", v)} type="email" />
-        <Field label="Phone number" value={form.phone} onChange={(v) => updateField("phone", v)} type="tel" placeholder="09XX XXX XXXX" />
-        <div className="mt-1" />
-        <Field label="Street address" value={form.address} onChange={(v) => updateField("address", v)} />
-        <div className="grid grid-cols-2 gap-3">
-          <SearchSelect label="City / Municipality" value={form.city} onChange={(v) => updateField("city", v)} options={CITIES} mapHint={CITY_PROVINCE_MAP} />
-          <Field label="Province" value={form.province} onChange={(v) => updateField("province", v)} disabled />
-        </div>
-        <Field label="ZIP code" value={form.zip} onChange={(v) => updateField("zip", v)} />
-      </div>
-
-      {/* Total breakdown */}
-      <div className="mt-8 mb-4 flex flex-col gap-2 py-4" style={{ borderTop: "1px solid var(--border-soft)" }}>
-        <div className="flex justify-between" style={{ fontFamily: "var(--font-sans)", fontSize: "13px", fontWeight: 300, color: "var(--text-body)" }}>
-          <span>Subtotal ({quantity}×)</span><span>₱{subtotal.toLocaleString()}</span>
-        </div>
-        <div className="flex justify-between" style={{ fontFamily: "var(--font-sans)", fontSize: "13px", fontWeight: 300, color: "var(--text-body)" }}>
-          <span>Shipping</span><span>₱{SHIPPING_FEE}</span>
-        </div>
-        <div className="flex justify-between pt-2" style={{ borderTop: "1px solid var(--border-soft)", fontFamily: "var(--font-serif)", fontSize: "1.2rem", fontWeight: 400, color: "var(--text-head)" }}>
-          <span>Total</span><span>₱{total.toLocaleString()}</span>
-        </div>
-      </div>
-
-      <button onClick={onSubmit} disabled={!canSubmit} className="w-full py-5 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300" style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400, letterSpacing: "0.22em", textTransform: "uppercase", color: "var(--white)", background: "var(--green)", border: "none" }}>
-        Place Order
-      </button>
-      <p className="mt-4 text-center" style={{ fontFamily: "var(--font-sans)", fontSize: "13px", fontWeight: 400, color: "var(--text-body)", opacity: 0.6, lineHeight: 1.7 }}>
-        Secure payment via PayMongo · GCash · Maya · Card
-      </p>
-    </div>
-  );
-}
-
-/* ═══ CONFIRMATION ═══ */
-function ConfirmationView({ artifact, size, qty, total, onClose }: { artifact: Artifact; size: string; qty: number; total: number; onClose: () => void }) {
-  return (
-    <div className="flex flex-col items-center justify-center min-h-[80vh] text-center px-8">
-      <div className="mb-6 relative" style={{ width: "48px", height: "80px" }}>
-        <Image src="/images/mg-key-transparent.png" alt="Key" fill style={{ objectFit: "contain", opacity: 0.3 }} />
-      </div>
-      <h3 style={{ fontFamily: "var(--font-serif)", fontSize: "1.6rem", fontWeight: 300, fontStyle: "italic", color: "var(--text-head)", lineHeight: 1.4, marginBottom: "0.6rem" }}>You now carry a chapter.</h3>
-      <div className="w-[1px] h-[24px] mx-auto my-4" style={{ background: "var(--text-body)", opacity: 0.12 }} />
-      <p style={{ fontFamily: "var(--font-sans)", fontSize: "14px", fontWeight: 300, lineHeight: 1.9, color: "var(--text-body)", maxWidth: "320px", marginBottom: "2rem" }}>
-        <strong style={{ fontWeight: 500, color: "var(--text-head)" }}>{artifact.name}</strong> · Size {size} × {qty}<br />A confirmation will be sent to your email.
-      </p>
-      <div className="w-full max-w-xs p-5" style={{ background: "var(--bg-mid)", border: "1px solid var(--border-soft)" }}>
-        <div className="flex justify-between mb-3">
-          <span style={{ fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 400, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-body)", opacity: 0.5 }}>Total</span>
-          <span style={{ fontFamily: "var(--font-serif)", fontSize: "1.1rem", fontWeight: 300, color: "var(--text-head)" }}>₱{total.toLocaleString()}</span>
-        </div>
-        <div className="flex justify-between">
-          <span style={{ fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 400, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-body)", opacity: 0.5 }}>Status</span>
-          <span style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400, color: "var(--gold)" }}>Processing</span>
-        </div>
-      </div>
-      <a href="/home" className="mt-8 no-underline" style={{ fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 400, letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--text-body)", opacity: 0.4 }}>Continue Exploring →</a>
-    </div>
-  );
-}
-
-/* ═══ SIZE CHART ═══ */
-function SizeChart() {
-  const [open, setOpen] = useState(false);
-  const sizes = [
-    { size: "XS", chest: "34\"", length: "26\"", shoulder: "16\"" },
-    { size: "S", chest: "36\"", length: "27\"", shoulder: "17\"" },
-    { size: "M", chest: "38\"", length: "28\"", shoulder: "18\"" },
-    { size: "L", chest: "40\"", length: "29\"", shoulder: "19\"" },
-    { size: "XL", chest: "42\"", length: "30\"", shoulder: "20\"" },
-    { size: "2XL", chest: "44\"", length: "31\"", shoulder: "21\"" },
-  ];
-
-  return (
-    <div className="mb-6">
-      <button
-        type="button"
-        onClick={() => setOpen(!open)}
-        className="bg-transparent border-none flex items-center gap-2"
-        style={{ fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 400, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--gold)", textDecoration: "underline", textUnderlineOffset: "3px" }}
-      >
-        {open ? "Hide" : "View"} Size Chart
-      </button>
-
-      {open && (
-        <div className="mt-4 overflow-x-auto" style={{ border: "1px solid var(--border-soft)" }}>
-          <table className="w-full" style={{ borderCollapse: "collapse", fontFamily: "var(--font-sans)" }}>
-            <thead>
-              <tr>
-                {["Size", "Chest", "Length", "Shoulder"].map((h) => (
-                  <th key={h} className="text-left px-4 py-3" style={{ fontSize: "11px", fontWeight: 500, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--text-body)", borderBottom: "1px solid var(--border-soft)" }}>
-                    {h}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {sizes.map((row) => (
-                <tr key={row.size}>
-                  <td className="px-4 py-3" style={{ fontSize: "14px", fontWeight: 500, color: "var(--text-head)", borderBottom: "1px solid var(--border-soft)" }}>{row.size}</td>
-                  <td className="px-4 py-3" style={{ fontSize: "14px", fontWeight: 300, color: "var(--text-body)", borderBottom: "1px solid var(--border-soft)" }}>{row.chest}</td>
-                  <td className="px-4 py-3" style={{ fontSize: "14px", fontWeight: 300, color: "var(--text-body)", borderBottom: "1px solid var(--border-soft)" }}>{row.length}</td>
-                  <td className="px-4 py-3" style={{ fontSize: "14px", fontWeight: 300, color: "var(--text-body)", borderBottom: "1px solid var(--border-soft)" }}>{row.shoulder}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <p className="px-4 py-2" style={{ fontSize: "11px", fontWeight: 300, color: "var(--text-body)", opacity: 0.4 }}>
-            Measurements in inches. Oversized fit — size down for a regular fit.
-          </p>
-        </div>
-      )}
-    </div>
-  );
-}
-
-/* ═══ FORM FIELDS ═══ */
-function Field({ label, value, onChange, type = "text", placeholder, autoFocus, disabled }: {
-  label: string; value: string; onChange: (v: string) => void; type?: string; placeholder?: string; autoFocus?: boolean; disabled?: boolean;
-}) {
-  return (
-    <div className="relative">
-      <input type={type} value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder || label} autoFocus={autoFocus} disabled={disabled}
-        className="w-full" style={{ fontFamily: "var(--font-sans)", fontSize: "15px", fontWeight: 300, color: "var(--text-head)", background: "transparent", border: "none", borderBottom: "1px solid var(--border-soft)", padding: "14px 0 10px", outline: "none", transition: "border-color 0.3s", opacity: disabled ? 0.5 : 1 }}
-        onFocus={(e) => { if (!disabled) e.target.style.borderBottomColor = "var(--gold)"; }}
-        onBlur={(e) => { e.target.style.borderBottomColor = "var(--border-soft)"; }}
-      />
-      {value && <label className="absolute left-0 top-[-2px] pointer-events-none" style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--gold)", opacity: 0.6 }}>{label}</label>}
-    </div>
-  );
-}
-
-function SearchSelect({ label, value, onChange, options, mapHint }: {
-  label: string; value: string; onChange: (v: string) => void; options: string[]; mapHint?: Record<string, string>;
-}) {
-  const [open, setOpen] = useState(false);
-  const [search, setSearch] = useState("");
-
-  const filtered = useMemo(() => {
-    if (!search) return options.slice(0, 30);
-    return options.filter((o) => o.toLowerCase().includes(search.toLowerCase())).slice(0, 30);
-  }, [search, options]);
-
-  return (
-    <div className="relative">
-      <input type="text" value={open ? search : value} placeholder={label}
-        onFocus={() => { setOpen(true); setSearch(""); }}
-        onBlur={() => setTimeout(() => setOpen(false), 200)}
-        onChange={(e) => setSearch(e.target.value)}
-        className="w-full" style={{ fontFamily: "var(--font-sans)", fontSize: "15px", fontWeight: 300, color: "var(--text-head)", background: "transparent", border: "none", borderBottom: "1px solid var(--border-soft)", padding: "14px 0 10px", outline: "none", transition: "border-color 0.3s" }}
-        onFocusCapture={(e) => { e.target.style.borderBottomColor = "var(--gold)"; }}
-        onBlurCapture={(e) => { e.target.style.borderBottomColor = "var(--border-soft)"; }}
-      />
-      {value && !open && <label className="absolute left-0 top-[-2px] pointer-events-none" style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--gold)", opacity: 0.6 }}>{label}</label>}
-      <svg className="absolute right-0 top-4 pointer-events-none" width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="var(--text-body)" strokeWidth="1" opacity="0.4" /></svg>
-
-      {open && (
-        <div className="absolute left-0 right-0 top-full z-30 max-h-[200px]" style={{ background: "var(--bg-surface)", border: "1px solid var(--border-soft)", boxShadow: "0 8px 30px rgba(0,0,0,0.3)", overflowY: "auto" }}
-          onWheel={(e) => e.stopPropagation()}
-        >
-          {filtered.length === 0 ? (
-            <div className="px-4 py-3" style={{ fontFamily: "var(--font-sans)", fontSize: "13px", color: "var(--text-body)", opacity: 0.5 }}>No results</div>
-          ) : filtered.map((opt) => (
-            <button key={opt} onMouseDown={() => { onChange(opt); setSearch(""); setOpen(false); }}
-              className="w-full text-left px-4 py-3 border-none transition-colors duration-150"
-              style={{ fontFamily: "var(--font-sans)", fontSize: "14px", fontWeight: 300, color: "var(--text-head)", background: "transparent", borderBottom: "1px solid var(--border-soft)" }}
-              onMouseOver={(e) => { e.currentTarget.style.background = "rgba(200,146,42,0.08)"; }}
-              onMouseOut={(e) => { e.currentTarget.style.background = "transparent"; }}
-            >
-              {opt}
-              {mapHint?.[opt] && <span className="ml-2" style={{ fontSize: "11px", color: "var(--text-body)", opacity: 0.4 }}>{mapHint[opt]}</span>}
-            </button>
-          ))}
-        </div>
-      )}
+    <div style={{ position: "relative", marginBottom: 12 }}>
+      <input type={type} value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder || label} className="checkout-input" />
+      {value && <span className="checkout-label">{label}</span>}
     </div>
   );
 }

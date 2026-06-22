@@ -110,24 +110,120 @@ input, textarea, select {
   z-index: 1;
 }
 
-body.overlay-open {
+.checkout-backdrop {
   position: fixed;
-  top: var(--scroll-y, 0);
-  left: 0;
-  right: 0;
-  overflow: hidden;
+  inset: 0;
+  z-index: 400;
+  background: rgba(0,0,0,0.6);
 }
 
-.order-overlay-scroll {
-  position: absolute;
+.checkout-panel {
+  position: fixed;
   top: 0;
-  left: 0;
   right: 0;
   bottom: 0;
+  z-index: 401;
+  width: 100%;
+  max-width: 520px;
+  background: var(--bg-surface);
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
-  overscroll-behavior: contain;
+  overscroll-behavior-y: contain;
+}
+
+.checkout-close {
+  position: sticky;
+  top: 12px;
+  float: right;
+  margin-right: 16px;
+  z-index: 10;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: var(--bg-surface);
+  border: none;
+  border-radius: 50%;
+  font-family: var(--font-serif);
+  font-size: 1.8rem;
+  font-weight: 300;
+  color: var(--text-body);
+  line-height: 1;
+  cursor: pointer;
+}
+
+.checkout-content {
+  padding: 8px 32px 48px;
+  clear: both;
+}
+
+.checkout-input {
+  width: 100%;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 300;
+  color: var(--text-head);
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border-soft);
+  padding: 14px 0 10px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+.checkout-input:focus {
+  border-bottom-color: var(--gold);
+}
+.checkout-input::placeholder {
+  color: var(--text-body);
+  opacity: 0.35;
+}
+
+.checkout-label {
+  position: absolute;
+  left: 0;
+  top: -2px;
+  pointer-events: none;
+  font-family: var(--font-sans);
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+  opacity: 0.6;
+}
+
+.checkout-dropdown {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  z-index: 30;
+  max-height: 200px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-soft);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+}
+
+.checkout-dropdown-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 12px 14px;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--text-head);
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border-soft);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.checkout-dropdown-item:hover {
+  background: rgba(200,146,42,0.08);
 }
 
 @media (prefers-reduced-motion: reduce) {
