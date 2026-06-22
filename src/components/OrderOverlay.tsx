@@ -126,36 +126,45 @@ export function OrderOverlay({ artifact, isOpen, onClose }: OrderOverlayProps) {
           />
 
           <motion.div
-            className="fixed top-0 right-0 bottom-0 z-[401] w-full max-w-[520px] flex flex-col"
-            style={{ background: "var(--bg-surface)" }}
+            className="fixed top-0 right-0 bottom-0 z-[401] w-full max-w-[520px]"
+            style={{
+              background: "var(--bg-surface)",
+              overflowY: "scroll",
+              WebkitOverflowScrolling: "touch",
+            }}
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
           >
-            {/* Fixed close button */}
-            <div className="absolute top-4 right-5 z-20">
-              <button
-                onClick={handleClose}
-                className="w-10 h-10 flex items-center justify-center bg-transparent border-none"
-                style={{ fontFamily: "var(--font-serif)", fontSize: "1.8rem", fontWeight: 300, color: "var(--text-body)", lineHeight: 1 }}
-              >
-                ×
-              </button>
-            </div>
+            {/* Close button */}
+            <button
+              onClick={handleClose}
+              className="fixed z-20 w-10 h-10 flex items-center justify-center bg-transparent border-none"
+              style={{
+                top: "16px",
+                right: "20px",
+                fontFamily: "var(--font-serif)",
+                fontSize: "1.8rem",
+                fontWeight: 300,
+                color: "var(--text-body)",
+                lineHeight: 1,
+                background: "var(--bg-surface)",
+                borderRadius: "50%",
+              }}
+            >
+              ×
+            </button>
 
-            {/* Scrollable content */}
-            <div className="flex-1 overflow-y-auto overscroll-contain">
-              <AnimatePresence mode="wait">
-                {step === "confirmed" ? (
-                  <ConfirmationView key="confirmed" artifact={artifact} size={selectedSize} total={total} onClose={handleClose} />
-                ) : step === "select" ? (
-                  <SelectStep key="select" artifact={artifact} selectedSize={selectedSize} setSelectedSize={setSelectedSize} total={total} onContinue={() => setStep("details")} />
-                ) : (
-                  <DetailsStep key="details" artifact={artifact} selectedSize={selectedSize} total={total} form={form} updateField={updateField} canSubmit={!!canSubmit} onBack={() => setStep("select")} onSubmit={handlePlaceOrder} />
-                )}
-              </AnimatePresence>
-            </div>
+            <AnimatePresence mode="wait">
+              {step === "confirmed" ? (
+                <ConfirmationView key="confirmed" artifact={artifact} size={selectedSize} total={total} onClose={handleClose} />
+              ) : step === "select" ? (
+                <SelectStep key="select" artifact={artifact} selectedSize={selectedSize} setSelectedSize={setSelectedSize} total={total} onContinue={() => setStep("details")} />
+              ) : (
+                <DetailsStep key="details" artifact={artifact} selectedSize={selectedSize} total={total} form={form} updateField={updateField} canSubmit={!!canSubmit} onBack={() => setStep("select")} onSubmit={handlePlaceOrder} />
+              )}
+            </AnimatePresence>
           </motion.div>
         </>
       )}
