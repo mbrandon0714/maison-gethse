@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { supabase } from "@/lib/supabase";
 
 export async function POST(req: NextRequest) {
   try {
@@ -61,6 +62,28 @@ export async function POST(req: NextRequest) {
     }
 
     const checkoutUrl = data.data.attributes.checkout_url;
+    const sessionId = data.data.id;
+
+    // Save order to Supabase
+    await supabase.from("orders").insert({
+      paymongo_session_id: sessionId,
+      product_name: name,
+      size,
+      quantity,
+      subtotal: price * quantity,
+      shipping_fee: 80,
+      total: price * quantity + 80,
+      customer_first_name: customer.firstName,
+      customer_last_name: customer.lastName,
+      customer_email: customer.email,
+      customer_phone: customer.phone,
+      shipping_address: customer.address,
+      shipping_city: customer.city,
+      shipping_province: customer.province,
+      shipping_zip: customer.zip || "",
+      status: "paid",
+    });
+
     return NextResponse.json({ checkout_url: checkoutUrl });
   } catch (error) {
     console.error("Checkout error:", error);

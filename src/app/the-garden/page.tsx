@@ -112,10 +112,20 @@ export default function TheGardenPage() {
     return PROMPTS[Math.floor(Math.random() * PROMPTS.length)];
   }, []);
 
-  const handleSubmit = useCallback(() => {
+  const handleSubmit = useCallback(async () => {
     if (!seedText.trim()) return;
-    // TODO: POST to Supabase with status: "pending"
-    // { text: seedText, identity_type: identityType, display_name: displayName, prompt: currentPrompt }
+    try {
+      await fetch("/api/garden", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          text: seedText,
+          prompt: currentPrompt,
+          identityType,
+          displayName: identityType === "anonymous" ? null : displayName,
+        }),
+      });
+    } catch {}
     setSubmitted(true);
     setTimeout(() => {
       setFormOpen(false);
