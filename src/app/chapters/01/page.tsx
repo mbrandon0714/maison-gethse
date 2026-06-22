@@ -278,12 +278,20 @@ export default function Chapter01Page() {
       <main>
         {/* ═══ CHAPTER HERO ═══ */}
         <section className="relative min-h-screen flex items-end" style={{ background: "var(--void)" }}>
-          <ParallaxImage
-            src="/images/ch01/ch1_8216.jpg"
-            alt="Before We Knew — a boy resting with innocence"
-            className="absolute inset-0"
-          />
-          <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, rgba(10,13,10,0.3) 0%, rgba(10,13,10,0.85) 100%)" }} />
+          {/* Video background */}
+          <div className="absolute inset-0 overflow-hidden">
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="w-full h-full object-cover"
+              style={{ filter: "saturate(0.8) brightness(0.9)" }}
+            >
+              <source src="/video/intro-film.mp4" type="video/mp4" />
+            </video>
+          </div>
+          <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, rgba(10,13,10,0.35) 0%, rgba(10,13,10,0.88) 100%)" }} />
 
           <motion.div
             className="relative z-10 w-full px-6 md:px-12 pb-16 md:pb-24 max-w-4xl"
