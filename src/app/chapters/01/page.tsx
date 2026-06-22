@@ -384,7 +384,7 @@ export default function Chapter01Page() {
           src="/images/ch01/ch1_0878.jpg"
           alt="Three friends laughing under golden trees"
           className="h-[50vh] md:h-[70vh]"
-          objectPosition="center 25%"
+          objectPosition="center 55%"
         />
 
         {/* ═══ THE PERSON ═══ */}

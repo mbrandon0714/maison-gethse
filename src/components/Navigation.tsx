@@ -102,22 +102,36 @@ export function Navigation() {
             <li key={item.id}>
               <button
                 onClick={() => navigateTo(item)}
-                className="relative bg-transparent border-none cursor-pointer"
+                className="relative bg-transparent border-none cursor-pointer py-2 px-3 -mx-3"
                 style={{
                   fontFamily: "var(--font-sans)",
                   fontSize: "10px",
-                  fontWeight: 400,
+                  fontWeight: activeSection === item.id ? 500 : 400,
                   letterSpacing: "0.18em",
                   textTransform: "uppercase",
                   color: activeSection === item.id ? "var(--gold)" : "var(--text-head)",
-                  transition: "color 0.3s",
+                  background: activeSection === item.id ? "rgba(200,146,42,0.08)" : "transparent",
+                  borderRadius: "4px",
+                  transition: "all 0.3s ease",
+                }}
+                onMouseOver={(e) => {
+                  if (activeSection !== item.id) {
+                    e.currentTarget.style.color = "var(--gold)";
+                    e.currentTarget.style.background = "rgba(200,146,42,0.05)";
+                  }
+                }}
+                onMouseOut={(e) => {
+                  if (activeSection !== item.id) {
+                    e.currentTarget.style.color = "var(--text-head)";
+                    e.currentTarget.style.background = "transparent";
+                  }
                 }}
               >
                 {item.label}
                 {activeSection === item.id && (
                   <motion.div
                     layoutId="nav-indicator"
-                    className="absolute -bottom-1 left-0 right-0 h-[1px]"
+                    className="absolute bottom-0 left-3 right-3 h-[1.5px]"
                     style={{ background: "var(--gold)" }}
                     transition={{ type: "spring", stiffness: 350, damping: 30 }}
                   />

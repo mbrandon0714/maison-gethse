@@ -104,12 +104,12 @@ export default function CoverPage() {
               <motion.div
                 animate={
                   isUnlocking
-                    ? { scale: 1.15, opacity: 0.3 }
-                    : { scale: [1, 1.04, 1] }
+                    ? { rotate: 90, scale: 1.2, opacity: 0 }
+                    : { scale: [1, 1.05, 1] }
                 }
                 transition={
                   isUnlocking
-                    ? { duration: 0.8, ease: [0.16, 1, 0.3, 1] }
+                    ? { duration: 1, ease: [0.16, 1, 0.3, 1] }
                     : {
                         duration: 3,
                         repeat: Infinity,
