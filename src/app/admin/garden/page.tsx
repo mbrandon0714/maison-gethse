@@ -25,23 +25,22 @@ export default function AdminGardenPage() {
 
   useEffect(() => { fetchSeeds(); }, [fetchSeeds]);
 
-  const updateStatus = async (id: string, status: string) => {
-    await fetch("/api/admin/garden", {
+  const updateStatus = (id: string, status: string) => {
+    setSeeds(prev => prev.map(s => s.id === id ? { ...s, status } : s));
+    fetch("/api/admin/garden", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id, status }),
     });
-    fetchSeeds();
   };
 
-  const deleteSeed = async (id: string) => {
-    if (!confirm("Delete this seed permanently?")) return;
-    await fetch("/api/admin/garden", {
+  const deleteSeed = (id: string) => {
+    setSeeds(prev => prev.filter(s => s.id !== id));
+    fetch("/api/admin/garden", {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id }),
     });
-    fetchSeeds();
   };
 
   const filtered = filter === "all" ? seeds : seeds.filter(s => s.status === filter);
