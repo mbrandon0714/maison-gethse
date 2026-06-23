@@ -507,34 +507,55 @@ export default function Chapter01Page() {
                   {/* RIGHT — Product details */}
                   <FadeIn delay={0.15}>
                     <div>
-                      <p style={{ fontFamily: "var(--font-sans)", fontSize: 12, letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--gold)", marginBottom: 8 }}>{artifact.chapter || "Chapter 01 · Before We Knew"}</p>
-                      <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "clamp(1.6rem, 3vw, 2.2rem)", fontWeight: 400, color: "var(--text-head)", marginBottom: 4 }}>{artifact.name}</h2>
-                      <p style={{ fontFamily: "var(--font-sans)", fontSize: 14, color: "var(--text-body)", opacity: 0.6, marginBottom: 8 }}>100% Cotton · Screen-printed · Oversized Fit</p>
+                      <p style={{ fontFamily: "var(--font-sans)", fontSize: 14, letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--gold)", marginBottom: 10 }}>{artifact.chapter}</p>
+                      <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "clamp(1.8rem, 3.5vw, 2.6rem)", fontWeight: 400, color: "var(--text-head)", marginBottom: 6 }}>{artifact.name}</h2>
+                      <p style={{ fontFamily: "var(--font-sans)", fontSize: 16, color: "var(--text-body)", opacity: 0.7, marginBottom: 12 }}>100% Cotton · Screen-printed · Oversized Fit</p>
 
-                      {/* Reviews placeholder */}
-                      <div className="flex items-center gap-2 mb-6">
-                        <div className="flex gap-0.5">{[1,2,3,4,5].map(s => <svg key={s} width="14" height="14" viewBox="0 0 24 24" fill={s <= 5 ? "var(--gold)" : "none"} stroke="var(--gold)" strokeWidth="1.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>)}</div>
-                        <span style={{ fontFamily: "var(--font-sans)", fontSize: 13, color: "var(--text-body)", opacity: 0.5 }}>0 reviews</span>
+                      {/* Reviews */}
+                      <div className="flex items-center gap-3 mb-8">
+                        <div className="flex gap-1">{[1,2,3,4,5].map(s => <svg key={s} width="18" height="18" viewBox="0 0 24 24" fill="var(--gold)" stroke="var(--gold)" strokeWidth="1"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>)}</div>
+                        <span style={{ fontFamily: "var(--font-sans)", fontSize: 14, color: "var(--text-body)", opacity: 0.5 }}>No reviews yet</span>
                       </div>
 
                       {/* Price */}
-                      <p style={{ fontFamily: "var(--font-serif)", fontSize: "1.6rem", fontWeight: 400, color: "var(--text-head)", marginBottom: 20 }}>{artifact.priceDisplay}</p>
+                      <p style={{ fontFamily: "var(--font-serif)", fontSize: "2rem", fontWeight: 400, color: "var(--text-head)", marginBottom: 24 }}>{artifact.priceDisplay}</p>
 
                       {/* Color */}
-                      <p style={{ fontFamily: "var(--font-sans)", fontSize: 12, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--text-body)", marginBottom: 8 }}>Color · <span style={{ color: "var(--text-head)" }}>White</span></p>
-                      <div className="mb-6">
-                        <div style={{ width: 32, height: 32, borderRadius: "50%", background: "#f5f5f0", border: "2px solid var(--gold)" }} />
+                      <p style={{ fontFamily: "var(--font-sans)", fontSize: 14, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--text-body)", marginBottom: 10 }}>Color · <span style={{ color: "var(--text-head)", fontWeight: 500 }}>White</span></p>
+                      <div className="mb-8">
+                        <div style={{ width: 36, height: 36, borderRadius: "50%", background: "#f5f5f0", border: "2px solid var(--gold)", cursor: "pointer" }} />
                       </div>
 
                       {/* Size */}
-                      <div className="flex justify-between items-center mb-3">
-                        <p style={{ fontFamily: "var(--font-sans)", fontSize: 12, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--text-body)" }}>Size</p>
-                        <button type="button" style={{ fontFamily: "var(--font-sans)", fontSize: 12, color: "var(--gold)", background: "none", border: "none", textDecoration: "underline", textUnderlineOffset: 3, cursor: "pointer" }}>Size Chart</button>
+                      <div className="flex justify-between items-center mb-4">
+                        <p style={{ fontFamily: "var(--font-sans)", fontSize: 14, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--text-body)" }}>Size</p>
+                        <button type="button" onClick={() => setExpandedSection(expandedSection === "sizechart" ? null : "sizechart")} style={{ fontFamily: "var(--font-sans)", fontSize: 14, color: "var(--gold)", background: "none", border: "none", textDecoration: "underline", textUnderlineOffset: 4, cursor: "pointer" }}>Size Chart</button>
                       </div>
-                      <div className="grid grid-cols-5 gap-2 mb-4">
+
+                      {/* Size chart popup */}
+                      {expandedSection === "sizechart" && (
+                        <div className="fixed inset-0 z-[600] flex items-center justify-center p-4" onClick={() => setExpandedSection(null)}>
+                          <div className="absolute inset-0 bg-black/70" />
+                          <div className="relative z-10 w-full max-w-md p-8" style={{ background: "var(--bg-surface)", border: "1px solid var(--border-soft)", borderRadius: 12 }} onClick={e => e.stopPropagation()}>
+                            <button onClick={() => setExpandedSection(null)} className="absolute top-4 right-5" style={{ background: "none", border: "none", fontFamily: "var(--font-serif)", fontSize: "1.6rem", fontWeight: 300, color: "var(--text-body)", cursor: "pointer" }}>×</button>
+                            <h4 style={{ fontFamily: "var(--font-serif)", fontSize: "1.5rem", fontWeight: 300, color: "var(--text-head)", marginBottom: 6 }}>Size Chart</h4>
+                            <p style={{ fontFamily: "var(--font-sans)", fontSize: 14, color: "var(--text-body)", opacity: 0.5, marginBottom: 20 }}>Measurements in inches · Oversized fit — size down for regular</p>
+                            <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                              <thead><tr>{["Size","Chest","Length","Shoulder"].map(h=><th key={h} style={{ textAlign: "left", padding: "12px 16px", fontSize: 13, fontWeight: 600, color: "var(--text-body)", borderBottom: "2px solid var(--border-soft)", textTransform: "uppercase", letterSpacing: "0.08em", fontFamily: "var(--font-sans)" }}>{h}</th>)}</tr></thead>
+                              <tbody>
+                                {[{s:"XS",c:'34"',l:'26"',sh:'16"'},{s:"S",c:'36"',l:'27"',sh:'17"'},{s:"M",c:'38"',l:'28"',sh:'18"'},{s:"L",c:'40"',l:'29"',sh:'19"'},{s:"XL",c:'42"',l:'30"',sh:'20"'}].map(r=>
+                                  <tr key={r.s}><td style={{padding:"14px 16px",fontSize:16,fontWeight:500,color:"var(--text-head)",borderBottom:"1px solid var(--border-soft)",fontFamily:"var(--font-sans)"}}>{r.s}</td><td style={{padding:"14px 16px",fontSize:16,fontWeight:300,color:"var(--text-body)",borderBottom:"1px solid var(--border-soft)",fontFamily:"var(--font-sans)"}}>{r.c}</td><td style={{padding:"14px 16px",fontSize:16,fontWeight:300,color:"var(--text-body)",borderBottom:"1px solid var(--border-soft)",fontFamily:"var(--font-sans)"}}>{r.l}</td><td style={{padding:"14px 16px",fontSize:16,fontWeight:300,color:"var(--text-body)",borderBottom:"1px solid var(--border-soft)",fontFamily:"var(--font-sans)"}}>{r.sh}</td></tr>
+                                )}
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      )}
+
+                      <div className="grid grid-cols-5 gap-2 mb-5">
                         {artifact.sizes.filter(s => s.label !== "2XL").map(s => (
                           <button key={s.label} disabled={s.stock === 0} onClick={() => setSelectedSize(s.label)}
-                            style={{ padding: "12px 0", fontFamily: "var(--font-sans)", fontSize: 14, fontWeight: selectedSize === s.label ? 500 : 300, color: selectedSize === s.label ? "#fff" : "var(--text-head)", background: selectedSize === s.label ? "var(--green)" : "transparent", border: selectedSize === s.label ? "1px solid var(--green)" : "1px solid var(--border-soft)", opacity: s.stock === 0 ? 0.2 : 1, cursor: s.stock === 0 ? "not-allowed" : "pointer", transition: "all 0.2s" }}>
+                            style={{ padding: "14px 0", fontFamily: "var(--font-sans)", fontSize: 15, fontWeight: selectedSize === s.label ? 600 : 300, color: selectedSize === s.label ? "#fff" : "var(--text-head)", background: selectedSize === s.label ? "var(--green)" : "transparent", border: selectedSize === s.label ? "2px solid var(--green)" : "1px solid var(--border-soft)", opacity: s.stock === 0 ? 0.2 : 1, cursor: s.stock === 0 ? "not-allowed" : "pointer", transition: "all 0.2s", borderRadius: 4 }}>
                             {s.label}
                           </button>
                         ))}
@@ -542,8 +563,8 @@ export default function Chapter01Page() {
 
                       {/* Stock */}
                       {selectedSize && (
-                        <p style={{ fontFamily: "var(--font-sans)", fontSize: 12, color: currentStock <= 3 ? "var(--gold)" : "var(--text-body)", opacity: 0.7, marginBottom: 16 }}>
-                          {currentStock} in stock. Limited archive.
+                        <p style={{ fontFamily: "var(--font-sans)", fontSize: 14, color: currentStock <= 3 ? "var(--gold)" : "var(--text-body)", marginBottom: 20 }}>
+                          {currentStock} in stock · Limited archive
                         </p>
                       )}
 
@@ -551,19 +572,9 @@ export default function Chapter01Page() {
                       <button
                         disabled={!selectedSize || currentStock === 0}
                         onClick={() => {
-                          addItem({
-                            id: artifact.id,
-                            name: artifact.name,
-                            price: artifact.price,
-                            priceDisplay: artifact.priceDisplay,
-                            size: selectedSize,
-                            color: "White",
-                            image: artifact.image,
-                            chapter: "Chapter 01",
-                            maxStock: currentStock,
-                          });
+                          addItem({ id: artifact.id, name: artifact.name, price: artifact.price, priceDisplay: artifact.priceDisplay, size: selectedSize, color: "White", image: artifact.image, chapter: "Chapter 01", maxStock: currentStock });
                         }}
-                        style={{ width: "100%", padding: "18px 0", fontFamily: "var(--font-sans)", fontSize: 13, fontWeight: 400, letterSpacing: "0.18em", textTransform: "uppercase", color: "#fff", background: "var(--green)", border: "none", cursor: selectedSize ? "pointer" : "not-allowed", opacity: selectedSize ? 1 : 0.4, transition: "all 0.3s", marginBottom: 20 }}>
+                        style={{ width: "100%", padding: "20px 0", fontFamily: "var(--font-sans)", fontSize: 15, fontWeight: 500, letterSpacing: "0.16em", textTransform: "uppercase", color: "#fff", background: "var(--green)", border: "none", cursor: selectedSize ? "pointer" : "not-allowed", opacity: selectedSize ? 1 : 0.35, transition: "all 0.3s", borderRadius: 4, marginBottom: 24 }}>
                         {selectedSize ? `Add to Cart — ${artifact.priceDisplay}` : "Select a Size"}
                       </button>
 
@@ -571,13 +582,13 @@ export default function Chapter01Page() {
                       {expandables.map(sec => (
                         <div key={sec.key} style={{ borderTop: "1px solid var(--border-soft)" }}>
                           <button onClick={() => setExpandedSection(expandedSection === sec.key ? null : sec.key)}
-                            className="w-full flex justify-between items-center py-4" style={{ background: "none", border: "none", cursor: "pointer" }}>
-                            <span style={{ fontFamily: "var(--font-sans)", fontSize: 13, fontWeight: 400, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--text-head)" }}>{sec.label}</span>
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--text-body)" strokeWidth="1.5" style={{ transform: expandedSection === sec.key ? "rotate(180deg)" : "rotate(0)", transition: "transform 0.3s" }}><path d="M6 9l6 6 6-6"/></svg>
+                            className="w-full flex justify-between items-center py-5" style={{ background: "none", border: "none", cursor: "pointer" }}>
+                            <span style={{ fontFamily: "var(--font-sans)", fontSize: 15, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--text-head)" }}>{sec.label}</span>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-body)" strokeWidth="1.5" style={{ transform: expandedSection === sec.key ? "rotate(180deg)" : "rotate(0)", transition: "transform 0.3s" }}><path d="M6 9l6 6 6-6"/></svg>
                           </button>
                           {expandedSection === sec.key && (
-                            <div style={{ paddingBottom: 16 }}>
-                              <p style={{ fontFamily: "var(--font-sans)", fontSize: 14, fontWeight: 300, lineHeight: 1.9, color: "var(--text-body)", opacity: 0.7, whiteSpace: "pre-line" }}>{sec.content}</p>
+                            <div style={{ paddingBottom: 20 }}>
+                              <p style={{ fontFamily: "var(--font-sans)", fontSize: 15, fontWeight: 300, lineHeight: 2, color: "var(--text-body)", opacity: 0.8, whiteSpace: "pre-line" }}>{sec.content}</p>
                             </div>
                           )}
                         </div>
