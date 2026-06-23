@@ -140,7 +140,9 @@ export default function HomePage() {
               <a
                 href="/chapters/01"
                 className="block mt-16 group relative overflow-hidden no-underline"
-                style={{ background: "var(--bg-surface)", transition: "background 0.5s" }}
+                style={{ background: "var(--bg-surface)", transition: "all 0.5s", border: "1px solid transparent" }}
+                onMouseOver={e => { e.currentTarget.style.borderColor = "rgba(200,146,42,0.2)"; e.currentTarget.style.boxShadow = "0 8px 40px rgba(200,146,42,0.08)"; }}
+                onMouseOut={e => { e.currentTarget.style.borderColor = "transparent"; e.currentTarget.style.boxShadow = "none"; }}
               >
                 <div className="grid md:grid-cols-2">
                   <div className="aspect-[16/10] md:aspect-auto relative overflow-hidden" style={{ background: "var(--bg-mid)", minHeight: "320px" }}>
@@ -253,38 +255,42 @@ export default function HomePage() {
         <section id="lens" className="py-32 px-6 md:px-12" style={{ background: "var(--bg-body)", transition: "background 0.5s" }}>
           <div className="max-w-5xl mx-auto">
             <FadeIn>
-              <p className="mb-4" style={{ fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 400, letterSpacing: "0.22em", textTransform: "uppercase", color: "var(--gold)" }}>
-                The Lens
-              </p>
-              <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "clamp(2rem, 4vw, 3.2rem)", fontWeight: 300, color: "var(--text-head)", lineHeight: 1.1 }}>
-                Documented, not <em style={{ fontStyle: "italic" }}>displayed.</em>
-              </h2>
-              <p className="mt-4 max-w-lg" style={{ fontFamily: "var(--font-sans)", fontSize: "17px", fontWeight: 300, lineHeight: 2, color: "var(--text-body)", letterSpacing: "0.02em" }}>
-                A visual archive of chapters and the stories between them. Photography as memory — grounded, intentional, honest.
-              </p>
+              <div className="flex justify-between items-end flex-wrap gap-4">
+                <div>
+                  <p className="mb-4" style={{ fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 400, letterSpacing: "0.22em", textTransform: "uppercase", color: "var(--gold)" }}>
+                    The Lens
+                  </p>
+                  <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "clamp(2rem, 4vw, 3.2rem)", fontWeight: 300, color: "var(--text-head)", lineHeight: 1.1 }}>
+                    Documented, not <em style={{ fontStyle: "italic" }}>displayed.</em>
+                  </h2>
+                  <p className="mt-4 max-w-lg" style={{ fontFamily: "var(--font-sans)", fontSize: "17px", fontWeight: 300, lineHeight: 2, color: "var(--text-body)", letterSpacing: "0.02em" }}>
+                    A visual archive of chapters and the stories between them.
+                  </p>
+                </div>
+                <a href="/the-lens" className="no-underline" style={{ fontFamily: "var(--font-sans)", fontSize: "14px", fontWeight: 400, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--gold)", transition: "opacity 0.3s", whiteSpace: "nowrap" }}>
+                  View Full Archive →
+                </a>
+              </div>
             </FadeIn>
 
             {/* Photo grid placeholder */}
             <FadeIn delay={0.2}>
-              <div className="mt-12 grid grid-cols-2 md:grid-cols-3 gap-[3px]">
+              <div className="mt-12 columns-2 md:columns-3 gap-[3px]">
                 {[
-                  { src: "/images/ch01/ch1_8216.jpg", alt: "Boy with teddy bear", aspect: "3/4" },
-                  { src: "/images/ch01/ch1_0655.jpg", alt: "Paper boat in puddle", aspect: "1/1" },
-                  { src: "/images/ch01/ch1_0878.jpg", alt: "Friends under golden trees", aspect: "4/5" },
-                  { src: "/images/ch01/ch1_0733.jpg", alt: "Kids in a tree", aspect: "4/5" },
-                  { src: "/images/ch01/ch1_5863.jpg", alt: "Overgrown playground", aspect: "1/1" },
-                  { src: "/images/ch01/ch1_talipapa.jpg", alt: "Boys at talipapa market", aspect: "3/4" },
-                ].map((photo, i) => (
-                  <div
-                    key={i}
-                    className="relative overflow-hidden cursor-pointer group"
-                    style={{ aspectRatio: photo.aspect }}
-                  >
+                  "/images/ch01/ch1_8216.jpg",
+                  "/images/ch01/ch1_0655.jpg",
+                  "/images/ch01/ch1_0878.jpg",
+                  "/images/ch01/ch1_0733.jpg",
+                  "/images/ch01/ch1_5863.jpg",
+                  "/images/ch01/ch1_talipapa.jpg",
+                ].map((src, i) => (
+                  <div key={i} className="break-inside-avoid mb-[3px] overflow-hidden cursor-pointer group">
                     <Image
-                      src={photo.src}
-                      alt={photo.alt}
-                      fill
-                      className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                      src={src}
+                      alt="Chapter 01 photography"
+                      width={500}
+                      height={600}
+                      className="w-full block transition-all duration-700 group-hover:scale-[1.04]"
                       style={{ filter: "saturate(0.85) contrast(1.05) brightness(0.95)" }}
                       sizes="(max-width: 768px) 50vw, 33vw"
                     />
@@ -293,26 +299,6 @@ export default function HomePage() {
               </div>
             </FadeIn>
 
-            <FadeIn delay={0.3}>
-              <div className="mt-8 text-center">
-                <a
-                  href="/the-lens"
-                  className="inline-block no-underline"
-                  style={{
-                    fontFamily: "var(--font-sans)",
-                    fontSize: "11px",
-                    fontWeight: 400,
-                    letterSpacing: "0.2em",
-                    textTransform: "uppercase",
-                    color: "var(--text-head)",
-                    opacity: 0.5,
-                    transition: "opacity 0.3s",
-                  }}
-                >
-                  View Full Archive →
-                </a>
-              </div>
-            </FadeIn>
           </div>
         </section>
 
