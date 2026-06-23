@@ -117,12 +117,12 @@ export default function TheGardenPage() {
   const [seedText, setSeedText] = useState("");
   const [liveSeeds, setLiveSeeds] = useState<Seed[]>([]);
 
-  // Fetch approved seeds from Supabase
-  useEffect(() => {
+  // Fetch approved seeds + subscribe to real-time updates
+  const fetchSeeds = useCallback(() => {
     fetch("/api/garden")
       .then(res => res.json())
       .then(data => {
-        if (data.seeds && data.seeds.length > 0) {
+        if (data.seeds) {
           const mapped = data.seeds.map((s: { id: string; text: string; prompt: string; identity_type: string; display_name: string | null }, i: number) => ({
             id: s.id,
             text: s.text,
@@ -134,7 +134,14 @@ export default function TheGardenPage() {
         }
       })
       .catch(() => {});
-  }, [submitted]);
+  }, []);
+
+  useEffect(() => {
+    fetchSeeds();
+    // Poll every 10 seconds for near-instant updates
+    const interval = setInterval(fetchSeeds, 10000);
+    return () => clearInterval(interval);
+  }, [fetchSeeds, submitted]);
 
   // Combine live seeds with sample seeds as fallback
   const allSeeds: Seed[] = liveSeeds.length > 0
