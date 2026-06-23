@@ -463,62 +463,50 @@ export default function TheGardenPage() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.8 }}
           >
-            {/* Golden seed drops */}
-            <motion.div
-              style={{ width: 14, height: 14, borderRadius: "50%", background: "#c8922a", position: "relative", zIndex: 2 }}
-              initial={{ y: -100, scale: 0, opacity: 0 }}
-              animate={{ y: 0, scale: [0, 1.5, 1], opacity: 1, boxShadow: ["0 0 0 0 rgba(200,146,42,0)", "0 0 80px 40px rgba(200,146,42,0.5)", "0 0 50px 20px rgba(200,146,42,0.2)"] }}
-              transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-            />
-
-            {/* Roots spread */}
-            <div className="flex items-center" style={{ marginTop: -7, position: "relative", zIndex: 1 }}>
-              <motion.div style={{ height: 2, background: "linear-gradient(to left, #c8922a, transparent)" }} initial={{ width: 0 }} animate={{ width: 200 }} transition={{ duration: 1.5, delay: 0.8, ease: [0.16, 1, 0.3, 1] }} />
-              <motion.div style={{ height: 2, background: "linear-gradient(to right, #c8922a, transparent)" }} initial={{ width: 0 }} animate={{ width: 200 }} transition={{ duration: 1.5, delay: 0.8, ease: [0.16, 1, 0.3, 1] }} />
-            </div>
-
-            {/* Sprout upward */}
-            <motion.div
-              style={{ width: 3, background: "linear-gradient(to top, #c8922a, rgba(200,146,42,0))", marginTop: -2, position: "relative", zIndex: 2 }}
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: 160, opacity: 1 }}
-              transition={{ duration: 2, delay: 1.5, ease: [0.16, 1, 0.3, 1] }}
-            />
-
-            {/* Bloom */}
-            <motion.div
-              style={{ width: 10, height: 10, borderRadius: "50%", background: "#c8922a", marginTop: -5, position: "relative", zIndex: 2 }}
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: [0, 2.5, 1.5], opacity: [0, 1, 0.7], boxShadow: ["0 0 0 0 rgba(200,146,42,0)", "0 0 80px 40px rgba(200,146,42,0.5)", "0 0 40px 15px rgba(200,146,42,0.15)"] }}
-              transition={{ duration: 1.5, delay: 2.8, ease: "easeOut" }}
-            />
-
-            {/* Fireflies from bloom */}
-            {Array.from({ length: 16 }).map((_, i) => (
-              <motion.div
-                key={i}
-                className="absolute rounded-full"
-                style={{ width: i % 3 === 0 ? 6 : 3, height: i % 3 === 0 ? 6 : 3, background: "#c8922a", boxShadow: "0 0 10px 4px rgba(200,146,42,0.5)", left: "50%", top: "45%", zIndex: 3 }}
-                initial={{ opacity: 0, x: 0, y: 0, scale: 0 }}
-                animate={{ opacity: [0, 1, 0], x: Math.cos(i * 22.5 * Math.PI / 180) * (80 + i * 10), y: Math.sin(i * 22.5 * Math.PI / 180) * (80 + i * 10) - 40, scale: [0, 1.5, 0] }}
-                transition={{ duration: 2.5, delay: 3.2 + i * 0.06, ease: "easeOut" }}
-              />
-            ))}
+            {/* Many scattered fireflies */}
+            {Array.from({ length: 40 }).map((_, i) => {
+              const startX = Math.random() * 100;
+              const startY = Math.random() * 100;
+              const size = 2 + Math.random() * 5;
+              const delay = Math.random() * 1.5;
+              const duration = 3 + Math.random() * 3;
+              return (
+                <motion.div
+                  key={i}
+                  className="absolute rounded-full"
+                  style={{
+                    width: size, height: size,
+                    background: "#c8922a",
+                    boxShadow: `0 0 ${size * 3}px ${size}px rgba(200,146,42,${0.2 + Math.random() * 0.3})`,
+                    left: `${startX}%`,
+                    top: `${startY}%`,
+                  }}
+                  initial={{ opacity: 0, scale: 0 }}
+                  animate={{
+                    opacity: [0, 0.6 + Math.random() * 0.4, 0.3, 0.7, 0.4],
+                    scale: [0, 1, 0.8, 1.2, 1],
+                    x: [0, (Math.random() - 0.5) * 40, (Math.random() - 0.5) * 60],
+                    y: [0, (Math.random() - 0.5) * 30, -20 - Math.random() * 30],
+                  }}
+                  transition={{ duration, delay, ease: "easeInOut", repeat: Infinity, repeatType: "mirror" }}
+                />
+              );
+            })}
 
             {/* Text */}
             <motion.h3
-              style={{ fontFamily: "var(--font-serif)", fontSize: "clamp(2rem, 5vw, 3rem)", fontWeight: 300, fontStyle: "italic", color: "#f4f1ec", marginTop: 40, position: "relative", zIndex: 4 }}
-              initial={{ opacity: 0, y: 30 }}
+              style={{ fontFamily: "var(--font-serif)", fontSize: "clamp(2rem, 5vw, 3rem)", fontWeight: 300, fontStyle: "italic", color: "#f4f1ec", position: "relative", zIndex: 4, textAlign: "center", padding: "0 24px" }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1.2, delay: 3.8 }}
+              transition={{ duration: 1.5, delay: 0.5 }}
             >
               Your seed has been planted.
             </motion.h3>
             <motion.p
-              style={{ fontFamily: "var(--font-sans)", fontSize: 17, fontWeight: 300, color: "#d8d4ce", opacity: 0.5, marginTop: 20, position: "relative", zIndex: 4 }}
+              style={{ fontFamily: "var(--font-sans)", fontSize: 17, fontWeight: 300, color: "#d8d4ce", marginTop: 16, position: "relative", zIndex: 4, textAlign: "center" }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 0.5 }}
-              transition={{ duration: 1, delay: 4.5 }}
+              transition={{ duration: 1, delay: 1.5 }}
             >
               Thank you for sharing what you carry.
             </motion.p>
