@@ -203,25 +203,26 @@ export default function TheLensPage() {
                   onClick={() => setSubmitOpen(true)}
                   className="cursor-pointer"
                   style={{
-                    fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400,
-                    letterSpacing: "0.18em", textTransform: "uppercase",
-                    color: "var(--beige)", opacity: 0.4, background: "transparent",
-                    border: "1px solid rgba(216,212,206,0.12)", padding: "8px 16px",
-                    transition: "all 0.3s",
+                    fontFamily: "var(--font-sans)", fontSize: "14px", fontWeight: 500,
+                    letterSpacing: "0.14em", textTransform: "uppercase",
+                    color: "var(--beige-light)", background: "var(--green)",
+                    border: "2px solid var(--green)", padding: "14px 28px",
+                    transition: "all 0.3s", borderRadius: 4,
                   }}
+                  onMouseOver={e => { e.currentTarget.style.background = "var(--gold)"; e.currentTarget.style.borderColor = "var(--gold)"; e.currentTarget.style.color = "#0f130f"; }}
+                  onMouseOut={e => { e.currentTarget.style.background = "var(--green)"; e.currentTarget.style.borderColor = "var(--green)"; e.currentTarget.style.color = "var(--beige-light)"; }}
                 >
                   Submit Your Work →
                 </button>
-                <style>{`.submit-glow:hover { border-color: var(--gold) !important; background: rgba(200,146,42,0.08) !important; color: var(--gold) !important; }`}</style>
               </div>
             </FadeIn>
 
             {/* Masonry gallery */}
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 6 }}>
+            <div className="columns-2 md:columns-3 gap-[4px]">
               {filteredPhotos.map((photo, i) => (
                 <FadeIn key={i} delay={0.04 * Math.min(i, 6)}>
                   <div
-                    className="overflow-hidden cursor-pointer relative group"
+                    className="break-inside-avoid mb-[4px] overflow-hidden cursor-pointer relative group"
                     onClick={() => openLightbox(i)}
                   >
                     <Image

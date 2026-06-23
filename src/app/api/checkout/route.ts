@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
         data: {
           attributes: {
             line_items: lineItems,
-            payment_method_types: ["gcash", "maya", "card", "dob", "paymaya"],
+            payment_method_types: ["gcash", "paymaya", "card", "qrph"],
             success_url: `${origin}/order/success?session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `${origin}/chapters/01`,
             description: `Maison Gethse — ${name} (Size ${size} × ${quantity})`,
