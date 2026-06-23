@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useMemo, useCallback } from "react";
+import { useRef, useState, useMemo, useCallback, useEffect } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { Navigation } from "@/components/Navigation";
 import { MuteToggle } from "@/components/MuteToggle";
@@ -100,13 +100,46 @@ const SAMPLE_SEEDS = [
   },
 ];
 
+interface Seed {
+  id: string | number;
+  text: string;
+  prompt: string;
+  author: string;
+  rotation: number;
+}
+
 export default function TheGardenPage() {
   const [formOpen, setFormOpen] = useState(false);
-  const [previewSeed, setPreviewSeed] = useState<typeof SAMPLE_SEEDS[0] | null>(null);
+  const [previewSeed, setPreviewSeed] = useState<Seed | null>(null);
   const [submitted, setSubmitted] = useState(false);
   const [identityType, setIdentityType] = useState<"anonymous" | "penname" | "name">("anonymous");
   const [displayName, setDisplayName] = useState("");
   const [seedText, setSeedText] = useState("");
+  const [liveSeeds, setLiveSeeds] = useState<Seed[]>([]);
+
+  // Fetch approved seeds from Supabase
+  useEffect(() => {
+    fetch("/api/garden")
+      .then(res => res.json())
+      .then(data => {
+        if (data.seeds && data.seeds.length > 0) {
+          const mapped = data.seeds.map((s: { id: string; text: string; prompt: string; identity_type: string; display_name: string | null }, i: number) => ({
+            id: s.id,
+            text: s.text,
+            prompt: s.prompt,
+            author: s.identity_type === "anonymous" ? "Anonymous" : (s.display_name || "Anonymous"),
+            rotation: ((i * 1.7) % 5) - 2.5,
+          }));
+          setLiveSeeds(mapped);
+        }
+      })
+      .catch(() => {});
+  }, [submitted]);
+
+  // Combine live seeds with sample seeds as fallback
+  const allSeeds: Seed[] = liveSeeds.length > 0
+    ? [...liveSeeds, ...SAMPLE_SEEDS.slice(0, Math.max(0, 8 - liveSeeds.length))]
+    : SAMPLE_SEEDS;
 
   const currentPrompt = useMemo(() => {
     return PROMPTS[Math.floor(Math.random() * PROMPTS.length)];
@@ -223,7 +256,7 @@ export default function TheGardenPage() {
 
             {/* Organic scattered layout */}
             <div className="flex flex-wrap justify-center gap-5 md:gap-6">
-              {SAMPLE_SEEDS.map((seed, i) => (
+              {allSeeds.map((seed, i) => (
                 <FadeIn key={seed.id} delay={0.08 * i}>
                   <motion.div
                     className="max-w-[320px] p-6 relative cursor-pointer"
