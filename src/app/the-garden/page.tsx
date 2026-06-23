@@ -404,7 +404,7 @@ export default function TheGardenPage() {
           <>
             <motion.div
               className="fixed inset-0 z-[400]"
-              style={{ background: "rgba(0,0,0,0.8)" }}
+              style={{ background: "rgba(5,7,5,0.92)" }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -417,33 +417,69 @@ export default function TheGardenPage() {
               exit={{ opacity: 0 }}
               onClick={() => setPreviewSeed(null)}
             >
+              {/* Ambient fireflies behind the card */}
+              {Array.from({ length: 8 }).map((_, i) => (
+                <motion.div
+                  key={i}
+                  className="absolute rounded-full"
+                  style={{
+                    width: 3 + (i % 3), height: 3 + (i % 3),
+                    background: "#c8922a",
+                    boxShadow: `0 0 ${8 + i * 2}px ${3 + i}px rgba(200,146,42,0.2)`,
+                    left: `${15 + (i * 9) % 70}%`,
+                    top: `${20 + (i * 11) % 60}%`,
+                  }}
+                  animate={{
+                    y: [0, -8, 4, 0],
+                    x: [0, (i % 2 === 0 ? 6 : -6), 0],
+                    opacity: [0.2, 0.5, 0.2],
+                  }}
+                  transition={{ duration: 4 + i, repeat: Infinity, ease: "easeInOut" }}
+                />
+              ))}
+
               <motion.div
-                className="w-full max-w-md p-10 relative text-center"
-                style={{ background: "#141a14", border: "1px solid rgba(216,212,206,0.1)", borderRadius: "24px" }}
-                initial={{ y: 20, scale: 0.97 }}
-                animate={{ y: 0, scale: 1 }}
-                exit={{ y: 20, scale: 0.97 }}
+                className="w-full max-w-lg relative text-center overflow-hidden"
+                style={{
+                  padding: "48px 36px 40px",
+                  background: "linear-gradient(135deg, rgba(200,146,42,0.08) 0%, rgba(10,14,10,0.95) 40%, rgba(10,14,10,0.98) 100%)",
+                  border: "1px solid rgba(200,146,42,0.15)",
+                  borderRadius: "48px 10px 48px 10px",
+                  boxShadow: "0 0 60px rgba(200,146,42,0.08), 0 0 120px rgba(200,146,42,0.04), inset 0 0 40px rgba(200,146,42,0.03)",
+                }}
+                initial={{ y: 30, scale: 0.95, opacity: 0 }}
+                animate={{ y: 0, scale: 1, opacity: 1 }}
+                exit={{ y: 30, scale: 0.95, opacity: 0 }}
+                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                 onClick={(e) => e.stopPropagation()}
               >
+                {/* Leaf vein */}
+                <div className="absolute top-6 left-1/2 w-[1px] h-[30%] -translate-x-1/2 pointer-events-none" style={{ background: "linear-gradient(to bottom, rgba(200,146,42,0.2), transparent)" }} />
+
+                {/* Close */}
                 <button
                   onClick={() => setPreviewSeed(null)}
-                  className="absolute top-4 right-5 bg-transparent border-none"
-                  style={{ fontFamily: "var(--font-serif)", fontSize: "1.6rem", fontWeight: 300, color: "var(--beige)", opacity: 0.4, lineHeight: 1 }}
+                  className="absolute top-5 right-6 bg-transparent border-none"
+                  style={{ fontFamily: "var(--font-serif)", fontSize: "1.6rem", fontWeight: 300, color: "rgba(200,146,42,0.4)", lineHeight: 1, cursor: "pointer" }}
                 >
                   ×
                 </button>
 
-                <p className="mb-4" style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400, letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--gold)", opacity: 0.6 }}>
+                {/* Prompt */}
+                <p className="mb-6" style={{ fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 500, letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--gold)", opacity: 0.5 }}>
                   {previewSeed.prompt}
                 </p>
 
-                <p style={{ fontFamily: "var(--font-hand)", fontSize: "clamp(1.3rem, 3vw, 1.8rem)", fontWeight: 400, color: "#f4f1ec", lineHeight: 1.7, opacity: 0.9 }}>
+                {/* The seed text — large */}
+                <p style={{ fontFamily: "var(--font-hand)", fontSize: "clamp(1.5rem, 3.5vw, 2.2rem)", fontWeight: 400, color: "#f4f1ec", lineHeight: 1.7, opacity: 0.9 }}>
                   &ldquo;{previewSeed.text}&rdquo;
                 </p>
 
-                <div className="w-[1px] h-[20px] mx-auto my-6" style={{ background: "var(--beige)", opacity: 0.1 }} />
+                {/* Gold divider */}
+                <div className="w-[30px] h-[1px] mx-auto my-8" style={{ background: "var(--gold)", opacity: 0.25 }} />
 
-                <p style={{ fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 400, letterSpacing: "0.16em", textTransform: "uppercase", color: "#d8d4ce", opacity: 0.3 }}>
+                {/* Author */}
+                <p style={{ fontFamily: "var(--font-sans)", fontSize: "13px", fontWeight: 400, letterSpacing: "0.18em", textTransform: "uppercase", color: "#d8d4ce", opacity: 0.3 }}>
                   — {previewSeed.author}
                 </p>
               </motion.div>
