@@ -253,6 +253,7 @@ export default function Chapter01Page() {
   const [selectedSize, setSelectedSize] = useState("");
   const [productImg, setProductImg] = useState(0);
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
+  const [sizeChartOpen, setSizeChartOpen] = useState(false);
 
   const openLightbox = useCallback((index: number) => {
     setLightboxIndex(index);
@@ -529,15 +530,15 @@ export default function Chapter01Page() {
                       {/* Size */}
                       <div className="flex justify-between items-center mb-4">
                         <p style={{ fontFamily: "var(--font-sans)", fontSize: 14, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--text-body)" }}>Size</p>
-                        <button type="button" onClick={() => setExpandedSection(expandedSection === "sizechart" ? null : "sizechart")} style={{ fontFamily: "var(--font-sans)", fontSize: 14, color: "var(--gold)", background: "none", border: "none", textDecoration: "underline", textUnderlineOffset: 4, cursor: "pointer" }}>Size Chart</button>
+                        <button type="button" onClick={() => setSizeChartOpen(true)} style={{ fontFamily: "var(--font-sans)", fontSize: 14, color: "var(--gold)", background: "none", border: "none", textDecoration: "underline", textUnderlineOffset: 4, cursor: "pointer" }}>Size Chart</button>
                       </div>
 
                       {/* Size chart popup */}
-                      {expandedSection === "sizechart" && (
-                        <div className="fixed inset-0 z-[600] flex items-center justify-center p-4" onClick={() => setExpandedSection(null)}>
+                      {sizeChartOpen && (
+                        <div className="fixed inset-0 z-[600] flex items-center justify-center p-4" onClick={() => setSizeChartOpen(false)}>
                           <div className="absolute inset-0 bg-black/70" />
-                          <div className="relative z-10 w-full max-w-md p-8" style={{ background: "var(--bg-surface)", border: "1px solid var(--border-soft)", borderRadius: 12 }} onClick={e => e.stopPropagation()}>
-                            <button onClick={() => setExpandedSection(null)} className="absolute top-4 right-5" style={{ background: "none", border: "none", fontFamily: "var(--font-serif)", fontSize: "1.6rem", fontWeight: 300, color: "var(--text-body)", cursor: "pointer" }}>×</button>
+                          <div className="relative z-10 w-full max-w-md p-8" data-lenis-prevent style={{ background: "var(--bg-surface)", border: "1px solid var(--border-soft)", borderRadius: 12 }} onClick={e => e.stopPropagation()}>
+                            <button onClick={() => setSizeChartOpen(false)} className="absolute top-4 right-5" style={{ background: "none", border: "none", fontFamily: "var(--font-serif)", fontSize: "1.6rem", fontWeight: 300, color: "var(--text-body)", cursor: "pointer" }}>×</button>
                             <h4 style={{ fontFamily: "var(--font-serif)", fontSize: "1.5rem", fontWeight: 300, color: "var(--text-head)", marginBottom: 6 }}>Size Chart</h4>
                             <p style={{ fontFamily: "var(--font-sans)", fontSize: 14, color: "var(--text-body)", opacity: 0.5, marginBottom: 20 }}>Measurements in inches · Oversized fit — size down for regular</p>
                             <table style={{ width: "100%", borderCollapse: "collapse" }}>
@@ -563,7 +564,7 @@ export default function Chapter01Page() {
 
                       {/* Stock */}
                       {selectedSize && (
-                        <p style={{ fontFamily: "var(--font-sans)", fontSize: 14, color: currentStock <= 3 ? "var(--gold)" : "var(--text-body)", marginBottom: 20 }}>
+                        <p style={{ fontFamily: "var(--font-sans)", fontSize: 16, fontWeight: 600, color: currentStock <= 3 ? "var(--gold)" : "var(--text-head)", marginBottom: 20 }}>
                           {currentStock} in stock · Limited archive
                         </p>
                       )}
@@ -583,12 +584,12 @@ export default function Chapter01Page() {
                         <div key={sec.key} style={{ borderTop: "1px solid var(--border-soft)" }}>
                           <button onClick={() => setExpandedSection(expandedSection === sec.key ? null : sec.key)}
                             className="w-full flex justify-between items-center py-5" style={{ background: "none", border: "none", cursor: "pointer" }}>
-                            <span style={{ fontFamily: "var(--font-sans)", fontSize: 15, fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--text-head)" }}>{sec.label}</span>
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-body)" strokeWidth="1.5" style={{ transform: expandedSection === sec.key ? "rotate(180deg)" : "rotate(0)", transition: "transform 0.3s" }}><path d="M6 9l6 6 6-6"/></svg>
+                            <span style={{ fontFamily: "var(--font-sans)", fontSize: 16, fontWeight: 500, letterSpacing: "0.06em", textTransform: "uppercase", color: "var(--text-head)" }}>{sec.label}</span>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-head)" strokeWidth="2" style={{ transform: expandedSection === sec.key ? "rotate(180deg)" : "rotate(0)", transition: "transform 0.3s" }}><path d="M6 9l6 6 6-6"/></svg>
                           </button>
                           {expandedSection === sec.key && (
-                            <div style={{ paddingBottom: 20 }}>
-                              <p style={{ fontFamily: "var(--font-sans)", fontSize: 15, fontWeight: 300, lineHeight: 2, color: "var(--text-body)", opacity: 0.8, whiteSpace: "pre-line" }}>{sec.content}</p>
+                            <div style={{ paddingBottom: 24 }}>
+                              <p style={{ fontFamily: "var(--font-sans)", fontSize: 16, fontWeight: 400, lineHeight: 2, color: "var(--text-head)", opacity: 0.8, whiteSpace: "pre-line" }}>{sec.content}</p>
                             </div>
                           )}
                         </div>
@@ -817,20 +818,20 @@ export default function Chapter01Page() {
 
       {/* Floating shop button */}
       <motion.button
-        className="fixed bottom-6 left-6 z-50"
+        className="fixed bottom-8 left-8 z-50"
         style={{
-          fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 400,
-          letterSpacing: "0.16em", textTransform: "uppercase",
+          fontFamily: "var(--font-sans)", fontSize: "15px", fontWeight: 500,
+          letterSpacing: "0.14em", textTransform: "uppercase",
           color: "var(--white)", background: "var(--green)",
-          padding: "14px 24px", border: "none",
-          boxShadow: "0 4px 20px rgba(0,0,0,0.3)", cursor: "pointer",
+          padding: "18px 32px", border: "none", borderRadius: 6,
+          boxShadow: "0 6px 30px rgba(0,0,0,0.4)", cursor: "pointer",
         }}
         onClick={() => { const el = document.getElementById("shop"); if (el) el.scrollIntoView({ behavior: "smooth" }); }}
         initial={{ y: 80, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 2, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
       >
-        Shop — {ARTIFACTS[0].priceDisplay}
+        Carry This Chapter — Shop
       </motion.button>
     </>
   );
