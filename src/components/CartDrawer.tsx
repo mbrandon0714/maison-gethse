@@ -5,6 +5,11 @@ import { useCart } from "./CartProvider";
 
 const SHIPPING_FEE = 80;
 
+const OTHER_DROPS = [
+  { name: "Lesson II — Coming Soon", desc: "The second artifact of Chapter 01", status: "upcoming" },
+  { name: "Lesson III — Coming Soon", desc: "The third artifact of Chapter 01", status: "upcoming" },
+];
+
 export function CartDrawer() {
   const { items, removeItem, updateQuantity, isOpen, setIsOpen, justAdded, totalItems, subtotal } = useCart();
   const total = subtotal + (items.length > 0 ? SHIPPING_FEE : 0);
@@ -13,107 +18,179 @@ export function CartDrawer() {
 
   return (
     <>
-      <div className="fixed inset-0 z-[500] bg-black/50" onClick={() => setIsOpen(false)} />
-      <div className="fixed top-0 right-0 bottom-0 z-[501] w-full max-w-md bg-[var(--bg-surface)] shadow-2xl flex flex-col" data-lenis-prevent>
+      <div className="fixed inset-0 z-[500] bg-black/60" onClick={() => setIsOpen(false)} />
+      <div className="fixed inset-0 md:inset-auto md:top-0 md:right-0 md:bottom-0 md:w-full md:max-w-xl z-[501] bg-[var(--bg-surface)] shadow-2xl flex flex-col" data-lenis-prevent>
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-5 border-b border-[var(--border-soft)]">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-[var(--border-soft)] flex-shrink-0">
           <div>
-            <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "1.3rem", fontWeight: 400, color: "var(--text-head)" }}>
-              Your Cart
-            </h2>
-            {justAdded && (
-              <p style={{ fontFamily: "var(--font-sans)", fontSize: 12, color: "var(--gold)", marginTop: 2 }}>
-                ✓ Item added
-              </p>
-            )}
+            <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "1.4rem", fontWeight: 400, color: "var(--text-head)" }}>Your Cart</h2>
+            {justAdded && <p style={{ fontFamily: "var(--font-sans)", fontSize: 13, color: "var(--gold)", marginTop: 4, fontWeight: 500 }}>✓ Added to cart</p>}
           </div>
-          <button onClick={() => setIsOpen(false)} style={{ background: "none", border: "none", fontFamily: "var(--font-serif)", fontSize: "1.6rem", fontWeight: 300, color: "var(--text-body)", cursor: "pointer" }}>×</button>
+          <button onClick={() => setIsOpen(false)} style={{ background: "none", border: "none", fontFamily: "var(--font-serif)", fontSize: "1.8rem", fontWeight: 300, color: "var(--text-body)", cursor: "pointer" }}>×</button>
         </div>
 
-        {/* Items */}
-        <div className="flex-1 overflow-y-auto px-6 py-4" style={{ WebkitOverflowScrolling: "touch" }}>
+        {/* Scrollable content */}
+        <div className="flex-1 overflow-y-auto" style={{ WebkitOverflowScrolling: "touch" }}>
           {items.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-full text-center">
-              <p style={{ fontFamily: "var(--font-serif)", fontSize: "1.1rem", fontStyle: "italic", color: "var(--text-head)", opacity: 0.4 }}>Your cart is empty.</p>
-              <button onClick={() => setIsOpen(false)} className="mt-4" style={{ fontFamily: "var(--font-sans)", fontSize: 12, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-body)", opacity: 0.5, background: "none", border: "none", cursor: "pointer" }}>Continue Exploring →</button>
+            <div className="flex flex-col items-center justify-center h-full text-center px-6 py-20">
+              <p style={{ fontFamily: "var(--font-serif)", fontSize: "1.2rem", fontStyle: "italic", color: "var(--text-head)", opacity: 0.4 }}>Your cart is empty.</p>
+              <button onClick={() => setIsOpen(false)} className="mt-4" style={{ fontFamily: "var(--font-sans)", fontSize: 13, color: "var(--text-body)", opacity: 0.5, background: "none", border: "none", cursor: "pointer" }}>Continue Exploring →</button>
             </div>
           ) : (
-            <div className="flex flex-col gap-4">
+            <div className="px-6 py-5">
+              {/* Cart items */}
               {items.map(item => (
-                <div key={`${item.id}-${item.size}`} className="flex gap-4 pb-4 border-b border-[var(--border-soft)]">
-                  <div className="w-20 h-24 relative overflow-hidden flex-shrink-0 bg-[var(--bg-mid)]">
-                    <Image src={item.image} alt={item.name} fill className="object-cover" sizes="80px" />
+                <div key={`${item.id}-${item.size}`} className="flex gap-5 pb-6 mb-6 border-b border-[var(--border-soft)]">
+                  <div className="w-24 h-30 relative overflow-hidden flex-shrink-0 bg-[var(--bg-mid)]" style={{ borderRadius: 6 }}>
+                    <Image src={item.image} alt={item.name} fill className="object-cover" sizes="96px" />
                   </div>
                   <div className="flex-1">
-                    <div className="flex justify-between items-start">
+                    <div className="flex justify-between items-start mb-1">
                       <div>
-                        <p style={{ fontFamily: "var(--font-sans)", fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--gold)", marginBottom: 2 }}>{item.chapter}</p>
-                        <p style={{ fontFamily: "var(--font-serif)", fontSize: "1rem", fontWeight: 400, color: "var(--text-head)" }}>{item.name}</p>
-                        <p style={{ fontFamily: "var(--font-sans)", fontSize: 13, color: "var(--text-body)", marginTop: 2 }}>
-                          Size {item.size} · {item.color}
-                        </p>
+                        <p style={{ fontFamily: "var(--font-sans)", fontSize: 12, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--gold)", marginBottom: 3 }}>{item.chapter}</p>
+                        <p style={{ fontFamily: "var(--font-serif)", fontSize: "1.1rem", fontWeight: 400, color: "var(--text-head)" }}>{item.name}</p>
+                        <p style={{ fontFamily: "var(--font-sans)", fontSize: 14, color: "var(--text-body)", marginTop: 3 }}>Size {item.size} · {item.color}</p>
                       </div>
-                      <p style={{ fontFamily: "var(--font-serif)", fontSize: "1rem", color: "var(--text-head)" }}>₱{(item.price * item.quantity).toLocaleString()}</p>
+                      <p style={{ fontFamily: "var(--font-serif)", fontSize: "1.1rem", color: "var(--text-head)" }}>₱{(item.price * item.quantity).toLocaleString()}</p>
                     </div>
-                    <div className="flex items-center justify-between mt-3">
-                      <div className="flex items-center gap-0">
-                        <button onClick={() => updateQuantity(item.id, item.size, item.quantity - 1)} style={{ width: 32, height: 32, display: "flex", alignItems: "center", justifyContent: "center", background: "var(--input-bg)", border: "1px solid var(--border-soft)", fontSize: 16, color: "var(--text-head)", cursor: "pointer", fontFamily: "var(--font-sans)" }}>−</button>
-                        <div style={{ width: 36, height: 32, display: "flex", alignItems: "center", justifyContent: "center", borderTop: "1px solid var(--border-soft)", borderBottom: "1px solid var(--border-soft)", background: "var(--input-bg)", fontSize: 13, color: "var(--text-head)", fontFamily: "var(--font-sans)" }}>{item.quantity}</div>
-                        <button onClick={() => updateQuantity(item.id, item.size, item.quantity + 1)} disabled={item.quantity >= item.maxStock} style={{ width: 32, height: 32, display: "flex", alignItems: "center", justifyContent: "center", background: "var(--input-bg)", border: "1px solid var(--border-soft)", fontSize: 16, color: "var(--text-head)", cursor: item.quantity >= item.maxStock ? "not-allowed" : "pointer", opacity: item.quantity >= item.maxStock ? 0.3 : 1, fontFamily: "var(--font-sans)" }}>+</button>
+                    <div className="flex items-center justify-between mt-4">
+                      <div className="flex items-center">
+                        <button onClick={() => updateQuantity(item.id, item.size, item.quantity - 1)} style={{ width: 36, height: 36, display: "flex", alignItems: "center", justifyContent: "center", background: "var(--input-bg)", border: "1px solid var(--border-soft)", fontSize: 16, color: "var(--text-head)", cursor: "pointer", borderRadius: 4 }}>−</button>
+                        <div style={{ width: 40, height: 36, display: "flex", alignItems: "center", justifyContent: "center", borderTop: "1px solid var(--border-soft)", borderBottom: "1px solid var(--border-soft)", background: "var(--input-bg)", fontSize: 14, fontWeight: 500, color: "var(--text-head)" }}>{item.quantity}</div>
+                        <button onClick={() => updateQuantity(item.id, item.size, item.quantity + 1)} disabled={item.quantity >= item.maxStock} style={{ width: 36, height: 36, display: "flex", alignItems: "center", justifyContent: "center", background: "var(--input-bg)", border: "1px solid var(--border-soft)", fontSize: 16, color: "var(--text-head)", cursor: item.quantity >= item.maxStock ? "not-allowed" : "pointer", opacity: item.quantity >= item.maxStock ? 0.3 : 1, borderRadius: 4 }}>+</button>
                       </div>
-                      <button onClick={() => removeItem(item.id, item.size)} style={{ fontFamily: "var(--font-sans)", fontSize: 11, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--text-body)", opacity: 0.5, background: "none", border: "none", cursor: "pointer", textDecoration: "underline", textUnderlineOffset: 3 }}>Remove</button>
+                      <button onClick={() => removeItem(item.id, item.size)} style={{ fontFamily: "var(--font-sans)", fontSize: 12, color: "var(--text-body)", opacity: 0.5, background: "none", border: "none", cursor: "pointer", textDecoration: "underline", textUnderlineOffset: 3 }}>Remove</button>
                     </div>
-                    <p style={{ fontFamily: "var(--font-sans)", fontSize: 12, fontWeight: 600, color: item.maxStock <= 3 ? "var(--gold)" : "var(--text-body)", marginTop: 6, opacity: 0.8 }}>
+                    <p style={{ fontFamily: "var(--font-sans)", fontSize: 12, fontWeight: 600, color: item.maxStock <= 3 ? "var(--gold)" : "var(--text-body)", marginTop: 8 }}>
                       {item.maxStock} in stock · Limited archive
                     </p>
                   </div>
                 </div>
               ))}
+
+              {/* Other drops / Quick adds */}
+              <div className="mt-4 mb-6">
+                <h3 style={{ fontFamily: "var(--font-sans)", fontSize: 13, fontWeight: 500, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--text-body)", marginBottom: 14 }}>Other Artifacts</h3>
+                {OTHER_DROPS.map((drop, i) => (
+                  <div key={i} style={{ padding: "14px 16px", background: "rgba(255,255,255,0.02)", border: "1px solid var(--border-soft)", borderRadius: 6, marginBottom: 8, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <div>
+                      <p style={{ fontFamily: "var(--font-serif)", fontSize: 15, color: "var(--text-head)" }}>{drop.name}</p>
+                      <p style={{ fontFamily: "var(--font-sans)", fontSize: 13, color: "var(--text-body)", opacity: 0.5, marginTop: 2 }}>{drop.desc}</p>
+                    </div>
+                    <span style={{ fontFamily: "var(--font-sans)", fontSize: 11, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--gold)", opacity: 0.6, whiteSpace: "nowrap" }}>Coming Soon</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* FAQs */}
+              <div className="mt-2 mb-4">
+                <h3 style={{ fontFamily: "var(--font-sans)", fontSize: 13, fontWeight: 500, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--text-body)", marginBottom: 14 }}>Quick Help</h3>
+                {[
+                  { q: "How long does shipping take?", a: "3-5 business days via J&T Express nationwide." },
+                  { q: "Can I exchange my order?", a: "Yes, exchanges accepted within 7 days for unworn items with tags." },
+                  { q: "Do you accept returns?", a: "Exchanges only — no refunds. We want you to love what you carry." },
+                  { q: "How do I track my order?", a: "You'll receive a tracking number via email once your order ships." },
+                ].map((faq, i) => (
+                  <details key={i} style={{ marginBottom: 6, border: "1px solid var(--border-soft)", borderRadius: 6, overflow: "hidden" }}>
+                    <summary style={{ padding: "12px 16px", fontFamily: "var(--font-sans)", fontSize: 14, fontWeight: 400, color: "var(--text-head)", cursor: "pointer", listStyle: "none", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                      {faq.q}
+                    </summary>
+                    <div style={{ padding: "0 16px 14px", fontFamily: "var(--font-sans)", fontSize: 14, color: "var(--text-body)", opacity: 0.7, lineHeight: 1.7 }}>
+                      {faq.a}
+                    </div>
+                  </details>
+                ))}
+              </div>
             </div>
           )}
         </div>
 
-        {/* Footer */}
+        {/* Footer — checkout */}
         {items.length > 0 && (
-          <div className="px-6 py-5 border-t border-[var(--border-soft)]">
-            <div className="flex justify-between mb-2" style={{ fontFamily: "var(--font-sans)", fontSize: 13, color: "var(--text-body)" }}>
+          <div className="px-6 py-5 border-t border-[var(--border-soft)] flex-shrink-0">
+            <div className="flex justify-between mb-2" style={{ fontFamily: "var(--font-sans)", fontSize: 14, color: "var(--text-body)" }}>
               <span>Subtotal ({totalItems} item{totalItems > 1 ? "s" : ""})</span>
-              <span>₱{subtotal.toLocaleString()}</span>
+              <span style={{ color: "var(--text-head)" }}>₱{subtotal.toLocaleString()}</span>
             </div>
-            <div className="flex justify-between mb-3" style={{ fontFamily: "var(--font-sans)", fontSize: 13, color: "var(--text-body)" }}>
+            <div className="flex justify-between mb-3" style={{ fontFamily: "var(--font-sans)", fontSize: 14, color: "var(--text-body)" }}>
               <span>Shipping</span>
-              <span>₱{SHIPPING_FEE}</span>
+              <span style={{ color: "var(--text-head)" }}>₱{SHIPPING_FEE}</span>
             </div>
-            <div className="flex justify-between mb-5 pt-3 border-t border-[var(--border-soft)]" style={{ fontFamily: "var(--font-serif)", fontSize: "1.2rem", fontWeight: 400, color: "var(--text-head)" }}>
+            <div className="flex justify-between mb-5 pt-3 border-t border-[var(--border-soft)]" style={{ fontFamily: "var(--font-serif)", fontSize: "1.3rem", fontWeight: 500, color: "var(--text-head)" }}>
               <span>Total</span>
               <span>₱{total.toLocaleString()}</span>
             </div>
-            <a href="/checkout" style={{ display: "block", width: "100%", padding: "16px 0", fontFamily: "var(--font-sans)", fontSize: 12, fontWeight: 400, letterSpacing: "0.2em", textTransform: "uppercase", color: "#fff", background: "var(--green)", border: "none", textAlign: "center", textDecoration: "none" }}>
-              Check Out
+            <a href="/checkout" onClick={() => setIsOpen(false)} style={{ display: "block", width: "100%", padding: "18px 0", fontFamily: "var(--font-sans)", fontSize: 14, fontWeight: 500, letterSpacing: "0.16em", textTransform: "uppercase", color: "#fff", background: "var(--green)", border: "none", textAlign: "center", textDecoration: "none", borderRadius: 4 }}>
+              Check Out — ₱{total.toLocaleString()}
             </a>
-            <p style={{ marginTop: 10, textAlign: "center", fontFamily: "var(--font-sans)", fontSize: 12, color: "var(--text-body)", opacity: 0.4 }}>
+            <p style={{ marginTop: 12, textAlign: "center", fontFamily: "var(--font-sans)", fontSize: 13, fontWeight: 500, color: "var(--text-body)", opacity: 0.6 }}>
               Secure payment via GCash · Maya · Card
             </p>
           </div>
         )}
       </div>
+
+      {/* Fly animation */}
+      <FlyAnimation />
     </>
   );
 }
 
+function FlyAnimation() {
+  const { flyFrom } = useCart();
+  if (!flyFrom) return null;
+
+  return (
+    <div
+      className="fixed z-[600] pointer-events-none"
+      style={{
+        left: flyFrom.x - 8,
+        top: flyFrom.y - 8,
+        width: 16,
+        height: 16,
+        borderRadius: "50%",
+        background: "var(--gold)",
+        boxShadow: "0 0 20px rgba(200,146,42,0.6)",
+        animation: "flyToCart 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+      }}
+    >
+      <style>{`
+        @keyframes flyToCart {
+          0% { transform: scale(1); opacity: 1; }
+          50% { transform: scale(1.5) translate(30vw, -30vh); opacity: 0.8; }
+          100% { transform: scale(0.3) translate(60vw, -80vh); opacity: 0; }
+        }
+      `}</style>
+    </div>
+  );
+}
+
 export function CartButton() {
-  const { totalItems, setIsOpen } = useCart();
+  const { totalItems, setIsOpen, justAdded } = useCart();
 
   return (
     <button onClick={() => setIsOpen(true)} className="relative" style={{ background: "none", border: "none", cursor: "pointer", color: "var(--text-head)" }}>
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
         <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0" />
       </svg>
       {totalItems > 0 && (
-        <span style={{ position: "absolute", top: -6, right: -6, width: 18, height: 18, borderRadius: "50%", background: "var(--gold)", color: "#0f130f", fontSize: 10, fontWeight: 600, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "var(--font-sans)" }}>
+        <span style={{
+          position: "absolute", top: -8, right: -8, width: 20, height: 20, borderRadius: "50%",
+          background: "var(--gold)", color: "#0f130f", fontSize: 11, fontWeight: 700,
+          display: "flex", alignItems: "center", justifyContent: "center",
+          fontFamily: "var(--font-sans)",
+          animation: justAdded ? "cartPop 0.4s ease" : "none",
+        }}>
           {totalItems}
         </span>
       )}
+      <style>{`
+        @keyframes cartPop {
+          0% { transform: scale(1); }
+          50% { transform: scale(1.6); }
+          100% { transform: scale(1); }
+        }
+      `}</style>
     </button>
   );
 }

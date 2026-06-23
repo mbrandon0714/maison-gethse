@@ -1,12 +1,76 @@
 "use client";
 
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback, useEffect } from "react";
 import Image from "next/image";
 import { motion, useInView, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { Navigation } from "@/components/Navigation";
 import { MuteToggle } from "@/components/MuteToggle";
 import { KeyIcon } from "@/components/KeyIcon";
 import { useCart } from "@/components/CartProvider";
+
+function ReviewStars({ productId }: { productId: string }) {
+  const [data, setData] = useState<{ average: number; count: number }>({ average: 0, count: 0 });
+  const [showForm, setShowForm] = useState(false);
+  const [form, setForm] = useState({ name: "", rating: 5, text: "" });
+  const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    fetch(`/api/reviews?product=${productId}`)
+      .then(r => r.json())
+      .then(d => { if (d.count !== undefined) setData(d); })
+      .catch(() => {});
+  }, [productId, submitting]);
+
+  const submit = async () => {
+    if (!form.name || !form.text || submitting) return;
+    setSubmitting(true);
+    await fetch("/api/reviews", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ productId, ...form }),
+    });
+    setShowForm(false);
+    setForm({ name: "", rating: 5, text: "" });
+    setSubmitting(false);
+  };
+
+  return (
+    <div className="mb-8">
+      <div className="flex items-center gap-3 mb-2">
+        <div className="flex gap-1">
+          {[1,2,3,4,5].map(s => (
+            <svg key={s} width="18" height="18" viewBox="0 0 24 24" fill={s <= Math.round(data.average) ? "var(--gold)" : "none"} stroke="var(--gold)" strokeWidth="1.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          ))}
+        </div>
+        <span style={{ fontFamily: "var(--font-sans)", fontSize: 14, color: "var(--text-body)" }}>
+          {data.count > 0 ? `${data.average} (${data.count} review${data.count > 1 ? "s" : ""})` : "No reviews yet"}
+        </span>
+        <button onClick={() => setShowForm(!showForm)} style={{ fontFamily: "var(--font-sans)", fontSize: 13, color: "var(--gold)", background: "none", border: "none", textDecoration: "underline", textUnderlineOffset: 3, cursor: "pointer", marginLeft: "auto" }}>
+          Write a review
+        </button>
+      </div>
+
+      {showForm && (
+        <div style={{ padding: 20, border: "1px solid var(--border-soft)", borderRadius: 8, marginTop: 12, background: "rgba(255,255,255,0.02)" }}>
+          <div className="flex gap-2 mb-4">
+            {[1,2,3,4,5].map(s => (
+              <button key={s} onClick={() => setForm({ ...form, rating: s })} style={{ background: "none", border: "none", cursor: "pointer", padding: 2 }}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill={s <= form.rating ? "var(--gold)" : "none"} stroke="var(--gold)" strokeWidth="1.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              </button>
+            ))}
+          </div>
+          <input type="text" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} placeholder="Your name"
+            style={{ width: "100%", padding: "12px 14px", fontSize: 15, fontFamily: "var(--font-sans)", background: "var(--input-bg)", border: "1px solid var(--border-soft)", color: "var(--text-head)", borderRadius: 4, outline: "none", marginBottom: 10 }} />
+          <textarea value={form.text} onChange={e => setForm({ ...form, text: e.target.value })} placeholder="Share your experience..."
+            rows={3} style={{ width: "100%", padding: "12px 14px", fontSize: 15, fontFamily: "var(--font-sans)", background: "var(--input-bg)", border: "1px solid var(--border-soft)", color: "var(--text-head)", borderRadius: 4, outline: "none", resize: "vertical", marginBottom: 12 }} />
+          <button onClick={submit} disabled={!form.name || !form.text || submitting}
+            style={{ padding: "12px 24px", fontFamily: "var(--font-sans)", fontSize: 13, fontWeight: 500, letterSpacing: "0.1em", textTransform: "uppercase", color: "#fff", background: "var(--green)", border: "none", borderRadius: 4, cursor: form.name && form.text ? "pointer" : "not-allowed", opacity: form.name && form.text ? 1 : 0.4 }}>
+            {submitting ? "Submitting..." : "Submit Review"}
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
 
 function FadeIn({
   children,
@@ -513,10 +577,7 @@ export default function Chapter01Page() {
                       <p style={{ fontFamily: "var(--font-sans)", fontSize: 16, color: "var(--text-body)", opacity: 0.7, marginBottom: 12 }}>100% Cotton · Screen-printed · Oversized Fit</p>
 
                       {/* Reviews */}
-                      <div className="flex items-center gap-3 mb-8">
-                        <div className="flex gap-1">{[1,2,3,4,5].map(s => <svg key={s} width="18" height="18" viewBox="0 0 24 24" fill="var(--gold)" stroke="var(--gold)" strokeWidth="1"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>)}</div>
-                        <span style={{ fontFamily: "var(--font-sans)", fontSize: 14, color: "var(--text-body)", opacity: 0.5 }}>No reviews yet</span>
-                      </div>
+                      <ReviewStars productId={artifact.id} />
 
                       {/* Price */}
                       <p style={{ fontFamily: "var(--font-serif)", fontSize: "2rem", fontWeight: 400, color: "var(--text-head)", marginBottom: 24 }}>{artifact.priceDisplay}</p>
@@ -572,8 +633,9 @@ export default function Chapter01Page() {
                       {/* Add to Cart */}
                       <button
                         disabled={!selectedSize || currentStock === 0}
-                        onClick={() => {
-                          addItem({ id: artifact.id, name: artifact.name, price: artifact.price, priceDisplay: artifact.priceDisplay, size: selectedSize, color: "White", image: artifact.image, chapter: "Chapter 01", maxStock: currentStock });
+                        onClick={(e) => {
+                          const rect = e.currentTarget.getBoundingClientRect();
+                          addItem({ id: artifact.id, name: artifact.name, price: artifact.price, priceDisplay: artifact.priceDisplay, size: selectedSize, color: "White", image: artifact.image, chapter: "Chapter 01", maxStock: currentStock }, rect);
                         }}
                         style={{ width: "100%", padding: "20px 0", fontFamily: "var(--font-sans)", fontSize: 15, fontWeight: 500, letterSpacing: "0.16em", textTransform: "uppercase", color: "#fff", background: "var(--green)", border: "none", cursor: selectedSize ? "pointer" : "not-allowed", opacity: selectedSize ? 1 : 0.35, transition: "all 0.3s", borderRadius: 4, marginBottom: 24 }}>
                         {selectedSize ? `Add to Cart — ${artifact.priceDisplay}` : "Select a Size"}

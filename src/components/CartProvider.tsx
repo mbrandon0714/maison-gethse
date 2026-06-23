@@ -17,7 +17,8 @@ export interface CartItem {
 
 interface CartContextType {
   items: CartItem[];
-  addItem: (item: Omit<CartItem, "quantity"> & { quantity?: number }) => void;
+  addItem: (item: Omit<CartItem, "quantity"> & { quantity?: number }, buttonRect?: DOMRect) => void;
+  flyFrom: { x: number; y: number } | null;
   removeItem: (id: string, size: string) => void;
   updateQuantity: (id: string, size: string, qty: number) => void;
   clearCart: () => void;
@@ -31,7 +32,7 @@ interface CartContextType {
 const CartContext = createContext<CartContextType>({
   items: [], addItem: () => {}, removeItem: () => {}, updateQuantity: () => {},
   clearCart: () => {}, isOpen: false, setIsOpen: () => {}, justAdded: false,
-  totalItems: 0, subtotal: 0,
+  totalItems: 0, subtotal: 0, flyFrom: null,
 });
 
 export function useCart() { return useContext(CartContext); }
@@ -48,7 +49,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem("mg-cart", JSON.stringify(items));
   }, [items]);
 
-  const addItem = useCallback((item: Omit<CartItem, "quantity"> & { quantity?: number }) => {
+  const [flyFrom, setFlyFrom] = useState<{ x: number; y: number } | null>(null);
+
+  const addItem = useCallback((item: Omit<CartItem, "quantity"> & { quantity?: number }, buttonRect?: DOMRect) => {
+    if (buttonRect) {
+      setFlyFrom({ x: buttonRect.left + buttonRect.width / 2, y: buttonRect.top + buttonRect.height / 2 });
+      setTimeout(() => setFlyFrom(null), 800);
+    }
     setItems(prev => {
       const existing = prev.find(i => i.id === item.id && i.size === item.size);
       if (existing) {
@@ -82,7 +89,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const subtotal = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
 
   return (
-    <CartContext.Provider value={{ items, addItem, removeItem, updateQuantity, clearCart, isOpen, setIsOpen, justAdded, totalItems, subtotal }}>
+    <CartContext.Provider value={{ items, addItem, removeItem, updateQuantity, clearCart, isOpen, setIsOpen, justAdded, totalItems, subtotal, flyFrom }}>
       {children}
     </CartContext.Provider>
   );
