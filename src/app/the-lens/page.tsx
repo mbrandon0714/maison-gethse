@@ -212,15 +212,16 @@ export default function TheLensPage() {
                 >
                   Submit Your Work →
                 </button>
+                <style>{`.submit-glow:hover { border-color: var(--gold) !important; background: rgba(200,146,42,0.08) !important; color: var(--gold) !important; }`}</style>
               </div>
             </FadeIn>
 
             {/* Masonry gallery */}
-            <div className="columns-2 md:columns-3 gap-[6px]">
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 6 }}>
               {filteredPhotos.map((photo, i) => (
                 <FadeIn key={i} delay={0.04 * Math.min(i, 6)}>
                   <div
-                    className="break-inside-avoid mb-[6px] overflow-hidden cursor-pointer relative group"
+                    className="overflow-hidden cursor-pointer relative group"
                     onClick={() => openLightbox(i)}
                   >
                     <Image
@@ -463,7 +464,7 @@ export default function TheLensPage() {
                         transition: "background 0.3s",
                       }}
                     >
-                      Submit for Review
+                      Submit for Review ✦
                     </button>
                     <p className="text-center" style={{ fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 300, color: "var(--text-body)", opacity: 0.3, lineHeight: 1.7 }}>
                       Submissions are reviewed for aesthetic and narrative alignment.<br />

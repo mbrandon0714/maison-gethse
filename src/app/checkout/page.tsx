@@ -7,6 +7,43 @@ import { KeyIcon } from "@/components/KeyIcon";
 
 const SHIPPING_FEE = 80;
 
+const PROVINCE_CITIES: Record<string, string[]> = {
+  "Metro Manila": ["Manila", "Quezon City", "Makati", "Taguig", "Pasig", "Mandaluyong", "Marikina", "Parañaque", "Las Piñas", "Muntinlupa", "Caloocan", "Malabon", "Navotas", "Valenzuela", "San Juan", "Pasay", "Pateros"],
+  "Rizal": ["Antipolo", "Cainta", "Taytay", "Angono", "Binangonan", "San Mateo", "Rodriguez", "Tanay"],
+  "Cavite": ["Bacoor", "Imus", "Dasmariñas", "General Trias", "Cavite City", "Rosario", "Silang", "Tagaytay"],
+  "Laguna": ["San Pedro", "Biñan", "Santa Rosa", "Calamba", "Cabuyao", "Los Baños", "San Pablo"],
+  "Bulacan": ["Meycauayan", "Marilao", "San Jose del Monte", "Malolos", "Obando", "Bocaue", "Baliwag"],
+  "Pampanga": ["San Fernando", "Angeles City", "Mabalacat", "Apalit", "Guagua"],
+  "Batangas": ["Batangas City", "Lipa", "Tanauan", "Nasugbu", "Santo Tomas"],
+  "Zambales": ["Olongapo", "Subic", "San Narciso"],
+  "Benguet": ["Baguio", "La Trinidad"],
+  "Pangasinan": ["Dagupan", "Urdaneta", "San Carlos", "Lingayen"],
+  "Ilocos Norte": ["Laoag", "Batac"],
+  "Ilocos Sur": ["Vigan", "Candon"],
+  "La Union": ["San Fernando City"],
+  "Cagayan": ["Tuguegarao"],
+  "Isabela": ["Santiago", "Cauayan", "Ilagan"],
+  "Camarines Sur": ["Naga", "Iriga"],
+  "Albay": ["Legazpi", "Tabaco"],
+  "Cebu": ["Cebu City", "Mandaue", "Lapu-Lapu", "Talisay", "Danao"],
+  "Iloilo": ["Iloilo City", "Oton", "Santa Barbara"],
+  "Negros Occidental": ["Bacolod", "Silay", "Talisay", "Sagay"],
+  "Negros Oriental": ["Dumaguete", "Bais"],
+  "Leyte": ["Tacloban", "Ormoc"],
+  "Bohol": ["Tagbilaran", "Panglao"],
+  "Davao del Sur": ["Davao City", "Digos"],
+  "Davao del Norte": ["Tagum", "Panabo"],
+  "South Cotabato": ["General Santos", "Koronadal"],
+  "Misamis Oriental": ["Cagayan de Oro", "Gingoog"],
+  "Lanao del Norte": ["Iligan"],
+  "Zamboanga del Sur": ["Zamboanga City", "Pagadian"],
+  "Zamboanga del Norte": ["Dipolog", "Dapitan"],
+  "Agusan del Norte": ["Butuan"],
+  "Surigao del Norte": ["Surigao City"],
+  "Palawan": ["Puerto Princesa", "El Nido", "Coron"],
+  "Oriental Mindoro": ["Calapan"],
+};
+
 const PROVINCES = [
   "Metro Manila", "Abra", "Agusan del Norte", "Agusan del Sur", "Aklan", "Albay",
   "Antique", "Apayao", "Aurora", "Bataan", "Batanes", "Batangas", "Benguet",
@@ -65,18 +102,19 @@ function FloatingInput({ label, value, onChange, type = "text", autoComplete }: 
   );
 }
 
-function FloatingSelect({ label, value, onChange, options }: {
-  label: string; value: string; onChange: (v: string) => void; options: string[];
+function FloatingSelect({ label, value, onChange, options, disabled }: {
+  label: string; value: string; onChange: (v: string) => void; options: string[]; disabled?: boolean;
 }) {
   return (
     <div style={{ position: "relative" }}>
       <select
         value={value}
         onChange={e => onChange(e.target.value)}
+        disabled={disabled}
         style={{
           width: "100%", padding: "22px 16px 10px", fontSize: 16, fontFamily: "var(--font-sans)",
           border: "1px solid #3a3a38", borderRadius: 6, background: "#2a2a28", color: value ? "#e8e4de" : "#777",
-          outline: "none", appearance: "none", transition: "border-color 0.3s",
+          outline: "none", appearance: "none", transition: "border-color 0.3s", opacity: disabled ? 0.5 : 1,
           backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23777' stroke-width='1.5' fill='none'/%3E%3C/svg%3E\")",
           backgroundRepeat: "no-repeat", backgroundPosition: "right 16px center",
         }}
@@ -150,7 +188,10 @@ export default function CheckoutPage() {
       <div style={{ borderBottom: "1px solid #2a2a28", padding: "18px 24px" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <a href="/home" style={{ fontFamily: "var(--font-serif)", fontSize: "1.1rem", fontWeight: 400, letterSpacing: "0.14em", textTransform: "uppercase", color: "#e8e4de", textDecoration: "none" }}>Maison Gethse</a>
-          <span style={{ fontFamily: "var(--font-sans)", fontSize: 13, letterSpacing: "0.1em", textTransform: "uppercase", color: "#666" }}>Secure Checkout</span>
+          <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
+            <a href="/chapters/01" style={{ fontFamily: "var(--font-sans)", fontSize: 13, color: "#888", textDecoration: "none" }}>← Back to shop</a>
+            <span style={{ fontFamily: "var(--font-sans)", fontSize: 13, letterSpacing: "0.1em", textTransform: "uppercase", color: "#666" }}>Secure Checkout</span>
+          </div>
         </div>
       </div>
 
@@ -172,11 +213,9 @@ export default function CheckoutPage() {
             <div style={{ height: 8 }} />
 
             <FloatingInput label="Street address" value={form.address} onChange={v => setField("address", v)} autoComplete="street-address" />
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
-              <FloatingInput label="City / Municipality" value={form.city} onChange={v => setField("city", v)} autoComplete="address-level2" />
-              <FloatingInput label="Postal code" value={form.zip} onChange={v => setField("zip", v)} autoComplete="postal-code" />
-            </div>
-            <FloatingSelect label="Province / Region" value={form.province} onChange={v => setField("province", v)} options={PROVINCES} />
+            <FloatingInput label="Postal code" value={form.zip} onChange={v => setField("zip", v)} autoComplete="postal-code" />
+            <FloatingSelect label="Province / Region" value={form.province} onChange={v => { setField("province", v); setField("city", ""); }} options={PROVINCES} />
+            <FloatingSelect label="City / Municipality" value={form.city} onChange={v => setField("city", v)} options={form.province ? (PROVINCE_CITIES[form.province] || []) : []} disabled={!form.province} />
           </div>
 
           {/* Shipping */}

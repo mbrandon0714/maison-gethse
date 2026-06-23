@@ -68,8 +68,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       return [...prev, { ...item, quantity: item.quantity || 1 }];
     });
     setJustAdded(true);
-    setIsOpen(true);
-    setTimeout(() => setJustAdded(false), 2000);
+    setTimeout(() => setJustAdded(false), 2500);
   }, []);
 
   const removeItem = useCallback((id: string, size: string) => {
