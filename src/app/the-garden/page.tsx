@@ -262,51 +262,74 @@ export default function TheGardenPage() {
           </motion.div>
         </section>
 
-        {/* ═══ THE ARCHIVE — Night Garden Floor ═══ */}
-        <section className="py-24 px-6 md:px-12 relative overflow-hidden" style={{ background: "linear-gradient(to bottom, #0d120d 0%, #0a0e0a 50%, #080c08 100%)" }}>
-          {/* More fireflies in the archive */}
+        {/* ═══ THE ARCHIVE — Dark Soil with Golden Roots ═══ */}
+        <section className="py-24 px-6 md:px-12 relative overflow-hidden" style={{ background: "#080a07" }}>
+          {/* Golden root/vein network — SVG background */}
+          <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-[0.07]" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="rootGlow" cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor="#c8922a" stopOpacity="0.6"/><stop offset="100%" stopColor="#c8922a" stopOpacity="0"/></radialGradient>
+            </defs>
+            {/* Root lines */}
+            <path d="M0,200 Q200,180 400,250 T800,200 T1200,280 T1600,220" stroke="#c8922a" strokeWidth="1" fill="none" opacity="0.5"/>
+            <path d="M100,400 Q300,350 500,420 T900,380 T1300,450" stroke="#c8922a" strokeWidth="0.8" fill="none" opacity="0.4"/>
+            <path d="M50,600 Q250,580 450,650 T850,600 T1250,680" stroke="#c8922a" strokeWidth="0.6" fill="none" opacity="0.3"/>
+            <path d="M200,100 Q400,150 600,80 T1000,130 T1400,100" stroke="#c8922a" strokeWidth="0.7" fill="none" opacity="0.35"/>
+            {/* Root intersection glows */}
+            <circle cx="400" cy="250" r="30" fill="url(#rootGlow)" opacity="0.4"/>
+            <circle cx="800" cy="200" r="25" fill="url(#rootGlow)" opacity="0.3"/>
+            <circle cx="500" cy="420" r="20" fill="url(#rootGlow)" opacity="0.35"/>
+            <circle cx="1000" cy="130" r="22" fill="url(#rootGlow)" opacity="0.3"/>
+          </svg>
+
+          {/* Soil texture */}
+          <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at 30% 40%, rgba(200,146,42,0.04) 0%, transparent 50%), radial-gradient(ellipse at 70% 60%, rgba(200,146,42,0.03) 0%, transparent 50%)" }} />
+
+          {/* Fireflies among the roots */}
           <div className="absolute inset-0 pointer-events-none">
-            {Array.from({ length: 10 }).map((_, i) => (
+            {Array.from({ length: 8 }).map((_, i) => (
               <motion.div
-                key={`archive-fly-${i}`}
+                key={`root-fly-${i}`}
                 className="absolute rounded-full"
-                style={{ width: 3, height: 3, background: "rgba(200,146,42,0.5)", boxShadow: "0 0 6px 2px rgba(200,146,42,0.2)", left: `${8 + (i * 9.1) % 84}%`, top: `${15 + (i * 11.3) % 70}%` }}
-                animate={{ y: [0, -15, 5, 0], x: [0, (i % 2 === 0 ? 12 : -12), 0], opacity: [0.15, 0.6, 0.2, 0.15] }}
-                transition={{ duration: 6 + (i % 3) * 2, repeat: Infinity, delay: i * 0.7, ease: "easeInOut" }}
+                style={{ width: i % 2 === 0 ? 4 : 2, height: i % 2 === 0 ? 4 : 2, background: "rgba(200,146,42,0.7)", boxShadow: "0 0 10px 4px rgba(200,146,42,0.25)", left: `${10 + (i * 11) % 80}%`, top: `${20 + (i * 13) % 60}%` }}
+                animate={{ y: [0, -10, 5, 0], x: [0, (i % 2 === 0 ? 8 : -8), 0], opacity: [0.3, 0.8, 0.3] }}
+                transition={{ duration: 4 + (i % 3) * 2, repeat: Infinity, delay: i * 0.6, ease: "easeInOut" }}
               />
             ))}
           </div>
 
           <div className="max-w-5xl mx-auto relative z-10">
             <FadeIn>
-              <p className="mb-8 text-center" style={{ fontFamily: "var(--font-serif)", fontSize: "1.2rem", fontWeight: 300, fontStyle: "italic", color: "#f4f1ec", opacity: 0.5 }}>
+              <p className="mb-10 text-center" style={{ fontFamily: "var(--font-serif)", fontSize: "1.3rem", fontWeight: 300, fontStyle: "italic", color: "#f4f1ec", opacity: 0.5 }}>
                 Seeds planted by those who walked before you.
               </p>
             </FadeIn>
 
-            {/* Glowing seed cards */}
-            <div className="flex flex-wrap justify-center gap-5 md:gap-6">
+            {/* Golden leaf-shaped seed cards */}
+            <div className="flex flex-wrap justify-center gap-6 md:gap-8">
               {allSeeds.map((seed, i) => (
                 <FadeIn key={seed.id} delay={0.08 * i}>
                   <motion.div
-                    className="max-w-[320px] p-6 relative cursor-pointer"
+                    className="max-w-[300px] relative cursor-pointer"
                     onClick={() => setPreviewSeed(seed)}
                     style={{
-                      background: "rgba(200,146,42,0.03)",
-                      border: "1px solid rgba(200,146,42,0.08)",
-                      borderRadius: "20px",
-                      transform: `rotate(${seed.rotation}deg)`,
-                      marginTop: `${(i % 3) * 12}px`,
-                      boxShadow: "0 0 20px rgba(200,146,42,0.04), inset 0 0 30px rgba(200,146,42,0.02)",
+                      padding: "28px 24px 24px",
+                      background: "linear-gradient(135deg, rgba(200,146,42,0.06) 0%, rgba(200,146,42,0.02) 100%)",
+                      border: "1px solid rgba(200,146,42,0.12)",
+                      borderRadius: "40px 8px 40px 8px",
+                      transform: `rotate(${seed.rotation * 0.5}deg)`,
+                      marginTop: `${(i % 3) * 10}px`,
+                      boxShadow: "0 4px 30px rgba(200,146,42,0.06)",
                     }}
                     whileHover={{
-                      borderColor: "rgba(200,146,42,0.25)",
-                      boxShadow: "0 0 40px rgba(200,146,42,0.12), inset 0 0 30px rgba(200,146,42,0.04)",
-                      y: -6,
-                      scale: 1.03,
+                      borderColor: "rgba(200,146,42,0.3)",
+                      boxShadow: "0 8px 50px rgba(200,146,42,0.15), 0 0 20px rgba(200,146,42,0.05)",
+                      y: -8,
+                      scale: 1.02,
                     }}
                     transition={{ duration: 0.5 }}
                   >
+                    {/* Leaf vein line */}
+                    <div className="absolute top-4 left-1/2 w-[1px] h-[40%] -translate-x-1/2 pointer-events-none" style={{ background: "linear-gradient(to bottom, rgba(200,146,42,0.15), transparent)" }} />
                     {/* Prompt label */}
                     <p className="mb-3" style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--gold)", opacity: 0.4 }}>
                       {seed.prompt.length > 40 ? seed.prompt.slice(0, 40) + "..." : seed.prompt}
@@ -458,79 +481,83 @@ export default function TheGardenPage() {
                 onClick={(e) => e.stopPropagation()}
               >
                 {submitted ? (
-                  /* ── Key Unlocking Ceremony ── */
+                  /* ── Cinematic Seed Planting Ceremony ── */
                   <motion.div
-                    className="p-10 text-center relative overflow-hidden"
+                    className="flex flex-col items-center justify-center text-center relative overflow-hidden"
+                    style={{ minHeight: "50vh", padding: "40px 24px" }}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ duration: 0.5 }}
+                    transition={{ duration: 0.8 }}
                   >
-                    {/* Golden burst particles */}
+                    {/* Dark overlay for cinematic feel */}
+                    <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at center, #0a0d0a 0%, #060806 100%)" }} />
+
+                    {/* Golden particles rising from center */}
                     <div className="absolute inset-0 pointer-events-none">
-                      {Array.from({ length: 12 }).map((_, i) => (
+                      {Array.from({ length: 24 }).map((_, i) => (
                         <motion.div
                           key={i}
                           className="absolute rounded-full"
-                          style={{
-                            width: 4, height: 4,
-                            background: "var(--gold)",
-                            left: "50%", top: "40%",
-                          }}
-                          initial={{ scale: 0, opacity: 1 }}
-                          animate={{
-                            x: Math.cos(i * 30 * Math.PI / 180) * 120,
-                            y: Math.sin(i * 30 * Math.PI / 180) * 120,
-                            scale: [0, 1.5, 0],
-                            opacity: [1, 0.8, 0],
-                          }}
-                          transition={{ duration: 1.5, delay: 0.3, ease: "easeOut" }}
+                          style={{ width: i % 3 === 0 ? 4 : 2, height: i % 3 === 0 ? 4 : 2, background: "#c8922a", left: `${40 + (i * 1.2) % 20}%`, bottom: "30%", boxShadow: "0 0 6px 2px rgba(200,146,42,0.3)" }}
+                          initial={{ opacity: 0, y: 0 }}
+                          animate={{ y: [0, -150 - (i % 5) * 40], x: [(i % 2 === 0 ? -30 : 30) * (i % 4), (i % 2 === 0 ? 40 : -20) * (i % 3)], opacity: [0, 0.9, 0], scale: [0.5, 1.2, 0.3] }}
+                          transition={{ duration: 2 + (i % 3), delay: 0.5 + i * 0.08, ease: "easeOut" }}
                         />
                       ))}
                     </div>
 
-                    {/* Key rotation */}
+                    {/* Expanding golden rings */}
+                    {[0.4, 0.8, 1.2].map((delay, i) => (
+                      <motion.div
+                        key={i}
+                        className="absolute left-1/2 top-[45%] -translate-x-1/2 -translate-y-1/2 rounded-full"
+                        style={{ border: "1px solid rgba(200,146,42,0.4)" }}
+                        initial={{ width: 10, height: 10, opacity: 0.8 }}
+                        animate={{ width: 300 + i * 80, height: 300 + i * 80, opacity: 0 }}
+                        transition={{ duration: 2, delay, ease: "easeOut" }}
+                      />
+                    ))}
+
+                    {/* The Key — large, centered */}
                     <motion.div
-                      className="mx-auto mb-6"
-                      style={{ width: 60, height: 100, position: "relative" }}
-                      initial={{ rotate: 0, scale: 0.8, opacity: 0 }}
-                      animate={{ rotate: [0, -15, 90], scale: [0.8, 1.1, 1], opacity: [0, 1, 1] }}
-                      transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+                      className="relative z-10 mb-8"
+                      initial={{ scale: 0.3, opacity: 0, rotate: -30 }}
+                      animate={{ scale: 1, opacity: 1, rotate: [null, -15, 90, 90] }}
+                      transition={{ duration: 2, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
                     >
-                      <KeyIcon size={60} gold />
+                      <div style={{ filter: "drop-shadow(0 0 30px rgba(200,146,42,0.4))" }}>
+                        <KeyIcon size={80} gold />
+                      </div>
                     </motion.div>
 
-                    {/* Glowing ring */}
+                    {/* Seed sprouting line */}
                     <motion.div
-                      className="absolute left-1/2 top-[38%] -translate-x-1/2 rounded-full border-2"
-                      style={{ borderColor: "var(--gold)" }}
-                      initial={{ width: 20, height: 20, opacity: 1 }}
-                      animate={{ width: 200, height: 200, opacity: 0 }}
-                      transition={{ duration: 1, delay: 0.5, ease: "easeOut" }}
+                      className="relative z-10"
+                      style={{ width: 2, background: "linear-gradient(to top, rgba(200,146,42,0.5), rgba(200,146,42,0))" }}
+                      initial={{ height: 0 }}
+                      animate={{ height: 60 }}
+                      transition={{ duration: 1, delay: 1.5, ease: [0.16, 1, 0.3, 1] }}
                     />
 
+                    {/* Text reveal */}
                     <motion.h3
-                      style={{ fontFamily: "var(--font-serif)", fontSize: "1.8rem", fontWeight: 300, fontStyle: "italic", color: "var(--text-head)", lineHeight: 1.5 }}
-                      initial={{ opacity: 0, y: 20 }}
+                      className="relative z-10 mt-6"
+                      style={{ fontFamily: "var(--font-serif)", fontSize: "clamp(1.6rem, 4vw, 2.2rem)", fontWeight: 300, fontStyle: "italic", color: "#f4f1ec", lineHeight: 1.5 }}
+                      initial={{ opacity: 0, y: 30 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.8, delay: 0.8 }}
+                      transition={{ duration: 1, delay: 2 }}
                     >
-                      Your seed has entered the archive.
+                      Your seed has been planted.
                     </motion.h3>
-                    <motion.div
-                      className="w-[1px] h-[24px] mx-auto my-4"
-                      style={{ background: "var(--gold)", opacity: 0.3 }}
-                      initial={{ height: 0 }}
-                      animate={{ height: 24 }}
-                      transition={{ duration: 0.5, delay: 1.2 }}
-                    />
+
                     <motion.p
-                      className="mt-2"
-                      style={{ fontFamily: "var(--font-sans)", fontSize: "15px", fontWeight: 300, color: "var(--text-body)", opacity: 0.6, letterSpacing: "0.03em", lineHeight: 1.8 }}
+                      className="relative z-10 mt-4 max-w-sm"
+                      style={{ fontFamily: "var(--font-sans)", fontSize: "16px", fontWeight: 300, color: "#d8d4ce", opacity: 0.5, lineHeight: 1.9 }}
                       initial={{ opacity: 0 }}
-                      animate={{ opacity: 0.6 }}
-                      transition={{ duration: 0.5, delay: 1.4 }}
+                      animate={{ opacity: 0.5 }}
+                      transition={{ duration: 0.8, delay: 2.5 }}
                     >
-                      It will be reviewed and added to the garden.<br />
+                      It will be reviewed before entering the archive.<br />
                       Thank you for sharing what you carry.
                     </motion.p>
                   </motion.div>
