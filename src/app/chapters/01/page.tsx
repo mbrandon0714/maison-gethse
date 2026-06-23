@@ -6,7 +6,7 @@ import { motion, useInView, useScroll, useTransform, AnimatePresence } from "fra
 import { Navigation } from "@/components/Navigation";
 import { MuteToggle } from "@/components/MuteToggle";
 import { KeyIcon } from "@/components/KeyIcon";
-import { OrderOverlay } from "@/components/OrderOverlay";
+import { useCart } from "@/components/CartProvider";
 
 function FadeIn({
   children,
@@ -178,6 +178,7 @@ const ARTIFACTS = [
   {
     id: "perspective-change",
     lesson: "Lesson I",
+    chapter: "Chapter 01 · Before We Knew",
     name: "Perspective Change",
     price: 600,
     priceDisplay: "₱600",
@@ -248,8 +249,10 @@ const LOOKBOOK = [
 export default function Chapter01Page() {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
-  const [orderOpen, setOrderOpen] = useState(false);
-  const [orderArtifact, setOrderArtifact] = useState(ARTIFACTS[0]);
+  const { addItem } = useCart();
+  const [selectedSize, setSelectedSize] = useState("");
+  const [productImg, setProductImg] = useState(0);
+  const [expandedSection, setExpandedSection] = useState<string | null>(null);
 
   const openLightbox = useCallback((index: number) => {
     setLightboxIndex(index);
@@ -457,101 +460,136 @@ export default function Chapter01Page() {
           </div>
         </section>
 
-        {/* ═══ THE ARTIFACT ═══ */}
-        {ARTIFACTS.map((artifact) => (
-          <section
-            key={artifact.id}
-            className="py-32 px-6 md:px-12"
-            style={{ background: "var(--bg-surface)" }}
-          >
-            <div className="max-w-5xl mx-auto">
-              <FadeIn>
-                <p className="mb-3" style={{ fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 400, letterSpacing: "0.22em", textTransform: "uppercase", color: "var(--gold)" }}>
-                  {artifact.lesson} · The Artifact
-                </p>
-                <h2 style={{ fontFamily: "var(--font-hand)", fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 400, color: "var(--text-head)", lineHeight: 1.15 }}>
-                  {artifact.name}
-                </h2>
-              </FadeIn>
+        {/* ═══ THE ARTIFACT — Product Page ═══ */}
+        {ARTIFACTS.map((artifact) => {
+          const currentStock = artifact.sizes.find(s => s.label === selectedSize)?.stock ?? 0;
+          const PRODUCT_IMGS = [
+            { src: artifact.image, alt: "Back print" },
+            { src: "/images/ch01/Copy of IMG_0926.jpg", alt: "Front view" },
+            { src: "/images/ch01/Copy of IMG_0933.jpg", alt: "On tree" },
+            { src: "/images/ch01/Copy of IMG_0963.jpg", alt: "Detail" },
+            { src: "/images/ch01/Copy of IMG_0888.jpg", alt: "Label" },
+          ];
 
-              <div className="grid md:grid-cols-2 gap-12 md:gap-16 mt-12">
-                {/* Image */}
-                <FadeIn delay={0.1}>
-                  <div className="relative aspect-[4/5] overflow-hidden" style={{ background: "var(--bg-mid)" }}>
-                    <Image
-                      src={artifact.image}
-                      alt={`${artifact.name} — Chapter 01 artifact`}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 768px) 100vw, 50vw"
-                    />
-                    <div className="absolute top-4 right-4">
-                      <span style={{ fontFamily: "var(--font-sans)", fontSize: "8px", fontWeight: 400, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--beige-light)", background: "var(--green)", padding: "5px 12px" }}>
-                        Limited Archive
-                      </span>
+          const expandables = [
+            { key: "desc", label: "Description", content: artifact.description + "\n\nEach element on this tee carries meaning: The Sun (hope), The Paper Boat (purpose), The Teddy Bear (trust), The Waves (perseverance)." },
+            { key: "model", label: "Model Size", content: "Model photos coming soon. This is an oversized fit — we recommend sizing down for a regular fit." },
+            { key: "shipping", label: "Shipping & Returns", content: "Ships within 3-5 business days via J&T Express nationwide. ₱80 flat rate shipping.\n\nExchanges accepted within 7 days of delivery for unworn items with tags attached. No refunds — exchanges only." },
+            { key: "care", label: "Fabric & Care", content: "100% Cotton\nScreen-printed graphic\n\nMachine wash cold, inside out. Do not bleach. Tumble dry low. Do not iron on print." },
+          ];
+
+          return (
+            <section key={artifact.id} id="shop" className="py-20 px-6 md:px-12" style={{ background: "var(--bg-surface)" }}>
+              <div className="max-w-5xl mx-auto">
+                <div className="grid md:grid-cols-2 gap-8 md:gap-14">
+                  {/* LEFT — Images */}
+                  <FadeIn>
+                    <div className="flex flex-col gap-2">
+                      {/* Main image */}
+                      <div className="relative aspect-[4/5] overflow-hidden" style={{ background: "var(--bg-mid)" }}>
+                        {PRODUCT_IMGS.map((img, i) => (
+                          <div key={i} style={{ position: "absolute", inset: 0, opacity: productImg === i ? 1 : 0, transition: "opacity 0.5s" }}>
+                            <Image src={img.src} alt={img.alt} fill className="object-cover" sizes="(max-width: 768px) 100vw, 50vw" />
+                          </div>
+                        ))}
+                      </div>
+                      {/* Thumbnails */}
+                      <div className="grid grid-cols-5 gap-2">
+                        {PRODUCT_IMGS.map((img, i) => (
+                          <button key={i} onClick={() => setProductImg(i)} className="relative aspect-square overflow-hidden border-none p-0" style={{ border: productImg === i ? "2px solid var(--gold)" : "2px solid transparent", cursor: "pointer" }}>
+                            <Image src={img.src} alt={img.alt} fill className="object-cover" sizes="80px" />
+                          </button>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                </FadeIn>
+                  </FadeIn>
 
-                {/* Details */}
-                <FadeIn delay={0.2}>
-                  <div className="flex flex-col justify-center">
-                    <div className="flex items-baseline justify-between mb-6">
-                      <span style={{ fontFamily: "var(--font-serif)", fontSize: "1.8rem", fontWeight: 300, color: "var(--text-head)" }}>
-                        {artifact.name}
-                      </span>
-                      <span style={{ fontFamily: "var(--font-serif)", fontSize: "1.6rem", fontWeight: 300, color: "var(--text-body)" }}>
-                        {artifact.priceDisplay}
-                      </span>
-                    </div>
+                  {/* RIGHT — Product details */}
+                  <FadeIn delay={0.15}>
+                    <div>
+                      <p style={{ fontFamily: "var(--font-sans)", fontSize: 12, letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--gold)", marginBottom: 8 }}>{artifact.chapter || "Chapter 01 · Before We Knew"}</p>
+                      <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "clamp(1.6rem, 3vw, 2.2rem)", fontWeight: 400, color: "var(--text-head)", marginBottom: 4 }}>{artifact.name}</h2>
+                      <p style={{ fontFamily: "var(--font-sans)", fontSize: 14, color: "var(--text-body)", opacity: 0.6, marginBottom: 8 }}>100% Cotton · Screen-printed · Oversized Fit</p>
 
-                    <p style={{ fontFamily: "var(--font-sans)", fontSize: "16px", fontWeight: 300, lineHeight: 2, color: "var(--text-body)", letterSpacing: "0.02em", marginBottom: "2rem" }}>
-                      {artifact.description}
-                    </p>
+                      {/* Reviews placeholder */}
+                      <div className="flex items-center gap-2 mb-6">
+                        <div className="flex gap-0.5">{[1,2,3,4,5].map(s => <svg key={s} width="14" height="14" viewBox="0 0 24 24" fill={s <= 5 ? "var(--gold)" : "none"} stroke="var(--gold)" strokeWidth="1.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>)}</div>
+                        <span style={{ fontFamily: "var(--font-sans)", fontSize: 13, color: "var(--text-body)", opacity: 0.5 }}>0 reviews</span>
+                      </div>
 
-                    {/* Elements / Symbols */}
-                    <div className="flex flex-col gap-0 mb-8">
-                      {artifact.elements.map((el, i) => (
-                        <div
-                          key={i}
-                          className="py-4"
-                          style={{ borderTop: "1px solid var(--border-soft)" }}
-                        >
-                          <p style={{ fontFamily: "var(--font-hand)", fontSize: "1.25rem", fontWeight: 600, color: "var(--text-head)", marginBottom: "0.3rem" }}>
-                            {el.name}
-                          </p>
-                          <p style={{ fontFamily: "var(--font-sans)", fontSize: "15px", fontWeight: 300, lineHeight: 1.9, color: "var(--text-body)", opacity: 0.75 }}>
-                            {el.meaning}
-                          </p>
+                      {/* Price */}
+                      <p style={{ fontFamily: "var(--font-serif)", fontSize: "1.6rem", fontWeight: 400, color: "var(--text-head)", marginBottom: 20 }}>{artifact.priceDisplay}</p>
+
+                      {/* Color */}
+                      <p style={{ fontFamily: "var(--font-sans)", fontSize: 12, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--text-body)", marginBottom: 8 }}>Color · <span style={{ color: "var(--text-head)" }}>White</span></p>
+                      <div className="mb-6">
+                        <div style={{ width: 32, height: 32, borderRadius: "50%", background: "#f5f5f0", border: "2px solid var(--gold)" }} />
+                      </div>
+
+                      {/* Size */}
+                      <div className="flex justify-between items-center mb-3">
+                        <p style={{ fontFamily: "var(--font-sans)", fontSize: 12, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--text-body)" }}>Size</p>
+                        <button type="button" style={{ fontFamily: "var(--font-sans)", fontSize: 12, color: "var(--gold)", background: "none", border: "none", textDecoration: "underline", textUnderlineOffset: 3, cursor: "pointer" }}>Size Chart</button>
+                      </div>
+                      <div className="grid grid-cols-5 gap-2 mb-4">
+                        {artifact.sizes.filter(s => s.label !== "2XL").map(s => (
+                          <button key={s.label} disabled={s.stock === 0} onClick={() => setSelectedSize(s.label)}
+                            style={{ padding: "12px 0", fontFamily: "var(--font-sans)", fontSize: 14, fontWeight: selectedSize === s.label ? 500 : 300, color: selectedSize === s.label ? "#fff" : "var(--text-head)", background: selectedSize === s.label ? "var(--green)" : "transparent", border: selectedSize === s.label ? "1px solid var(--green)" : "1px solid var(--border-soft)", opacity: s.stock === 0 ? 0.2 : 1, cursor: s.stock === 0 ? "not-allowed" : "pointer", transition: "all 0.2s" }}>
+                            {s.label}
+                          </button>
+                        ))}
+                      </div>
+
+                      {/* Stock */}
+                      {selectedSize && (
+                        <p style={{ fontFamily: "var(--font-sans)", fontSize: 12, color: currentStock <= 3 ? "var(--gold)" : "var(--text-body)", opacity: 0.7, marginBottom: 16 }}>
+                          {currentStock} in stock. Limited archive.
+                        </p>
+                      )}
+
+                      {/* Add to Cart */}
+                      <button
+                        disabled={!selectedSize || currentStock === 0}
+                        onClick={() => {
+                          addItem({
+                            id: artifact.id,
+                            name: artifact.name,
+                            price: artifact.price,
+                            priceDisplay: artifact.priceDisplay,
+                            size: selectedSize,
+                            color: "White",
+                            image: artifact.image,
+                            chapter: "Chapter 01",
+                            maxStock: currentStock,
+                          });
+                        }}
+                        style={{ width: "100%", padding: "18px 0", fontFamily: "var(--font-sans)", fontSize: 13, fontWeight: 400, letterSpacing: "0.18em", textTransform: "uppercase", color: "#fff", background: "var(--green)", border: "none", cursor: selectedSize ? "pointer" : "not-allowed", opacity: selectedSize ? 1 : 0.4, transition: "all 0.3s", marginBottom: 20 }}>
+                        {selectedSize ? `Add to Cart — ${artifact.priceDisplay}` : "Select a Size"}
+                      </button>
+
+                      {/* Expandable sections */}
+                      {expandables.map(sec => (
+                        <div key={sec.key} style={{ borderTop: "1px solid var(--border-soft)" }}>
+                          <button onClick={() => setExpandedSection(expandedSection === sec.key ? null : sec.key)}
+                            className="w-full flex justify-between items-center py-4" style={{ background: "none", border: "none", cursor: "pointer" }}>
+                            <span style={{ fontFamily: "var(--font-sans)", fontSize: 13, fontWeight: 400, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--text-head)" }}>{sec.label}</span>
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--text-body)" strokeWidth="1.5" style={{ transform: expandedSection === sec.key ? "rotate(180deg)" : "rotate(0)", transition: "transform 0.3s" }}><path d="M6 9l6 6 6-6"/></svg>
+                          </button>
+                          {expandedSection === sec.key && (
+                            <div style={{ paddingBottom: 16 }}>
+                              <p style={{ fontFamily: "var(--font-sans)", fontSize: 14, fontWeight: 300, lineHeight: 1.9, color: "var(--text-body)", opacity: 0.7, whiteSpace: "pre-line" }}>{sec.content}</p>
+                            </div>
+                          )}
                         </div>
                       ))}
+                      <div style={{ borderTop: "1px solid var(--border-soft)" }} />
                     </div>
-
-                    {/* CTA */}
-                    <button
-                      className="w-full cursor-pointer"
-                      onClick={() => { setOrderArtifact(artifact); setOrderOpen(true); }}
-                      style={{
-                        fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400,
-                        letterSpacing: "0.2em", textTransform: "uppercase",
-                        color: "var(--white)", background: "var(--green)",
-                        border: "none", padding: "18px 32px",
-                        transition: "background 0.3s",
-                      }}
-                      onMouseOver={(e) => (e.currentTarget.style.background = "var(--green-deep)")}
-                      onMouseOut={(e) => (e.currentTarget.style.background = "var(--green)")}
-                    >
-                      Carry This Chapter — {artifact.priceDisplay}
-                    </button>
-                    <p className="mt-3 text-center" style={{ fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 300, color: "var(--text-body)", opacity: 0.4, letterSpacing: "0.06em" }}>
-                      Limited Archive · Ships within 3-5 business days
-                    </p>
-                  </div>
-                </FadeIn>
+                  </FadeIn>
+                </div>
               </div>
-            </div>
-          </section>
-        ))}
+            </section>
+          );
+        })}
 
         {/* ═══ THE DROP ═══ */}
         <section className="py-24 px-6 md:px-12" style={{ background: "var(--bg-deep)" }}>
@@ -768,36 +806,21 @@ export default function Chapter01Page() {
 
       {/* Floating shop button */}
       <motion.button
-        className="fixed bottom-6 left-6 z-50 flex items-center gap-3 no-underline"
+        className="fixed bottom-6 left-6 z-50"
         style={{
           fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 400,
-          letterSpacing: "0.18em", textTransform: "uppercase",
+          letterSpacing: "0.16em", textTransform: "uppercase",
           color: "var(--white)", background: "var(--green)",
           padding: "14px 24px", border: "none",
-          boxShadow: "0 4px 20px rgba(0,0,0,0.3)",
+          boxShadow: "0 4px 20px rgba(0,0,0,0.3)", cursor: "pointer",
         }}
-        onClick={() => { setOrderArtifact(ARTIFACTS[0]); setOrderOpen(true); }}
+        onClick={() => { const el = document.getElementById("shop"); if (el) el.scrollIntoView({ behavior: "smooth" }); }}
         initial={{ y: 80, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 2, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        whileHover={{ scale: 1.03 }}
       >
-        Carry This Chapter — {ARTIFACTS[0].priceDisplay}
+        Shop — {ARTIFACTS[0].priceDisplay}
       </motion.button>
-
-      {/* Order Overlay */}
-      <OrderOverlay
-        artifact={{
-          name: orderArtifact.name,
-          price: orderArtifact.price,
-          priceDisplay: orderArtifact.priceDisplay,
-          image: orderArtifact.image,
-          chapter: "Chapter 01 · Before We Knew",
-          sizes: orderArtifact.sizes,
-        }}
-        isOpen={orderOpen}
-        onClose={() => setOrderOpen(false)}
-      />
     </>
   );
 }

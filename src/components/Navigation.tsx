@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { useTheme } from "./ThemeProvider";
 import { KeyIcon } from "./KeyIcon";
+import { CartButton } from "./CartDrawer";
 
 const NAV_ITEMS = [
   { id: "brand", label: "The Brand", href: "/home#brand" },
@@ -143,6 +144,8 @@ export function Navigation() {
 
         {/* Right controls */}
         <div className="flex items-center gap-4">
+          {/* Cart */}
+          <CartButton />
           {/* Theme toggle */}
           <button
             onClick={(e) => toggleTheme(e)}

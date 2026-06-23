@@ -4,6 +4,8 @@ import { LenisProvider } from "@/components/LenisProvider";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { AudioProvider } from "@/components/AudioProvider";
 import { CustomCursor } from "@/components/CustomCursor";
+import { CartProvider } from "@/components/CartProvider";
+import { CartDrawer } from "@/components/CartDrawer";
 import "./globals.css";
 
 const cormorant = Cormorant_Garamond({
@@ -50,10 +52,13 @@ export default function RootLayout({
       <body>
         <ThemeProvider>
           <AudioProvider>
-            <LenisProvider>
-              <CustomCursor />
-              {children}
-            </LenisProvider>
+            <CartProvider>
+              <LenisProvider>
+                <CustomCursor />
+                {children}
+                <CartDrawer />
+              </LenisProvider>
+            </CartProvider>
           </AudioProvider>
         </ThemeProvider>
       </body>
