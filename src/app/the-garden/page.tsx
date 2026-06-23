@@ -145,8 +145,11 @@ export default function TheGardenPage() {
     return PROMPTS[Math.floor(Math.random() * PROMPTS.length)];
   }, []);
 
+  const [submitting, setSubmitting] = useState(false);
+
   const handleSubmit = useCallback(async () => {
-    if (!seedText.trim()) return;
+    if (!seedText.trim() || submitting) return;
+    setSubmitting(true);
     try {
       await fetch("/api/garden", {
         method: "POST",
@@ -163,10 +166,11 @@ export default function TheGardenPage() {
     setTimeout(() => {
       setFormOpen(false);
       setSubmitted(false);
+      setSubmitting(false);
       setSeedText("");
       setDisplayName("");
     }, 3500);
-  }, [seedText, identityType, displayName, currentPrompt]);
+  }, [seedText, identityType, displayName, currentPrompt, submitting]);
 
   return (
     <>
