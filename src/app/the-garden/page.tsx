@@ -169,14 +169,14 @@ export default function TheGardenPage() {
         }),
       });
     } catch {}
+    setFormOpen(false);
     setSubmitted(true);
     setTimeout(() => {
-      setFormOpen(false);
       setSubmitted(false);
       setSubmitting(false);
       setSeedText("");
       setDisplayName("");
-    }, 3500);
+    }, 6000);
   }, [seedText, identityType, displayName, currentPrompt, submitting]);
 
   return (
@@ -452,6 +452,80 @@ export default function TheGardenPage() {
         )}
       </AnimatePresence>
 
+      {/* ═══ FULLSCREEN PLANTING CEREMONY ═══ */}
+      <AnimatePresence>
+        {submitted && (
+          <motion.div
+            className="fixed inset-0 z-[700] flex flex-col items-center justify-center"
+            style={{ background: "#050705" }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            {/* Golden seed drops */}
+            <motion.div
+              style={{ width: 14, height: 14, borderRadius: "50%", background: "#c8922a", position: "relative", zIndex: 2 }}
+              initial={{ y: -100, scale: 0, opacity: 0 }}
+              animate={{ y: 0, scale: [0, 1.5, 1], opacity: 1, boxShadow: ["0 0 0 0 rgba(200,146,42,0)", "0 0 80px 40px rgba(200,146,42,0.5)", "0 0 50px 20px rgba(200,146,42,0.2)"] }}
+              transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+            />
+
+            {/* Roots spread */}
+            <div className="flex items-center" style={{ marginTop: -7, position: "relative", zIndex: 1 }}>
+              <motion.div style={{ height: 2, background: "linear-gradient(to left, #c8922a, transparent)" }} initial={{ width: 0 }} animate={{ width: 200 }} transition={{ duration: 1.5, delay: 0.8, ease: [0.16, 1, 0.3, 1] }} />
+              <motion.div style={{ height: 2, background: "linear-gradient(to right, #c8922a, transparent)" }} initial={{ width: 0 }} animate={{ width: 200 }} transition={{ duration: 1.5, delay: 0.8, ease: [0.16, 1, 0.3, 1] }} />
+            </div>
+
+            {/* Sprout upward */}
+            <motion.div
+              style={{ width: 3, background: "linear-gradient(to top, #c8922a, rgba(200,146,42,0))", marginTop: -2, position: "relative", zIndex: 2 }}
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 160, opacity: 1 }}
+              transition={{ duration: 2, delay: 1.5, ease: [0.16, 1, 0.3, 1] }}
+            />
+
+            {/* Bloom */}
+            <motion.div
+              style={{ width: 10, height: 10, borderRadius: "50%", background: "#c8922a", marginTop: -5, position: "relative", zIndex: 2 }}
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: [0, 2.5, 1.5], opacity: [0, 1, 0.7], boxShadow: ["0 0 0 0 rgba(200,146,42,0)", "0 0 80px 40px rgba(200,146,42,0.5)", "0 0 40px 15px rgba(200,146,42,0.15)"] }}
+              transition={{ duration: 1.5, delay: 2.8, ease: "easeOut" }}
+            />
+
+            {/* Fireflies from bloom */}
+            {Array.from({ length: 16 }).map((_, i) => (
+              <motion.div
+                key={i}
+                className="absolute rounded-full"
+                style={{ width: i % 3 === 0 ? 6 : 3, height: i % 3 === 0 ? 6 : 3, background: "#c8922a", boxShadow: "0 0 10px 4px rgba(200,146,42,0.5)", left: "50%", top: "45%", zIndex: 3 }}
+                initial={{ opacity: 0, x: 0, y: 0, scale: 0 }}
+                animate={{ opacity: [0, 1, 0], x: Math.cos(i * 22.5 * Math.PI / 180) * (80 + i * 10), y: Math.sin(i * 22.5 * Math.PI / 180) * (80 + i * 10) - 40, scale: [0, 1.5, 0] }}
+                transition={{ duration: 2.5, delay: 3.2 + i * 0.06, ease: "easeOut" }}
+              />
+            ))}
+
+            {/* Text */}
+            <motion.h3
+              style={{ fontFamily: "var(--font-serif)", fontSize: "clamp(2rem, 5vw, 3rem)", fontWeight: 300, fontStyle: "italic", color: "#f4f1ec", marginTop: 40, position: "relative", zIndex: 4 }}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1.2, delay: 3.8 }}
+            >
+              Your seed has been planted.
+            </motion.h3>
+            <motion.p
+              style={{ fontFamily: "var(--font-sans)", fontSize: 17, fontWeight: 300, color: "#d8d4ce", opacity: 0.5, marginTop: 20, position: "relative", zIndex: 4 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.5 }}
+              transition={{ duration: 1, delay: 4.5 }}
+            >
+              Thank you for sharing what you carry.
+            </motion.p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* ═══ SUBMISSION OVERLAY ═══ */}
       <AnimatePresence>
         {formOpen && (
@@ -480,106 +554,8 @@ export default function TheGardenPage() {
                 transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
                 onClick={(e) => e.stopPropagation()}
               >
-                {submitted ? (
-                  /* ── Cinematic Seed Planting ── */
-                  <motion.div
-                    className="flex flex-col items-center justify-center text-center relative overflow-hidden"
-                    style={{ minHeight: "60vh", padding: "60px 24px", background: "radial-gradient(ellipse at center bottom, #0d100d 0%, #060806 100%)" }}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 1 }}
-                  >
-                    {/* Golden seed dropping */}
-                    <motion.div
-                      className="relative z-10"
-                      style={{ width: 16, height: 16, borderRadius: "50%", background: "#c8922a" }}
-                      initial={{ y: -80, scale: 0, opacity: 0 }}
-                      animate={{ y: 0, scale: [0, 1.3, 1], opacity: 1, boxShadow: ["0 0 0 0 rgba(200,146,42,0)", "0 0 60px 30px rgba(200,146,42,0.4)", "0 0 40px 15px rgba(200,146,42,0.2)"] }}
-                      transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
-                    />
-
-                    {/* Roots spreading */}
-                    <div className="relative z-10 flex items-center" style={{ marginTop: -8 }}>
-                      <motion.div
-                        style={{ height: 2, background: "linear-gradient(to left, #c8922a, transparent)", transformOrigin: "right" }}
-                        initial={{ width: 0, opacity: 0 }}
-                        animate={{ width: 160, opacity: 0.5 }}
-                        transition={{ duration: 1.5, delay: 1, ease: [0.16, 1, 0.3, 1] }}
-                      />
-                      <motion.div
-                        style={{ height: 2, background: "linear-gradient(to right, #c8922a, transparent)", transformOrigin: "left" }}
-                        initial={{ width: 0, opacity: 0 }}
-                        animate={{ width: 160, opacity: 0.5 }}
-                        transition={{ duration: 1.5, delay: 1, ease: [0.16, 1, 0.3, 1] }}
-                      />
-                    </div>
-
-                    {/* Branch roots */}
-                    <div className="absolute left-1/2 top-[48%] pointer-events-none" style={{ transform: "translateX(-50%)" }}>
-                      {[{ angle: -30, len: 80 }, { angle: 25, len: 90 }, { angle: -55, len: 60 }, { angle: 50, len: 70 }].map((r, i) => (
-                        <motion.div
-                          key={i}
-                          style={{ position: "absolute", height: 1, background: "rgba(200,146,42,0.3)", transformOrigin: "left center", left: i < 2 ? 0 : "auto", right: i >= 2 ? 0 : "auto", transform: `rotate(${r.angle}deg)` }}
-                          initial={{ width: 0, opacity: 0 }}
-                          animate={{ width: r.len, opacity: 0.3 }}
-                          transition={{ duration: 1.2, delay: 1.3 + i * 0.15, ease: "easeOut" }}
-                        />
-                      ))}
-                    </div>
-
-                    {/* Golden light sprouting upward */}
-                    <motion.div
-                      className="relative z-10"
-                      style={{ width: 3, background: "linear-gradient(to top, #c8922a, rgba(200,146,42,0.1), transparent)", marginTop: -4 }}
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: 140, opacity: 1 }}
-                      transition={{ duration: 2, delay: 1.8, ease: [0.16, 1, 0.3, 1] }}
-                    />
-
-                    {/* Glow bloom at top of sprout */}
-                    <motion.div
-                      className="relative z-10"
-                      style={{ width: 8, height: 8, borderRadius: "50%", background: "#c8922a", marginTop: -4 }}
-                      initial={{ scale: 0, opacity: 0 }}
-                      animate={{ scale: [0, 2, 1.2], opacity: [0, 1, 0.8], boxShadow: ["0 0 0 0 rgba(200,146,42,0)", "0 0 50px 25px rgba(200,146,42,0.4)", "0 0 30px 10px rgba(200,146,42,0.2)"] }}
-                      transition={{ duration: 1.5, delay: 3, ease: "easeOut" }}
-                    />
-
-                    {/* Fireflies rising from the bloom */}
-                    {Array.from({ length: 12 }).map((_, i) => (
-                      <motion.div
-                        key={i}
-                        className="absolute rounded-full z-10"
-                        style={{ width: i % 3 === 0 ? 5 : 3, height: i % 3 === 0 ? 5 : 3, background: "#c8922a", boxShadow: "0 0 8px 3px rgba(200,146,42,0.4)", left: "50%", top: "35%" }}
-                        initial={{ opacity: 0, x: 0, y: 0, scale: 0 }}
-                        animate={{ opacity: [0, 0.9, 0], x: (i % 2 === 0 ? -1 : 1) * (20 + i * 8), y: -(40 + i * 12), scale: [0, 1.2, 0.3] }}
-                        transition={{ duration: 2 + i * 0.2, delay: 3.5 + i * 0.1, ease: "easeOut" }}
-                      />
-                    ))}
-
-                    {/* Text */}
-                    <motion.h3
-                      className="relative z-10 mt-10"
-                      style={{ fontFamily: "var(--font-serif)", fontSize: "clamp(1.8rem, 5vw, 2.6rem)", fontWeight: 300, fontStyle: "italic", color: "#f4f1ec", lineHeight: 1.4 }}
-                      initial={{ opacity: 0, y: 30 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 1.2, delay: 4 }}
-                    >
-                      Your seed has been planted.
-                    </motion.h3>
-
-                    <motion.p
-                      className="relative z-10 mt-6 max-w-sm"
-                      style={{ fontFamily: "var(--font-sans)", fontSize: 16, fontWeight: 300, color: "#d8d4ce", lineHeight: 1.9 }}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 0.5 }}
-                      transition={{ duration: 1, delay: 4.8 }}
-                    >
-                      It will be reviewed before entering the archive.<br />Thank you for sharing what you carry.
-                    </motion.p>
-                  </motion.div>
-                ) : (
-                  /* ── Submission form ── */
+                {/* ── Submission form ── */}
+                {(
                   <div className="p-8 md:p-10">
                     {/* Close */}
                     <button
