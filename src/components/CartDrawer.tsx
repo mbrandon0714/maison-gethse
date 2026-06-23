@@ -63,6 +63,9 @@ export function CartDrawer() {
                       </div>
                       <button onClick={() => removeItem(item.id, item.size)} style={{ fontFamily: "var(--font-sans)", fontSize: 11, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--text-body)", opacity: 0.5, background: "none", border: "none", cursor: "pointer", textDecoration: "underline", textUnderlineOffset: 3 }}>Remove</button>
                     </div>
+                    <p style={{ fontFamily: "var(--font-sans)", fontSize: 12, fontWeight: 600, color: item.maxStock <= 3 ? "var(--gold)" : "var(--text-body)", marginTop: 6, opacity: 0.8 }}>
+                      {item.maxStock} in stock · Limited archive
+                    </p>
                   </div>
                 </div>
               ))}
