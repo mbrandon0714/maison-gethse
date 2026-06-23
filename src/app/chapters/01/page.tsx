@@ -3,6 +3,7 @@
 import { useRef, useState, useCallback, useEffect } from "react";
 import Image from "next/image";
 import { motion, useInView, useScroll, useTransform, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 import { Navigation } from "@/components/Navigation";
 import { MuteToggle } from "@/components/MuteToggle";
 import { KeyIcon } from "@/components/KeyIcon";
@@ -859,7 +860,7 @@ export default function Chapter01Page() {
                 &ldquo;You are not buying a shirt.<br />You are carrying a chapter.&rdquo;
               </p>
               <div className="w-[1px] h-[40px] mx-auto my-8" style={{ background: "var(--beige)", opacity: 0.1 }} />
-              <a
+              <Link
                 href="/home"
                 className="inline-block no-underline"
                 style={{
@@ -872,7 +873,7 @@ export default function Chapter01Page() {
                 }}
               >
                 ← Return to Maison Gethse
-              </a>
+              </Link>
             </FadeIn>
           </div>
         </section>
@@ -880,13 +881,14 @@ export default function Chapter01Page() {
 
       {/* Floating shop button */}
       <motion.button
-        className="fixed bottom-8 left-8 z-50"
+        className="fixed bottom-6 left-4 right-4 md:left-8 md:right-auto z-50"
         style={{
-          fontFamily: "var(--font-sans)", fontSize: "15px", fontWeight: 500,
+          fontFamily: "var(--font-sans)", fontSize: "13px", fontWeight: 500,
           letterSpacing: "0.14em", textTransform: "uppercase",
           color: "var(--white)", background: "var(--green)",
-          padding: "18px 32px", border: "none", borderRadius: 6,
+          padding: "16px 24px", border: "none", borderRadius: 6,
           boxShadow: "0 6px 30px rgba(0,0,0,0.4)", cursor: "pointer",
+          textAlign: "center",
         }}
         onClick={() => { const el = document.getElementById("shop"); if (el) el.scrollIntoView({ behavior: "smooth" }); }}
         initial={{ y: 80, opacity: 0 }}

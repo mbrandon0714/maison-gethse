@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { useTheme } from "./ThemeProvider";
 import { KeyIcon } from "./KeyIcon";
@@ -78,7 +79,7 @@ export function Navigation() {
         transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
       >
         {/* Logo / Key */}
-        <a
+        <Link
           href="/home"
           className="flex items-center gap-3 no-underline"
           style={{ color: "var(--text-head)" }}
@@ -95,7 +96,7 @@ export function Navigation() {
           >
             Maison Gethse
           </span>
-        </a>
+        </Link>
 
         {/* Desktop nav */}
         <ul className="hidden md:flex items-center gap-10 list-none">
@@ -106,7 +107,7 @@ export function Navigation() {
                 className="relative bg-transparent border-none cursor-pointer py-2 px-3 -mx-3"
                 style={{
                   fontFamily: "var(--font-sans)",
-                  fontSize: "10px",
+                  fontSize: "11px",
                   fontWeight: activeSection === item.id ? 500 : 400,
                   letterSpacing: "0.18em",
                   textTransform: "uppercase",

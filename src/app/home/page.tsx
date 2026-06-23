@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import Image from "next/image";
 import { motion, useInView } from "framer-motion";
+import Link from "next/link";
 import { Navigation } from "@/components/Navigation";
 import { MuteToggle } from "@/components/MuteToggle";
 import { KeyIcon } from "@/components/KeyIcon";
@@ -106,7 +107,7 @@ export default function HomePage() {
                         <h4 style={{ fontFamily: "var(--font-serif)", fontSize: "1.05rem", fontWeight: 400, color: "var(--text-head)", marginBottom: "0.3rem" }}>
                           {pillar.title}
                         </h4>
-                        <p style={{ fontFamily: "var(--font-sans)", fontSize: "15px", fontWeight: 300, lineHeight: 1.9, color: "var(--text-body)", opacity: 0.75 }}>
+                        <p style={{ fontFamily: "var(--font-sans)", fontSize: "15px", fontWeight: 300, lineHeight: 1.9, color: "var(--text-body)", opacity: 0.85 }}>
                           {pillar.desc}
                         </p>
                       </div>
@@ -137,7 +138,7 @@ export default function HomePage() {
 
             {/* Chapter 01 Card */}
             <FadeIn delay={0.2}>
-              <a
+              <Link
                 href="/chapters/01"
                 className="block mt-16 group relative overflow-hidden no-underline"
                 style={{ background: "var(--bg-surface)", transition: "all 0.5s", border: "1px solid transparent" }}
@@ -171,13 +172,13 @@ export default function HomePage() {
                       We once dreamed without limits. Before life opened our eyes to the weight of reality, there was innocence — a childlike trust in what could be. This chapter honors the space between who we were and who we are becoming.
                     </p>
                     <div className="mt-8 flex items-center gap-3">
-                      <span style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--text-head)", opacity: 0.5 }}>
+                      <span style={{ fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 400, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--text-head)", opacity: 0.6 }}>
                         Enter Chapter →
                       </span>
                     </div>
                   </div>
                 </div>
-              </a>
+              </Link>
             </FadeIn>
           </div>
         </section>
@@ -219,7 +220,7 @@ export default function HomePage() {
                     <p style={{ fontFamily: "var(--font-hand)", fontSize: "1.15rem", fontWeight: 400, color: "var(--beige-light)", lineHeight: 1.65, opacity: 0.85 }}>
                       &ldquo;{seed.text}&rdquo;
                     </p>
-                    <p className="mt-3" style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400, letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--beige)", opacity: 0.25 }}>
+                    <p className="mt-3" style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400, letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--beige)", opacity: 0.35 }}>
                       — {seed.author}
                     </p>
                   </div>
@@ -228,7 +229,7 @@ export default function HomePage() {
             </FadeIn>
 
             <FadeIn delay={0.3}>
-              <a
+              <Link
                 href="/the-garden"
                 className="inline-block mt-12 no-underline"
                 style={{
@@ -244,7 +245,7 @@ export default function HomePage() {
                 }}
               >
                 Plant a Seed
-              </a>
+              </Link>
             </FadeIn>
           </div>
         </section>
@@ -267,15 +268,15 @@ export default function HomePage() {
                     A visual archive of chapters and the stories between them.
                   </p>
                 </div>
-                <a href="/the-lens" className="no-underline" style={{ fontFamily: "var(--font-sans)", fontSize: "14px", fontWeight: 400, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--gold)", transition: "opacity 0.3s", whiteSpace: "nowrap" }}>
+                <Link href="/the-lens" className="no-underline" style={{ fontFamily: "var(--font-sans)", fontSize: "14px", fontWeight: 400, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--gold)", transition: "opacity 0.3s", whiteSpace: "nowrap" }}>
                   View Full Archive →
-                </a>
+                </Link>
               </div>
             </FadeIn>
 
-            {/* Photo grid placeholder */}
+            {/* Photo grid */}
             <FadeIn delay={0.2}>
-              <div className="mt-12 columns-2 md:columns-3 gap-[3px]">
+              <div className="mt-12 grid grid-cols-2 md:grid-cols-3 gap-[3px]">
                 {[
                   "/images/ch01/ch1_8216.jpg",
                   "/images/ch01/ch1_0655.jpg",
@@ -284,13 +285,13 @@ export default function HomePage() {
                   "/images/ch01/ch1_5863.jpg",
                   "/images/ch01/ch1_talipapa.jpg",
                 ].map((src, i) => (
-                  <div key={i} className="break-inside-avoid mb-[3px] overflow-hidden cursor-pointer group">
+                  <div key={i} className="overflow-hidden cursor-pointer group relative aspect-[4/5]">
                     <Image
                       src={src}
                       alt="Chapter 01 photography"
-                      width={500}
-                      height={600}
-                      className="w-full block transition-all duration-700 group-hover:scale-[1.04]"
+                      fill
+                      loading="eager"
+                      className="object-cover transition-all duration-700 group-hover:scale-[1.04]"
                       style={{ filter: "saturate(0.85) contrast(1.05) brightness(0.95)" }}
                       sizes="(max-width: 768px) 50vw, 33vw"
                     />
@@ -368,7 +369,7 @@ export default function HomePage() {
                 <span className="block mb-4" style={{ fontFamily: "var(--font-serif)", fontSize: "1.2rem", fontWeight: 300, letterSpacing: "0.14em", color: "var(--beige-light)" }}>
                   Maison Gethse
                 </span>
-                <p style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 300, lineHeight: 1.9, color: "var(--beige)", opacity: 0.4, maxWidth: "200px" }}>
+                <p style={{ fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 300, lineHeight: 1.9, color: "var(--beige)", opacity: 0.5, maxWidth: "200px" }}>
                   A sanctuary of stories, seasons, and the quiet process of becoming.
                 </p>
               </div>
@@ -378,21 +379,27 @@ export default function HomePage() {
                 { title: "Connect", links: [{ label: "Instagram", href: "https://www.instagram.com/maison.gethse/" }, { label: "Facebook", href: "#" }, { label: "TikTok", href: "https://www.tiktok.com/@maison.gethse" }, { label: "maisongethse@gmail.com", href: "mailto:maisongethse@gmail.com" }] },
               ].map((col) => (
                 <div key={col.title}>
-                  <h5 className="mb-4" style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400, letterSpacing: "0.22em", textTransform: "uppercase", color: "var(--beige)", opacity: 0.35 }}>
+                  <h5 className="mb-4" style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400, letterSpacing: "0.22em", textTransform: "uppercase", color: "var(--beige)", opacity: 0.45 }}>
                     {col.title}
                   </h5>
                   <ul className="flex flex-col gap-3" style={{ listStyle: "none" }}>
-                    {col.links.map((link) => (
-                      <li key={link.label}>
-                        <a
-                          href={link.href}
-                          className="no-underline transition-opacity duration-300 hover:opacity-100"
-                          style={{ fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 300, letterSpacing: "0.04em", color: "var(--beige)", opacity: 0.55 }}
-                        >
-                          {link.label}
-                        </a>
-                      </li>
-                    ))}
+                    {col.links.map((link) => {
+                      const isInternal = link.href.startsWith("/");
+                      const Tag = isInternal ? Link : "a";
+                      const extra = isInternal ? {} : { target: "_blank", rel: "noopener noreferrer" };
+                      return (
+                        <li key={link.label}>
+                          <Tag
+                            href={link.href}
+                            className="no-underline transition-opacity duration-300 hover:opacity-100"
+                            style={{ fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 300, letterSpacing: "0.04em", color: "var(--beige)", opacity: 0.55 }}
+                            {...extra}
+                          >
+                            {link.label}
+                          </Tag>
+                        </li>
+                      );
+                    })}
                   </ul>
                 </div>
               ))}

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
+import { sendOrderConfirmation } from "@/lib/email";
 
 export async function POST(req: NextRequest) {
   try {
@@ -83,6 +84,19 @@ export async function POST(req: NextRequest) {
       shipping_zip: customer.zip || "",
       status: "paid",
     });
+
+    // Send confirmation email (non-blocking)
+    sendOrderConfirmation({
+      customerName: `${customer.firstName} ${customer.lastName}`,
+      customerEmail: customer.email,
+      productName: name,
+      size,
+      quantity,
+      subtotal: price * quantity,
+      shippingFee: 80,
+      total: price * quantity + 80,
+      shippingAddress: `${customer.address}, ${customer.city}, ${customer.province} ${customer.zip}`,
+    }).catch((err) => console.error("Email send failed:", err));
 
     return NextResponse.json({ checkout_url: checkoutUrl });
   } catch (error) {

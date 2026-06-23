@@ -149,7 +149,7 @@ export default function CoverPage() {
               textTransform: "uppercase",
             }}
             initial={{ opacity: 0 }}
-            animate={{ opacity: 0.2 }}
+            animate={{ opacity: 0.25 }}
             transition={{ duration: 1, delay: 2.5 }}
           >
             Stories · Chapters · Becoming

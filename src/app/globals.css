@@ -29,6 +29,24 @@
   --nav-bg: rgba(15, 19, 15, 0.9);
   --nav-bd: rgba(216, 212, 206, 0.08);
 
+  --checkout-bg: #1a1d1a;
+  --checkout-surface: #222522;
+  --checkout-input-bg: #2a2a28;
+  --checkout-input-bd: #3a3a38;
+  --checkout-text: #e8e4de;
+  --checkout-muted: #888;
+  --checkout-dim: #777;
+  --checkout-divider: #2a2a28;
+  --checkout-subtle: #666;
+  --checkout-btn-bg: #303d30;
+  --checkout-btn-disabled: #444;
+
+  --garden-hero: linear-gradient(to bottom, #080c08 0%, #0d120d 40%, #111611 100%);
+  --garden-soil: #080a07;
+  --garden-closing: linear-gradient(to bottom, #080c08 0%, #0a0e0a 100%);
+  --lens-bg: #0a0a0a;
+  --lens-closing: #070a07;
+
   --font-serif: 'Cormorant Garamond', Georgia, serif;
   --font-sans: 'Jost', system-ui, sans-serif;
   --font-hand: 'Caveat', cursive;
@@ -55,6 +73,24 @@
   --input-bd: var(--beige);
   --nav-bg: rgba(244, 241, 236, 0.94);
   --nav-bd: var(--beige);
+
+  --checkout-bg: var(--beige-light);
+  --checkout-surface: var(--white);
+  --checkout-input-bg: var(--white);
+  --checkout-input-bd: var(--beige);
+  --checkout-text: var(--green);
+  --checkout-muted: var(--brown);
+  --checkout-dim: rgba(86, 76, 69, 0.7);
+  --checkout-divider: var(--beige-mid);
+  --checkout-subtle: rgba(86, 76, 69, 0.5);
+  --checkout-btn-bg: var(--green);
+  --checkout-btn-disabled: var(--beige);
+
+  --garden-hero: linear-gradient(to bottom, #192114 0%, #1e2a1e 40%, #243024 100%);
+  --garden-soil: #192114;
+  --garden-closing: linear-gradient(to bottom, #192114 0%, #1e2a1e 100%);
+  --lens-bg: var(--green-deep);
+  --lens-closing: #0d160d;
 }
 
 * {

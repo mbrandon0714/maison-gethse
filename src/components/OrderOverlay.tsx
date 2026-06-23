@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect, useMemo, useRef } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { useLenis } from "./LenisProvider";
 
 interface Artifact {
@@ -375,7 +376,7 @@ function renderDone(artifact: { name: string }, size: string, qty: number, total
         <div style={{ display:"flex",justifyContent:"space-between",marginBottom:12,fontFamily:"var(--font-sans)",fontSize:12 }}><span style={{opacity:0.5,textTransform:"uppercase",letterSpacing:"0.12em",color:"var(--text-body)"}}>Total</span><span style={{fontFamily:"var(--font-serif)",fontSize:"1.1rem",color:"var(--text-head)"}}>₱{total.toLocaleString()}</span></div>
         <div style={{ display:"flex",justifyContent:"space-between",fontFamily:"var(--font-sans)",fontSize:12 }}><span style={{opacity:0.5,textTransform:"uppercase",letterSpacing:"0.12em",color:"var(--text-body)"}}>Status</span><span style={{color:"var(--gold)",fontWeight:500}}>Processing</span></div>
       </div>
-      <a href="/home" style={{ marginTop:32,fontFamily:"var(--font-sans)",fontSize:12,letterSpacing:"0.16em",textTransform:"uppercase",color:"var(--text-body)",opacity:0.5,textDecoration:"none" }}>Continue Exploring →</a>
+      <Link href="/home" style={{ marginTop:32,fontFamily:"var(--font-sans)",fontSize:12,letterSpacing:"0.16em",textTransform:"uppercase",color:"var(--text-body)",opacity:0.5,textDecoration:"none" }}>Continue Exploring →</Link>
     </div>
   );
 }

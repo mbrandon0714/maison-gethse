@@ -3,6 +3,7 @@
 import { useRef, useState, useCallback } from "react";
 import Image from "next/image";
 import { motion, useInView, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 import { Navigation } from "@/components/Navigation";
 import { MuteToggle } from "@/components/MuteToggle";
 import { KeyIcon } from "@/components/KeyIcon";
@@ -100,7 +101,7 @@ export default function TheLensPage() {
 
       <main>
         {/* ═══ HERO ═══ */}
-        <section className="min-h-[70vh] flex items-center justify-center relative" style={{ background: "#0a0a0a", paddingTop: "var(--nav-h)" }}>
+        <section className="min-h-[70vh] flex items-center justify-center relative" style={{ background: "var(--lens-bg)", paddingTop: "var(--nav-h)" }}>
           <motion.div
             className="relative z-10 text-center max-w-2xl px-6"
             initial={{ opacity: 0, y: 30 }}
@@ -121,7 +122,7 @@ export default function TheLensPage() {
         </section>
 
         {/* ═══ FEATURED VISUAL AUTHORS ═══ */}
-        <section className="py-20 px-6 md:px-12" style={{ background: "#0a0a0a", borderTop: "1px solid rgba(216,212,206,0.05)" }}>
+        <section className="py-20 px-6 md:px-12" style={{ background: "var(--lens-bg)", borderTop: "1px solid rgba(216,212,206,0.05)" }}>
           <div className="max-w-5xl mx-auto">
             <FadeIn>
               <p className="mb-8" style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400, letterSpacing: "0.24em", textTransform: "uppercase", color: "var(--gold)", opacity: 0.5 }}>
@@ -165,7 +166,7 @@ export default function TheLensPage() {
         </section>
 
         {/* ═══ GALLERY ═══ */}
-        <section className="py-20 px-6 md:px-12 relative" style={{ background: "#0a0a0a" }}>
+        <section className="py-20 px-6 md:px-12 relative" style={{ background: "var(--lens-bg)" }}>
           {/* Film grain */}
           <div className="absolute inset-0 pointer-events-none opacity-[0.03]" style={{
             backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E\")",
@@ -262,7 +263,7 @@ export default function TheLensPage() {
         </section>
 
         {/* ═══ CLOSING ═══ */}
-        <section className="py-20 px-6" style={{ background: "#070a07" }}>
+        <section className="py-20 px-6" style={{ background: "var(--lens-closing)" }}>
           <div className="max-w-xl mx-auto text-center">
             <FadeIn>
               <KeyIcon size={36} className="mx-auto mb-6 opacity-20" />
@@ -271,9 +272,9 @@ export default function TheLensPage() {
                 It is a growing visual memory system.
               </p>
               <div className="mt-8">
-                <a href="/home" className="no-underline" style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--beige)", opacity: 0.3 }}>
+                <Link href="/home" className="no-underline" style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--beige)", opacity: 0.3 }}>
                   ← Return to Maison Gethse
-                </a>
+                </Link>
               </div>
             </FadeIn>
           </div>

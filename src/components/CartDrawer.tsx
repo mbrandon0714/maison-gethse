@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useCart } from "./CartProvider";
 
 const SHIPPING_FEE = 80;
@@ -120,9 +121,9 @@ export function CartDrawer() {
               <span>Total</span>
               <span>₱{total.toLocaleString()}</span>
             </div>
-            <a href="/checkout" onClick={() => setIsOpen(false)} style={{ display: "block", width: "100%", padding: "18px 0", fontFamily: "var(--font-sans)", fontSize: 14, fontWeight: 500, letterSpacing: "0.16em", textTransform: "uppercase", color: "#fff", background: "var(--green)", border: "none", textAlign: "center", textDecoration: "none", borderRadius: 4 }}>
+            <Link href="/checkout" onClick={() => setIsOpen(false)} style={{ display: "block", width: "100%", padding: "18px 0", fontFamily: "var(--font-sans)", fontSize: 14, fontWeight: 500, letterSpacing: "0.16em", textTransform: "uppercase", color: "#fff", background: "var(--green)", border: "none", textAlign: "center", textDecoration: "none", borderRadius: 4 }}>
               Check Out — ₱{total.toLocaleString()}
-            </a>
+            </Link>
             <p style={{ marginTop: 12, textAlign: "center", fontFamily: "var(--font-sans)", fontSize: 13, fontWeight: 500, color: "var(--text-body)", opacity: 0.6 }}>
               Secure payment via GCash · Maya · Card
             </p>

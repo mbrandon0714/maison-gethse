@@ -2,6 +2,7 @@
 
 import { useRef, useState, useMemo, useCallback, useEffect } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 import { Navigation } from "@/components/Navigation";
 import { MuteToggle } from "@/components/MuteToggle";
 import { KeyIcon } from "@/components/KeyIcon";
@@ -188,7 +189,7 @@ export default function TheGardenPage() {
         {/* ═══ HERO — Night Garden ═══ */}
         <section
           className="min-h-[80vh] flex items-center justify-center relative overflow-hidden"
-          style={{ background: "linear-gradient(to bottom, #080c08 0%, #0d120d 40%, #111611 100%)", paddingTop: "var(--nav-h)" }}
+          style={{ background: "var(--garden-hero)", paddingTop: "var(--nav-h)" }}
         >
           {/* Fireflies */}
           <div className="absolute inset-0 pointer-events-none">
@@ -263,7 +264,7 @@ export default function TheGardenPage() {
         </section>
 
         {/* ═══ THE ARCHIVE — Dark Soil with Golden Roots ═══ */}
-        <section className="py-24 px-6 md:px-12 relative overflow-hidden" style={{ background: "#080a07" }}>
+        <section className="py-24 px-6 md:px-12 relative overflow-hidden" style={{ background: "var(--garden-soil)" }}>
           {/* Golden root/vein network — SVG background */}
           <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-[0.07]" xmlns="http://www.w3.org/2000/svg">
             <defs>
@@ -342,7 +343,7 @@ export default function TheGardenPage() {
 
                     {/* Author */}
                     <div className="mt-4 pt-3" style={{ borderTop: "1px solid rgba(216,212,206,0.05)" }}>
-                      <p style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400, letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--beige)", opacity: 0.2 }}>
+                      <p style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400, letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--beige)", opacity: 0.35 }}>
                         — {seed.author}
                       </p>
                     </div>
@@ -376,7 +377,7 @@ export default function TheGardenPage() {
         </section>
 
         {/* ═══ CLOSING ═══ */}
-        <section className="py-20 px-6 relative" style={{ background: "linear-gradient(to bottom, #080c08 0%, #0a0e0a 100%)" }}>
+        <section className="py-20 px-6 relative" style={{ background: "var(--garden-closing)" }}>
           <div className="max-w-xl mx-auto text-center">
             <FadeIn>
               <KeyIcon size={36} className="mx-auto mb-6 opacity-20" />
@@ -385,13 +386,13 @@ export default function TheGardenPage() {
                 has walked through a season like yours.
               </p>
               <div className="mt-8">
-                <a
+                <Link
                   href="/home"
                   className="no-underline"
                   style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--beige)", opacity: 0.3, transition: "opacity 0.3s" }}
                 >
                   ← Return to Maison Gethse
-                </a>
+                </Link>
               </div>
             </FadeIn>
           </div>
@@ -479,7 +480,7 @@ export default function TheGardenPage() {
                 <div className="w-[30px] h-[1px] mx-auto my-8" style={{ background: "var(--gold)", opacity: 0.25 }} />
 
                 {/* Author */}
-                <p style={{ fontFamily: "var(--font-sans)", fontSize: "13px", fontWeight: 400, letterSpacing: "0.18em", textTransform: "uppercase", color: "#d8d4ce", opacity: 0.3 }}>
+                <p style={{ fontFamily: "var(--font-sans)", fontSize: "13px", fontWeight: 400, letterSpacing: "0.18em", textTransform: "uppercase", color: "#d8d4ce", opacity: 0.4 }}>
                   — {previewSeed.author}
                 </p>
               </motion.div>
@@ -493,7 +494,7 @@ export default function TheGardenPage() {
         {submitted && (
           <motion.div
             className="fixed inset-0 z-[700] flex flex-col items-center justify-center"
-            style={{ background: "#050705" }}
+            style={{ background: "var(--garden-soil)" }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}

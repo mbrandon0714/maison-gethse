@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import Link from "next/link";
 import { KeyIcon } from "@/components/KeyIcon";
 
 export default function OrderSuccessPage() {
@@ -31,12 +31,12 @@ export default function OrderSuccessPage() {
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 12, alignItems: "center" }}>
-          <a href="/home" style={{ fontFamily: "var(--font-sans)", fontSize: 12, fontWeight: 400, letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--white)", background: "var(--green)", padding: "16px 32px", textDecoration: "none" }}>
+          <Link href="/home" style={{ fontFamily: "var(--font-sans)", fontSize: 12, fontWeight: 400, letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--white)", background: "var(--green)", padding: "16px 32px", textDecoration: "none" }}>
             Return to Maison Gethse
-          </a>
-          <a href="/chapters/01" style={{ fontFamily: "var(--font-sans)", fontSize: 12, fontWeight: 400, letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--text-body)", opacity: 0.4, textDecoration: "none" }}>
+          </Link>
+          <Link href="/chapters/01" style={{ fontFamily: "var(--font-sans)", fontSize: 12, fontWeight: 400, letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--text-body)", opacity: 0.4, textDecoration: "none" }}>
             Back to Chapter 01
-          </a>
+          </Link>
         </div>
       </div>
     </div>
