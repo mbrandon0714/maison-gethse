@@ -185,38 +185,44 @@ export default function TheGardenPage() {
       <MuteToggle />
 
       <main>
-        {/* ═══ HERO ═══ */}
+        {/* ═══ HERO — Night Garden ═══ */}
         <section
-          className="min-h-[80vh] flex items-center justify-center relative"
-          style={{ background: "var(--bg-deep)", paddingTop: "var(--nav-h)" }}
+          className="min-h-[80vh] flex items-center justify-center relative overflow-hidden"
+          style={{ background: "linear-gradient(to bottom, #080c08 0%, #0d120d 40%, #111611 100%)", paddingTop: "var(--nav-h)" }}
         >
-          {/* Subtle particle field */}
-          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            {Array.from({ length: 12 }).map((_, i) => (
+          {/* Fireflies */}
+          <div className="absolute inset-0 pointer-events-none">
+            {Array.from({ length: 20 }).map((_, i) => (
               <motion.div
                 key={i}
                 className="absolute rounded-full"
                 style={{
-                  width: 3,
-                  height: 3,
-                  background: "rgba(200,146,42,0.25)",
-                  left: `${10 + (i * 7.3) % 80}%`,
-                  bottom: "-5%",
+                  width: i % 3 === 0 ? 4 : 2,
+                  height: i % 3 === 0 ? 4 : 2,
+                  background: i % 4 === 0 ? "rgba(200,146,42,0.8)" : "rgba(200,146,42,0.4)",
+                  boxShadow: i % 3 === 0 ? "0 0 8px 3px rgba(200,146,42,0.3)" : "0 0 4px 1px rgba(200,146,42,0.15)",
+                  left: `${5 + (i * 4.7) % 90}%`,
+                  top: `${10 + (i * 7.3) % 80}%`,
                 }}
                 animate={{
-                  y: [0, -900],
-                  x: [0, (i % 2 === 0 ? 30 : -20)],
-                  opacity: [0, 0.6, 0.6, 0],
+                  y: [0, -20 - (i % 5) * 10, 10, 0],
+                  x: [0, (i % 2 === 0 ? 15 : -15), (i % 3 === 0 ? -10 : 10), 0],
+                  opacity: [0.2, 0.8, 0.3, 0.2],
+                  scale: [1, 1.3, 0.8, 1],
                 }}
                 transition={{
-                  duration: 8 + (i % 4) * 2,
+                  duration: 5 + (i % 4) * 2,
                   repeat: Infinity,
-                  delay: i * 0.8,
-                  ease: "linear",
+                  delay: i * 0.5,
+                  ease: "easeInOut",
                 }}
               />
             ))}
           </div>
+
+          {/* Ground mist */}
+          <div className="absolute bottom-0 left-0 right-0 h-[30%] pointer-events-none" style={{ background: "linear-gradient(to top, rgba(200,146,42,0.03) 0%, transparent 100%)" }} />
+          <div className="absolute bottom-0 left-0 right-0 h-[15%] pointer-events-none" style={{ background: "linear-gradient(to top, rgba(15,19,15,0.8) 0%, transparent 100%)" }} />
 
           <motion.div
             className="relative z-10 text-center max-w-2xl px-6"
@@ -256,16 +262,29 @@ export default function TheGardenPage() {
           </motion.div>
         </section>
 
-        {/* ═══ THE ARCHIVE ═══ */}
-        <section className="py-24 px-6 md:px-12 relative" style={{ background: "#0f130f" }}>
-          <div className="max-w-5xl mx-auto">
+        {/* ═══ THE ARCHIVE — Night Garden Floor ═══ */}
+        <section className="py-24 px-6 md:px-12 relative overflow-hidden" style={{ background: "linear-gradient(to bottom, #0d120d 0%, #0a0e0a 50%, #080c08 100%)" }}>
+          {/* More fireflies in the archive */}
+          <div className="absolute inset-0 pointer-events-none">
+            {Array.from({ length: 10 }).map((_, i) => (
+              <motion.div
+                key={`archive-fly-${i}`}
+                className="absolute rounded-full"
+                style={{ width: 3, height: 3, background: "rgba(200,146,42,0.5)", boxShadow: "0 0 6px 2px rgba(200,146,42,0.2)", left: `${8 + (i * 9.1) % 84}%`, top: `${15 + (i * 11.3) % 70}%` }}
+                animate={{ y: [0, -15, 5, 0], x: [0, (i % 2 === 0 ? 12 : -12), 0], opacity: [0.15, 0.6, 0.2, 0.15] }}
+                transition={{ duration: 6 + (i % 3) * 2, repeat: Infinity, delay: i * 0.7, ease: "easeInOut" }}
+              />
+            ))}
+          </div>
+
+          <div className="max-w-5xl mx-auto relative z-10">
             <FadeIn>
-              <p className="mb-8 text-center" style={{ fontFamily: "var(--font-serif)", fontSize: "1.1rem", fontWeight: 300, fontStyle: "italic", color: "#f4f1ec", opacity: 0.4 }}>
+              <p className="mb-8 text-center" style={{ fontFamily: "var(--font-serif)", fontSize: "1.2rem", fontWeight: 300, fontStyle: "italic", color: "#f4f1ec", opacity: 0.5 }}>
                 Seeds planted by those who walked before you.
               </p>
             </FadeIn>
 
-            {/* Organic scattered layout */}
+            {/* Glowing seed cards */}
             <div className="flex flex-wrap justify-center gap-5 md:gap-6">
               {allSeeds.map((seed, i) => (
                 <FadeIn key={seed.id} delay={0.08 * i}>
@@ -273,19 +292,20 @@ export default function TheGardenPage() {
                     className="max-w-[320px] p-6 relative cursor-pointer"
                     onClick={() => setPreviewSeed(seed)}
                     style={{
-                      background: "rgba(255,255,255,0.02)",
-                      border: "1px solid rgba(216,212,206,0.06)",
+                      background: "rgba(200,146,42,0.03)",
+                      border: "1px solid rgba(200,146,42,0.08)",
                       borderRadius: "20px",
                       transform: `rotate(${seed.rotation}deg)`,
                       marginTop: `${(i % 3) * 12}px`,
+                      boxShadow: "0 0 20px rgba(200,146,42,0.04), inset 0 0 30px rgba(200,146,42,0.02)",
                     }}
                     whileHover={{
-                      borderColor: "rgba(200,146,42,0.2)",
-                      boxShadow: "0 6px 40px rgba(200,146,42,0.08)",
-                      y: -4,
-                      scale: 1.02,
+                      borderColor: "rgba(200,146,42,0.25)",
+                      boxShadow: "0 0 40px rgba(200,146,42,0.12), inset 0 0 30px rgba(200,146,42,0.04)",
+                      y: -6,
+                      scale: 1.03,
                     }}
-                    transition={{ duration: 0.4 }}
+                    transition={{ duration: 0.5 }}
                   >
                     {/* Prompt label */}
                     <p className="mb-3" style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--gold)", opacity: 0.4 }}>
@@ -333,7 +353,7 @@ export default function TheGardenPage() {
         </section>
 
         {/* ═══ CLOSING ═══ */}
-        <section className="py-20 px-6" style={{ background: "var(--bg-deep)" }}>
+        <section className="py-20 px-6 relative" style={{ background: "linear-gradient(to bottom, #080c08 0%, #0a0e0a 100%)" }}>
           <div className="max-w-xl mx-auto text-center">
             <FadeIn>
               <KeyIcon size={36} className="mx-auto mb-6 opacity-20" />
@@ -438,20 +458,81 @@ export default function TheGardenPage() {
                 onClick={(e) => e.stopPropagation()}
               >
                 {submitted ? (
-                  /* ── Planted confirmation ── */
+                  /* ── Key Unlocking Ceremony ── */
                   <motion.div
-                    className="p-10 text-center"
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
+                    className="p-10 text-center relative overflow-hidden"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
                     transition={{ duration: 0.5 }}
                   >
-                    <p className="text-4xl mb-4">🌱</p>
-                    <h3 style={{ fontFamily: "var(--font-hand)", fontSize: "1.6rem", color: "var(--text-head)", lineHeight: 1.5 }}>
-                      Your seed has been planted.
-                    </h3>
-                    <p className="mt-3" style={{ fontFamily: "var(--font-sans)", fontSize: "13px", fontWeight: 300, color: "var(--text-body)", opacity: 0.5, letterSpacing: "0.04em" }}>
-                      It will be reviewed and added to the archive.
-                    </p>
+                    {/* Golden burst particles */}
+                    <div className="absolute inset-0 pointer-events-none">
+                      {Array.from({ length: 12 }).map((_, i) => (
+                        <motion.div
+                          key={i}
+                          className="absolute rounded-full"
+                          style={{
+                            width: 4, height: 4,
+                            background: "var(--gold)",
+                            left: "50%", top: "40%",
+                          }}
+                          initial={{ scale: 0, opacity: 1 }}
+                          animate={{
+                            x: Math.cos(i * 30 * Math.PI / 180) * 120,
+                            y: Math.sin(i * 30 * Math.PI / 180) * 120,
+                            scale: [0, 1.5, 0],
+                            opacity: [1, 0.8, 0],
+                          }}
+                          transition={{ duration: 1.5, delay: 0.3, ease: "easeOut" }}
+                        />
+                      ))}
+                    </div>
+
+                    {/* Key rotation */}
+                    <motion.div
+                      className="mx-auto mb-6"
+                      style={{ width: 60, height: 100, position: "relative" }}
+                      initial={{ rotate: 0, scale: 0.8, opacity: 0 }}
+                      animate={{ rotate: [0, -15, 90], scale: [0.8, 1.1, 1], opacity: [0, 1, 1] }}
+                      transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+                    >
+                      <KeyIcon size={60} gold />
+                    </motion.div>
+
+                    {/* Glowing ring */}
+                    <motion.div
+                      className="absolute left-1/2 top-[38%] -translate-x-1/2 rounded-full border-2"
+                      style={{ borderColor: "var(--gold)" }}
+                      initial={{ width: 20, height: 20, opacity: 1 }}
+                      animate={{ width: 200, height: 200, opacity: 0 }}
+                      transition={{ duration: 1, delay: 0.5, ease: "easeOut" }}
+                    />
+
+                    <motion.h3
+                      style={{ fontFamily: "var(--font-serif)", fontSize: "1.8rem", fontWeight: 300, fontStyle: "italic", color: "var(--text-head)", lineHeight: 1.5 }}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.8, delay: 0.8 }}
+                    >
+                      Your seed has entered the archive.
+                    </motion.h3>
+                    <motion.div
+                      className="w-[1px] h-[24px] mx-auto my-4"
+                      style={{ background: "var(--gold)", opacity: 0.3 }}
+                      initial={{ height: 0 }}
+                      animate={{ height: 24 }}
+                      transition={{ duration: 0.5, delay: 1.2 }}
+                    />
+                    <motion.p
+                      className="mt-2"
+                      style={{ fontFamily: "var(--font-sans)", fontSize: "15px", fontWeight: 300, color: "var(--text-body)", opacity: 0.6, letterSpacing: "0.03em", lineHeight: 1.8 }}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 0.6 }}
+                      transition={{ duration: 0.5, delay: 1.4 }}
+                    >
+                      It will be reviewed and added to the garden.<br />
+                      Thank you for sharing what you carry.
+                    </motion.p>
                   </motion.div>
                 ) : (
                   /* ── Submission form ── */
