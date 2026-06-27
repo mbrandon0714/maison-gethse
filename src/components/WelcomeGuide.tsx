@@ -5,10 +5,11 @@ import { motion, AnimatePresence } from "framer-motion";
 
 /* ── Animated word-by-word text ── */
 
-function Word({ children, delay }: { children: string; delay: number }) {
+function Word({ children, delay, gold }: { children: string; delay: number; gold?: boolean }) {
   return (
     <motion.span
       className="inline-block mx-[0.2em]"
+      style={gold ? { color: "#c8922a" } : undefined}
       initial={{ opacity: 0, y: 10, filter: "blur(4px)" }}
       animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
       transition={{ delay, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
@@ -18,13 +19,13 @@ function Word({ children, delay }: { children: string; delay: number }) {
   );
 }
 
-function AnimatedLine({ text, startDelay, wordInterval = 0.12, style }: {
-  text: string; startDelay: number; wordInterval?: number; style?: React.CSSProperties;
+function AnimatedLine({ text, startDelay, wordInterval = 0.12, style, goldWords = [] }: {
+  text: string; startDelay: number; wordInterval?: number; style?: React.CSSProperties; goldWords?: number[];
 }) {
   return (
     <div style={style}>
       {text.split(" ").map((word, i) => (
-        <Word key={i} delay={startDelay + i * wordInterval}>{word}</Word>
+        <Word key={i} delay={startDelay + i * wordInterval} gold={goldWords.includes(i)}>{word}</Word>
       ))}
     </div>
   );
@@ -206,6 +207,7 @@ export function WelcomeGuide() {
                   text="Every story begins with a key."
                   startDelay={0.6}
                   wordInterval={0.15}
+                  goldWords={[5]}
                   style={{
                     fontFamily: "var(--font-serif)", fontSize: "clamp(1.4rem, 3.5vw, 2rem)",
                     fontWeight: 300, fontStyle: "italic", color: "#f4f1ec", lineHeight: 1.6,
@@ -217,9 +219,9 @@ export function WelcomeGuide() {
             {/* ── PHASE 2 ── */}
             {phase === 2 && (
               <motion.div key="p2" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.6 }}>
-                <AnimatedLine text="A reminder that growth," startDelay={0.2} wordInterval={0.13}
+                <AnimatedLine text="A reminder that growth," startDelay={0.2} wordInterval={0.13} goldWords={[3]}
                   style={{ fontFamily: "var(--font-serif)", fontSize: "clamp(1.2rem, 3vw, 1.7rem)", fontWeight: 300, color: "#f4f1ec", lineHeight: 1.8 }} />
-                <AnimatedLine text="purpose, and belonging" startDelay={0.9} wordInterval={0.13}
+                <AnimatedLine text="purpose, and belonging" startDelay={0.9} wordInterval={0.13} goldWords={[0, 2]}
                   style={{ fontFamily: "var(--font-serif)", fontSize: "clamp(1.2rem, 3vw, 1.7rem)", fontWeight: 300, color: "#f4f1ec", lineHeight: 1.8 }} />
                 <AnimatedLine text="are carried within us." startDelay={1.5} wordInterval={0.14}
                   style={{ fontFamily: "var(--font-serif)", fontSize: "clamp(1.2rem, 3vw, 1.7rem)", fontWeight: 300, fontStyle: "italic", color: "#c8922a", lineHeight: 1.8 }} />
@@ -229,13 +231,13 @@ export function WelcomeGuide() {
             {/* ── PHASE 3 ── */}
             {phase === 3 && (
               <motion.div key="p3" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.6 }}>
-                <AnimatedLine text="Maison Gethse documents these chapters —" startDelay={0.2} wordInterval={0.09}
+                <AnimatedLine text="Maison Gethse documents these chapters —" startDelay={0.2} wordInterval={0.09} goldWords={[0, 1, 4]}
                   style={{ fontFamily: "var(--font-sans)", fontSize: "clamp(0.95rem, 2.2vw, 1.1rem)", fontWeight: 300, color: "#d8d4ce", lineHeight: 2.2, letterSpacing: "0.02em" }} />
-                <AnimatedLine text="through the moments we capture," startDelay={1} wordInterval={0.09}
+                <AnimatedLine text="through the moments we capture," startDelay={1} wordInterval={0.09} goldWords={[2]}
                   style={{ fontFamily: "var(--font-sans)", fontSize: "clamp(0.95rem, 2.2vw, 1.1rem)", fontWeight: 300, color: "#d8d4ce", lineHeight: 2.2, letterSpacing: "0.02em", opacity: 0.8 }} />
-                <AnimatedLine text="the stories we preserve," startDelay={1.7} wordInterval={0.09}
+                <AnimatedLine text="the stories we preserve," startDelay={1.7} wordInterval={0.09} goldWords={[1]}
                   style={{ fontFamily: "var(--font-sans)", fontSize: "clamp(0.95rem, 2.2vw, 1.1rem)", fontWeight: 300, color: "#d8d4ce", lineHeight: 2.2, letterSpacing: "0.02em", opacity: 0.8 }} />
-                <AnimatedLine text="and the pieces we carry." startDelay={2.3} wordInterval={0.11}
+                <AnimatedLine text="and the pieces we carry." startDelay={2.3} wordInterval={0.11} goldWords={[2]}
                   style={{ fontFamily: "var(--font-sans)", fontSize: "clamp(0.95rem, 2.2vw, 1.1rem)", fontWeight: 300, fontStyle: "italic", color: "#f4f1ec", lineHeight: 2.2, letterSpacing: "0.02em" }} />
               </motion.div>
             )}
@@ -354,9 +356,11 @@ export function WelcomeGuide() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.6 }}
               style={{
-                fontFamily: "var(--font-sans)", fontSize: 12, fontWeight: 500,
-                letterSpacing: "0.24em", textTransform: "uppercase",
-                color: step.accent, marginBottom: 16,
+                fontFamily: "var(--font-sans)", fontSize: 14, fontWeight: 600,
+                letterSpacing: "0.28em", textTransform: "uppercase",
+                color: "#f4f1ec",
+                textShadow: "0 0 20px rgba(200,146,42,0.4)",
+                marginBottom: 16,
               }}
             >
               {step.label}
