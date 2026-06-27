@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { KeyIcon } from "./KeyIcon";
 
 /* ── Animated word-by-word text ── */
 
@@ -178,71 +177,26 @@ export function WelcomeGuide() {
         {/* Vignette */}
         <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at center, transparent 20%, rgba(0,0,0,0.7) 100%)" }} />
 
-        {/* Radial glow behind key */}
-        {phase >= 1 && phase <= 3 && (
+        {/* Ambient radial glow */}
+        {phase >= 1 && (
           <motion.div
             className="absolute pointer-events-none"
             style={{
-              width: 400, height: 400,
+              width: 500, height: 500,
               left: "50%", top: "50%",
-              marginLeft: -200, marginTop: -240,
-              background: "radial-gradient(circle, rgba(200,146,42,0.06) 0%, transparent 60%)",
+              marginLeft: -250, marginTop: -250,
+              background: "radial-gradient(circle, rgba(200,146,42,0.05) 0%, transparent 60%)",
             }}
-            animate={{ scale: [1, 1.3, 1], opacity: [0.5, 1, 0.5] }}
-            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+            animate={{ scale: [1, 1.4, 1], opacity: [0.4, 0.8, 0.4] }}
+            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
           />
         )}
 
-        {/* Particles emanating from key center */}
+        {/* Particles emanating from center */}
         {phase >= 2 && particles.map((p, i) => <Particle key={i} {...p} />)}
 
         {/* Content */}
         <div className="relative z-10 flex flex-col items-center justify-center text-center px-8" style={{ maxWidth: 520 }}>
-
-          {/* ── THE KEY (phases 1-3) ── */}
-          <AnimatePresence>
-            {phase >= 1 && phase <= 3 && (
-              <motion.div
-                className="mb-8"
-                initial={{ opacity: 0, scale: 0.5 }}
-                animate={{
-                  opacity: 1,
-                  scale: phase >= 3 ? 1.15 : 1,
-                  rotate: phase >= 3 ? 90 : 0,
-                }}
-                exit={{ opacity: 0, scale: 0.6, transition: { duration: 0.6 } }}
-                transition={{
-                  scale: { duration: 1.5, ease: [0.16, 1, 0.3, 1] },
-                  rotate: { duration: 1.5, ease: [0.16, 1, 0.3, 1] },
-                  opacity: { duration: 1 },
-                }}
-              >
-                <motion.div
-                  animate={{
-                    filter: [
-                      "drop-shadow(0 0 8px rgba(200,146,42,0.3))",
-                      "drop-shadow(0 0 30px rgba(200,146,42,0.7))",
-                      "drop-shadow(0 0 8px rgba(200,146,42,0.3))",
-                    ],
-                  }}
-                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                >
-                  <KeyIcon size={64} gold />
-                </motion.div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          {/* ── Golden divider line ── */}
-          {phase >= 1 && phase <= 3 && (
-            <motion.div
-              className="mb-6"
-              style={{ width: 1, background: "rgba(200,146,42,0.2)" }}
-              initial={{ height: 0 }}
-              animate={{ height: 30 }}
-              transition={{ delay: 0.4, duration: 1, ease: [0.16, 1, 0.3, 1] }}
-            />
-          )}
 
           <AnimatePresence mode="wait">
             {/* ── PHASE 1 ── */}
@@ -289,16 +243,7 @@ export function WelcomeGuide() {
             {/* ── PHASE 4: Unlock ── */}
             {phase === 4 && (
               <motion.div key="p4" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8 }} className="flex flex-col items-center">
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.7 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.2, duration: 1, ease: [0.16, 1, 0.3, 1] }}
-                  className="mb-6"
-                >
-                  <KeyIcon size={52} gold />
-                </motion.div>
-
-                <AnimatedLine text="Unlock the story." startDelay={0.4} wordInterval={0.2}
+                <AnimatedLine text="Unlock the story." startDelay={0.3} wordInterval={0.2}
                   style={{ fontFamily: "var(--font-serif)", fontSize: "clamp(1.5rem, 4vw, 2.2rem)", fontWeight: 300, fontStyle: "italic", color: "#c8922a", lineHeight: 1.5, marginBottom: 28 }} />
 
                 <motion.div
