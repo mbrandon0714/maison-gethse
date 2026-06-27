@@ -31,80 +31,76 @@ function AnimatedLine({ text, startDelay, wordInterval = 0.12, style }: {
   );
 }
 
-/* ── Floating particles ── */
+/* ── Particles that emanate from center ── */
 
-function Particle({ delay, x, y, size, drift }: {
-  delay: number; x: number; y: number; size: number; drift: { x: number; y: number };
+function Particle({ delay, angle, distance, size }: {
+  delay: number; angle: number; distance: number; size: number;
 }) {
+  const rad = (angle * Math.PI) / 180;
+  const endX = Math.cos(rad) * distance;
+  const endY = Math.sin(rad) * distance;
+
   return (
     <motion.div
       className="absolute rounded-full"
       style={{
-        width: size, height: size, left: `${x}%`, top: `${y}%`,
+        width: size, height: size,
+        left: "50%", top: "50%",
+        marginLeft: -size / 2, marginTop: -size / 2,
         background: "#c8922a",
         boxShadow: `0 0 ${size * 3}px ${size}px rgba(200,146,42,0.3)`,
       }}
-      initial={{ opacity: 0, scale: 0 }}
+      initial={{ opacity: 0, scale: 0, x: 0, y: 0 }}
       animate={{
-        opacity: [0, 0.7, 0.3, 0.6, 0.3],
-        scale: [0, 1, 0.8, 1.1, 0.9],
-        x: [0, drift.x * 0.5, drift.x],
-        y: [0, drift.y * 0.3, drift.y],
+        opacity: [0, 0.8, 0.4, 0.6, 0.2],
+        scale: [0, 1, 0.7, 1, 0.5],
+        x: [0, endX * 0.3, endX * 0.6, endX],
+        y: [0, endY * 0.3, endY * 0.6, endY],
       }}
-      transition={{ delay, duration: 8, ease: "easeInOut", repeat: Infinity, repeatType: "mirror" }}
+      transition={{ delay, duration: 10, ease: "easeOut", repeat: Infinity, repeatType: "mirror" }}
     />
   );
 }
 
-/* ── Tour content ── */
+/* ── Tour content — immersive full-screen panels ── */
 
 const TOUR_STEPS = [
   {
     label: "The Brand",
-    text: "Where it all started — and why pressure became the foundation.",
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" strokeWidth="1.2">
-        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-      </svg>
-    ),
+    title: "Where pressure became purpose.",
+    body: "Rooted in Gethsemane — a garden of transformation. This is the foundation of everything that follows.",
+    bg: "radial-gradient(ellipse at 30% 60%, rgba(48,61,48,0.4) 0%, #050705 70%), #050705",
+    accent: "var(--green)",
   },
   {
     label: "Chapters",
-    text: "Each one honors a person. Each garment carries what they left behind.",
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" strokeWidth="1.2">
-        <path d="M4 19.5A2.5 2.5 0 016.5 17H20M4 19.5A2.5 2.5 0 014 17V5a2.5 2.5 0 012.5-2.5H20v17H6.5z" />
-      </svg>
-    ),
+    title: "Each one honors a life.",
+    body: "Every chapter represents a person. Every artifact carries the lessons they left behind. This is not a collection — it is a living archive.",
+    bg: "radial-gradient(ellipse at 70% 40%, rgba(200,146,42,0.08) 0%, #050705 70%), #050705",
+    accent: "var(--gold)",
   },
   {
     label: "Shop",
-    text: "You're not buying a shirt. You're carrying a chapter.",
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" strokeWidth="1.2">
-        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0" />
-      </svg>
-    ),
+    title: "Carry a chapter with you.",
+    body: "Each garment is an artifact — a record of a moment, a lesson, a person. You’re not buying a shirt. You’re carrying a story.",
+    bg: "radial-gradient(ellipse at 50% 70%, rgba(48,61,48,0.3) 0%, #050705 70%), #050705",
+    accent: "var(--green)",
   },
   {
     label: "The Garden",
-    text: "A living archive. Plant what you carry — anonymously or by name.",
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" strokeWidth="1.2">
-        <path d="M12 22V8M12 8C12 8 7 3 3 8c4 0 9 0 9 0zM12 8C12 8 17 3 21 8c-4 0-9 0-9 0z" />
-        <path d="M7 22h10" />
-      </svg>
-    ),
+    title: "An archive of becoming.",
+    body: "A living collection of real stories, quiet lessons, and personal experiences from people navigating their own journeys.\n\nRead, reflect, and discover pieces of yourself in the chapters of others.",
+    bg: "radial-gradient(ellipse at 40% 50%, rgba(200,146,42,0.06) 0%, #050705 60%), #050705",
+    accent: "var(--gold)",
+    hasFireflies: true,
   },
   {
     label: "The Lens",
-    text: "Photography as memory — documented, not displayed.",
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" strokeWidth="1.2">
-        <circle cx="12" cy="13" r="3" />
-        <path d="M5 7h2l2-3h6l2 3h2a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9a2 2 0 012-2z" />
-      </svg>
-    ),
+    title: "An archive of perspective.",
+    body: "A collection of visual stories from creators capturing the moments, people, and places that shape our journey.\n\nDocumented, not displayed.",
+    bg: "radial-gradient(ellipse at 60% 40%, rgba(42,92,104,0.1) 0%, #050705 70%), #050705",
+    accent: "var(--teal)",
+    hasGrain: true,
   },
 ];
 
@@ -117,12 +113,11 @@ export function WelcomeGuide() {
   const [showSkip, setShowSkip] = useState(false);
 
   const particles = useMemo(() =>
-    Array.from({ length: 30 }).map(() => ({
-      x: 25 + Math.random() * 50,
-      y: 25 + Math.random() * 50,
-      size: 2 + Math.random() * 4,
-      delay: 3 + Math.random() * 6,
-      drift: { x: (Math.random() - 0.5) * 120, y: (Math.random() - 0.5) * 80 },
+    Array.from({ length: 24 }).map((_, i) => ({
+      angle: (i / 24) * 360 + Math.random() * 15,
+      distance: 150 + Math.random() * 250,
+      size: 2 + Math.random() * 3,
+      delay: 2 + Math.random() * 5,
     })),
   []);
 
@@ -169,7 +164,9 @@ export function WelcomeGuide() {
 
   if (mode === "hidden" || mode === "done") return null;
 
-  /* ── CINEMATIC SEQUENCE ── */
+  /* ══════════════════════════════════════════
+     CINEMATIC SEQUENCE
+     ══════════════════════════════════════════ */
   if (mode === "cinematic") {
     return (
       <motion.div
@@ -179,12 +176,27 @@ export function WelcomeGuide() {
         transition={{ duration: 1 }}
       >
         {/* Vignette */}
-        <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.6) 100%)" }} />
+        <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at center, transparent 20%, rgba(0,0,0,0.7) 100%)" }} />
 
-        {/* Golden particles */}
+        {/* Radial glow behind key */}
+        {phase >= 1 && phase <= 3 && (
+          <motion.div
+            className="absolute pointer-events-none"
+            style={{
+              width: 400, height: 400,
+              left: "50%", top: "50%",
+              marginLeft: -200, marginTop: -240,
+              background: "radial-gradient(circle, rgba(200,146,42,0.06) 0%, transparent 60%)",
+            }}
+            animate={{ scale: [1, 1.3, 1], opacity: [0.5, 1, 0.5] }}
+            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          />
+        )}
+
+        {/* Particles emanating from key center */}
         {phase >= 2 && particles.map((p, i) => <Particle key={i} {...p} />)}
 
-        {/* Content — absolutely centered */}
+        {/* Content */}
         <div className="relative z-10 flex flex-col items-center justify-center text-center px-8" style={{ maxWidth: 520 }}>
 
           {/* ── THE KEY (phases 1-3) ── */}
@@ -195,21 +207,21 @@ export function WelcomeGuide() {
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{
                   opacity: 1,
-                  scale: phase >= 3 ? 1.1 : 1,
+                  scale: phase >= 3 ? 1.15 : 1,
                   rotate: phase >= 3 ? 90 : 0,
                 }}
-                exit={{ opacity: 0, scale: 0.8 }}
+                exit={{ opacity: 0, scale: 0.6, transition: { duration: 0.6 } }}
                 transition={{
                   scale: { duration: 1.5, ease: [0.16, 1, 0.3, 1] },
                   rotate: { duration: 1.5, ease: [0.16, 1, 0.3, 1] },
-                  opacity: { duration: 0.8 },
+                  opacity: { duration: 1 },
                 }}
               >
                 <motion.div
                   animate={{
                     filter: [
                       "drop-shadow(0 0 8px rgba(200,146,42,0.3))",
-                      "drop-shadow(0 0 24px rgba(200,146,42,0.6))",
+                      "drop-shadow(0 0 30px rgba(200,146,42,0.7))",
                       "drop-shadow(0 0 8px rgba(200,146,42,0.3))",
                     ],
                   }}
@@ -221,8 +233,19 @@ export function WelcomeGuide() {
             )}
           </AnimatePresence>
 
-          {/* ── PHASE 1: "Every story begins with a key." ── */}
+          {/* ── Golden divider line ── */}
+          {phase >= 1 && phase <= 3 && (
+            <motion.div
+              className="mb-6"
+              style={{ width: 1, background: "rgba(200,146,42,0.2)" }}
+              initial={{ height: 0 }}
+              animate={{ height: 30 }}
+              transition={{ delay: 0.4, duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            />
+          )}
+
           <AnimatePresence mode="wait">
+            {/* ── PHASE 1 ── */}
             {phase === 1 && (
               <motion.div key="p1" exit={{ opacity: 0 }} transition={{ duration: 0.6 }}>
                 <AnimatedLine
@@ -237,7 +260,7 @@ export function WelcomeGuide() {
               </motion.div>
             )}
 
-            {/* ── PHASE 2: "A reminder that growth..." ── */}
+            {/* ── PHASE 2 ── */}
             {phase === 2 && (
               <motion.div key="p2" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.6 }}>
                 <AnimatedLine text="A reminder that growth," startDelay={0.2} wordInterval={0.13}
@@ -249,21 +272,21 @@ export function WelcomeGuide() {
               </motion.div>
             )}
 
-            {/* ── PHASE 3: "Maison Gethse documents..." ── */}
+            {/* ── PHASE 3 ── */}
             {phase === 3 && (
               <motion.div key="p3" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.6 }}>
                 <AnimatedLine text="Maison Gethse documents these chapters —" startDelay={0.2} wordInterval={0.09}
-                  style={{ fontFamily: "var(--font-sans)", fontSize: "clamp(0.95rem, 2.2vw, 1.1rem)", fontWeight: 300, color: "#d8d4ce", lineHeight: 2.1, letterSpacing: "0.02em" }} />
+                  style={{ fontFamily: "var(--font-sans)", fontSize: "clamp(0.95rem, 2.2vw, 1.1rem)", fontWeight: 300, color: "#d8d4ce", lineHeight: 2.2, letterSpacing: "0.02em" }} />
                 <AnimatedLine text="through the moments we capture," startDelay={1} wordInterval={0.09}
-                  style={{ fontFamily: "var(--font-sans)", fontSize: "clamp(0.95rem, 2.2vw, 1.1rem)", fontWeight: 300, color: "#d8d4ce", lineHeight: 2.1, letterSpacing: "0.02em", opacity: 0.8 }} />
+                  style={{ fontFamily: "var(--font-sans)", fontSize: "clamp(0.95rem, 2.2vw, 1.1rem)", fontWeight: 300, color: "#d8d4ce", lineHeight: 2.2, letterSpacing: "0.02em", opacity: 0.8 }} />
                 <AnimatedLine text="the stories we preserve," startDelay={1.7} wordInterval={0.09}
-                  style={{ fontFamily: "var(--font-sans)", fontSize: "clamp(0.95rem, 2.2vw, 1.1rem)", fontWeight: 300, color: "#d8d4ce", lineHeight: 2.1, letterSpacing: "0.02em", opacity: 0.8 }} />
+                  style={{ fontFamily: "var(--font-sans)", fontSize: "clamp(0.95rem, 2.2vw, 1.1rem)", fontWeight: 300, color: "#d8d4ce", lineHeight: 2.2, letterSpacing: "0.02em", opacity: 0.8 }} />
                 <AnimatedLine text="and the pieces we carry." startDelay={2.3} wordInterval={0.11}
-                  style={{ fontFamily: "var(--font-sans)", fontSize: "clamp(0.95rem, 2.2vw, 1.1rem)", fontWeight: 300, fontStyle: "italic", color: "#f4f1ec", lineHeight: 2.1, letterSpacing: "0.02em" }} />
+                  style={{ fontFamily: "var(--font-sans)", fontSize: "clamp(0.95rem, 2.2vw, 1.1rem)", fontWeight: 300, fontStyle: "italic", color: "#f4f1ec", lineHeight: 2.2, letterSpacing: "0.02em" }} />
               </motion.div>
             )}
 
-            {/* ── PHASE 4: "Unlock the story." ── */}
+            {/* ── PHASE 4: Unlock ── */}
             {phase === 4 && (
               <motion.div key="p4" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8 }} className="flex flex-col items-center">
                 <motion.div
@@ -284,31 +307,14 @@ export function WelcomeGuide() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 1.4, duration: 0.6 }}
                 >
-                  <motion.button
-                    onClick={startTour}
-                    className="cursor-pointer"
-                    style={{
-                      fontFamily: "var(--font-sans)", fontSize: 12, fontWeight: 500,
-                      letterSpacing: "0.18em", textTransform: "uppercase",
-                      color: "#0f130f", background: "var(--gold)",
-                      border: "none", padding: "15px 32px", borderRadius: 4,
-                    }}
-                    whileHover={{ scale: 1.03 }}
-                    whileTap={{ scale: 0.97 }}
-                  >
+                  <motion.button onClick={startTour} className="cursor-pointer"
+                    style={{ fontFamily: "var(--font-sans)", fontSize: 12, fontWeight: 500, letterSpacing: "0.18em", textTransform: "uppercase", color: "#0f130f", background: "var(--gold)", border: "none", padding: "15px 32px", borderRadius: 4 }}
+                    whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
                     Show Me Around
                   </motion.button>
-                  <motion.button
-                    onClick={dismiss}
-                    className="cursor-pointer"
-                    style={{
-                      fontFamily: "var(--font-sans)", fontSize: 12, fontWeight: 400,
-                      letterSpacing: "0.18em", textTransform: "uppercase",
-                      color: "rgba(244,241,236,0.5)", background: "transparent",
-                      border: "1px solid rgba(244,241,236,0.12)", padding: "15px 32px", borderRadius: 4,
-                    }}
-                    whileHover={{ borderColor: "rgba(244,241,236,0.3)" }}
-                  >
+                  <motion.button onClick={dismiss} className="cursor-pointer"
+                    style={{ fontFamily: "var(--font-sans)", fontSize: 12, fontWeight: 400, letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(244,241,236,0.5)", background: "transparent", border: "1px solid rgba(244,241,236,0.12)", padding: "15px 32px", borderRadius: 4 }}
+                    whileHover={{ borderColor: "rgba(244,241,236,0.3)" }}>
                     I&apos;ll Explore Myself
                   </motion.button>
                 </motion.div>
@@ -321,16 +327,9 @@ export function WelcomeGuide() {
         {showSkip && phase < 4 && (
           <motion.button
             className="absolute top-6 right-6 md:top-8 md:right-8 z-20 cursor-pointer"
-            onClick={dismiss}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            style={{
-              fontFamily: "var(--font-sans)", fontSize: 11, fontWeight: 400,
-              letterSpacing: "0.18em", textTransform: "uppercase",
-              color: "rgba(244,241,236,0.2)", background: "none", border: "none",
-            }}
-            whileHover={{ color: "rgba(244,241,236,0.5)" }}
-          >
+            onClick={dismiss} initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+            style={{ fontFamily: "var(--font-sans)", fontSize: 11, fontWeight: 400, letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(244,241,236,0.2)", background: "none", border: "none" }}
+            whileHover={{ color: "rgba(244,241,236,0.5)" }}>
             Skip
           </motion.button>
         )}
@@ -338,108 +337,178 @@ export function WelcomeGuide() {
     );
   }
 
-  /* ── TOUR MODE ── */
+  /* ══════════════════════════════════════════
+     IMMERSIVE TOUR — full-screen panels
+     ══════════════════════════════════════════ */
   if (mode === "tour") {
     const step = TOUR_STEPS[tourStep];
+    const bodyLines = step.body.split("\n\n");
 
     return (
-      <>
-        {/* Backdrop */}
+      <AnimatePresence mode="wait">
         <motion.div
-          className="fixed inset-0 z-[850]"
-          style={{ background: "rgba(0,0,0,0.75)", backdropFilter: "blur(3px)" }}
+          key={tourStep}
+          className="fixed inset-0 z-[850] flex flex-col items-center justify-center overflow-hidden"
+          style={{ background: step.bg }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          onClick={dismiss}
-        />
-
-        {/* Tour card */}
-        <motion.div
-          className="fixed inset-0 z-[851] flex items-center justify-center p-6"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.6 }}
         >
-          <AnimatePresence mode="wait">
+          {/* Vignette */}
+          <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.5) 100%)" }} />
+
+          {/* Film grain for Lens */}
+          {step.hasGrain && (
+            <div className="absolute inset-0 pointer-events-none opacity-[0.04]" style={{
+              backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
+            }} />
+          )}
+
+          {/* Fireflies for Garden */}
+          {step.hasFireflies && Array.from({ length: 12 }).map((_, i) => (
             <motion.div
-              key={tourStep}
-              className="w-full max-w-sm relative"
+              key={i}
+              className="absolute rounded-full"
               style={{
-                background: "var(--bg-surface)", border: "1px solid rgba(200,146,42,0.15)",
-                borderRadius: 16, padding: "36px 28px 28px", textAlign: "center",
-                boxShadow: "0 0 40px rgba(200,146,42,0.06), 0 20px 60px rgba(0,0,0,0.4)",
+                width: 2 + (i % 3), height: 2 + (i % 3),
+                background: "#c8922a",
+                boxShadow: `0 0 ${6 + i * 2}px ${2 + i}px rgba(200,146,42,0.2)`,
+                left: `${10 + (i * 7) % 80}%`,
+                top: `${15 + (i * 11) % 70}%`,
               }}
-              initial={{ opacity: 0, y: 20, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -20, scale: 0.95 }}
-              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              onClick={(e) => e.stopPropagation()}
+              animate={{
+                y: [0, -15, 5, 0],
+                x: [0, (i % 2 === 0 ? 10 : -10), 0],
+                opacity: [0.2, 0.7, 0.3],
+              }}
+              transition={{ duration: 4 + (i % 3) * 2, repeat: Infinity, delay: i * 0.4, ease: "easeInOut" }}
+            />
+          ))}
+
+          {/* Content */}
+          <div className="relative z-10 flex flex-col items-center text-center px-8 max-w-lg">
+
+            {/* Step counter */}
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2 }}
+              style={{
+                fontFamily: "var(--font-sans)", fontSize: 11, fontWeight: 400,
+                letterSpacing: "0.3em", textTransform: "uppercase",
+                color: "rgba(244,241,236,0.2)", marginBottom: 32,
+              }}
             >
-              {/* Icon */}
-              <div className="mb-5 flex justify-center">{step.icon}</div>
+              {String(tourStep + 1).padStart(2, "0")} / {String(TOUR_STEPS.length).padStart(2, "0")}
+            </motion.p>
 
-              {/* Label */}
-              <p style={{
-                fontFamily: "var(--font-sans)", fontSize: 11, fontWeight: 500,
-                letterSpacing: "0.22em", textTransform: "uppercase",
-                color: "var(--gold)", marginBottom: 8,
-              }}>
-                {step.label}
-              </p>
+            {/* Label */}
+            <motion.p
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.6 }}
+              style={{
+                fontFamily: "var(--font-sans)", fontSize: 12, fontWeight: 500,
+                letterSpacing: "0.24em", textTransform: "uppercase",
+                color: step.accent, marginBottom: 16,
+              }}
+            >
+              {step.label}
+            </motion.p>
 
-              {/* Description */}
-              <p style={{
-                fontFamily: "var(--font-serif)", fontSize: "1.15rem", fontWeight: 300,
-                fontStyle: "italic", color: "var(--text-head)", lineHeight: 1.65,
-                maxWidth: 280, margin: "0 auto",
-              }}>
-                {step.text}
-              </p>
+            {/* Title */}
+            <motion.h2
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+              style={{
+                fontFamily: "var(--font-serif)",
+                fontSize: "clamp(1.6rem, 4vw, 2.4rem)",
+                fontWeight: 300, fontStyle: "italic",
+                color: "#f4f1ec", lineHeight: 1.3,
+                marginBottom: 20,
+              }}
+            >
+              {step.title}
+            </motion.h2>
 
-              {/* Dots */}
-              <div className="flex justify-center gap-2 mt-7 mb-5">
-                {TOUR_STEPS.map((_, i) => (
-                  <div
-                    key={i}
-                    style={{
-                      width: i === tourStep ? 18 : 6, height: 6, borderRadius: 3,
-                      background: i === tourStep ? "var(--gold)" : "var(--border-soft)",
-                      transition: "all 0.3s",
-                    }}
-                  />
-                ))}
-              </div>
+            {/* Divider */}
+            <motion.div
+              style={{ width: 30, height: 1, background: step.accent, opacity: 0.3 }}
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: 1 }}
+              transition={{ delay: 0.7, duration: 0.5 }}
+              className="mb-6"
+            />
 
-              {/* Actions */}
-              <div className="flex gap-3">
-                <button
-                  onClick={dismiss}
-                  className="flex-1 cursor-pointer"
-                  style={{
-                    fontFamily: "var(--font-sans)", fontSize: 12, fontWeight: 400,
-                    letterSpacing: "0.1em", textTransform: "uppercase",
-                    color: "var(--text-body)", background: "transparent",
-                    border: "1px solid var(--border-soft)", padding: "13px 0", borderRadius: 6,
-                  }}
-                >
-                  Skip Tour
-                </button>
-                <button
-                  onClick={nextTourStep}
-                  className="flex-1 cursor-pointer"
-                  style={{
-                    fontFamily: "var(--font-sans)", fontSize: 12, fontWeight: 500,
-                    letterSpacing: "0.1em", textTransform: "uppercase",
-                    color: "#fff", background: "var(--green)",
-                    border: "none", padding: "13px 0", borderRadius: 6,
-                  }}
-                >
-                  {tourStep < TOUR_STEPS.length - 1 ? "Next" : "Start Exploring"}
-                </button>
-              </div>
+            {/* Body paragraphs */}
+            {bodyLines.map((line, i) => (
+              <motion.p
+                key={i}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.8 + i * 0.3, duration: 0.6 }}
+                style={{
+                  fontFamily: "var(--font-sans)",
+                  fontSize: "clamp(0.9rem, 2vw, 1rem)",
+                  fontWeight: 300, lineHeight: 2,
+                  color: i === 0 ? "rgba(216,212,206,0.7)" : "rgba(216,212,206,0.5)",
+                  letterSpacing: "0.02em",
+                  maxWidth: 400, marginBottom: i < bodyLines.length - 1 ? 12 : 0,
+                  fontStyle: i === bodyLines.length - 1 && bodyLines.length > 1 ? "italic" : "normal",
+                }}
+              >
+                {line}
+              </motion.p>
+            ))}
+
+            {/* Actions */}
+            <motion.div
+              className="flex gap-3 mt-10"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.2, duration: 0.5 }}
+            >
+              <motion.button onClick={dismiss} className="cursor-pointer"
+                style={{
+                  fontFamily: "var(--font-sans)", fontSize: 11, fontWeight: 400,
+                  letterSpacing: "0.16em", textTransform: "uppercase",
+                  color: "rgba(244,241,236,0.3)", background: "transparent",
+                  border: "1px solid rgba(244,241,236,0.08)", padding: "13px 24px", borderRadius: 4,
+                }}
+                whileHover={{ borderColor: "rgba(244,241,236,0.2)", color: "rgba(244,241,236,0.5)" }}>
+                Skip
+              </motion.button>
+              <motion.button onClick={nextTourStep} className="cursor-pointer"
+                style={{
+                  fontFamily: "var(--font-sans)", fontSize: 11, fontWeight: 500,
+                  letterSpacing: "0.16em", textTransform: "uppercase",
+                  color: "#0f130f", background: "var(--gold)",
+                  border: "none", padding: "13px 28px", borderRadius: 4,
+                }}
+                whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+                {tourStep < TOUR_STEPS.length - 1 ? "Continue" : "Enter Maison Gethse"}
+              </motion.button>
             </motion.div>
-          </AnimatePresence>
+
+            {/* Dots */}
+            <div className="flex gap-2 mt-8">
+              {TOUR_STEPS.map((_, i) => (
+                <motion.div
+                  key={i}
+                  animate={{
+                    width: i === tourStep ? 20 : 6,
+                    background: i === tourStep ? "var(--gold)" : "rgba(244,241,236,0.1)",
+                  }}
+                  style={{ height: 4, borderRadius: 2 }}
+                  transition={{ duration: 0.3 }}
+                />
+              ))}
+            </div>
+          </div>
         </motion.div>
-      </>
+      </AnimatePresence>
     );
   }
 
