@@ -1,9 +1,17 @@
 "use client";
 
+import { useEffect } from "react";
 import Link from "next/link";
 import { KeyIcon } from "@/components/KeyIcon";
+import { useCart } from "@/components/CartProvider";
 
 export default function OrderSuccessPage() {
+  const { clearCart } = useCart();
+
+  useEffect(() => {
+    clearCart();
+  }, [clearCart]);
+
   return (
     <div className="min-h-screen flex items-center justify-center px-6" style={{ background: "var(--bg-body)" }}>
       <div className="text-center max-w-md">

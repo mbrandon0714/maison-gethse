@@ -142,27 +142,54 @@ function FlyAnimation() {
   if (!flyFrom) return null;
 
   return (
-    <div
-      className="fixed z-[600] pointer-events-none"
-      style={{
-        left: flyFrom.x - 8,
-        top: flyFrom.y - 8,
-        width: 16,
-        height: 16,
-        borderRadius: "50%",
-        background: "var(--gold)",
-        boxShadow: "0 0 20px rgba(200,146,42,0.6)",
-        animation: "flyToCart 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards",
-      }}
-    >
+    <>
+      {/* Thumbnail that flies to cart */}
+      <div
+        className="fixed z-[600] pointer-events-none"
+        style={{
+          left: flyFrom.x - 28,
+          top: flyFrom.y - 28,
+          width: 56,
+          height: 56,
+          borderRadius: 8,
+          overflow: "hidden",
+          border: "2px solid var(--gold)",
+          boxShadow: "0 0 30px rgba(200,146,42,0.5), 0 4px 20px rgba(0,0,0,0.3)",
+          animation: "flyThumbToCart 1s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+        }}
+      >
+        {flyFrom.image && (
+          <img src={flyFrom.image} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+        )}
+        {!flyFrom.image && (
+          <div style={{ width: "100%", height: "100%", background: "var(--gold)" }} />
+        )}
+      </div>
+      {/* Gold burst at origin */}
+      <div
+        className="fixed z-[599] pointer-events-none"
+        style={{
+          left: flyFrom.x - 20,
+          top: flyFrom.y - 20,
+          width: 40,
+          height: 40,
+          borderRadius: "50%",
+          background: "radial-gradient(circle, rgba(200,146,42,0.4) 0%, transparent 70%)",
+          animation: "burstFade 0.6s ease-out forwards",
+        }}
+      />
       <style>{`
-        @keyframes flyToCart {
+        @keyframes flyThumbToCart {
+          0% { transform: scale(1) translate(0, 0); opacity: 1; }
+          40% { transform: scale(0.7) translate(10px, -60px); opacity: 0.9; }
+          100% { transform: scale(0.2) translate(calc(100vw - ${flyFrom.x}px - 60px), calc(-${flyFrom.y}px + 36px)); opacity: 0; }
+        }
+        @keyframes burstFade {
           0% { transform: scale(1); opacity: 1; }
-          50% { transform: scale(1.5) translate(30vw, -30vh); opacity: 0.8; }
-          100% { transform: scale(0.3) translate(60vw, -80vh); opacity: 0; }
+          100% { transform: scale(3); opacity: 0; }
         }
       `}</style>
-    </div>
+    </>
   );
 }
 
@@ -187,9 +214,10 @@ export function CartButton() {
       )}
       <style>{`
         @keyframes cartPop {
-          0% { transform: scale(1); }
-          50% { transform: scale(1.6); }
-          100% { transform: scale(1); }
+          0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(200,146,42,0.6); }
+          30% { transform: scale(1.8); box-shadow: 0 0 12px 4px rgba(200,146,42,0.4); }
+          60% { transform: scale(0.9); }
+          100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(200,146,42,0); }
         }
       `}</style>
     </button>

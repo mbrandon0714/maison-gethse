@@ -7,6 +7,7 @@ import Link from "next/link";
 import { Navigation } from "@/components/Navigation";
 import { MuteToggle } from "@/components/MuteToggle";
 import { KeyIcon } from "@/components/KeyIcon";
+import { WelcomeGuide } from "@/components/WelcomeGuide";
 
 function FadeIn({
   children,
@@ -39,6 +40,7 @@ export default function HomePage() {
     <>
       <Navigation />
       <MuteToggle />
+      <WelcomeGuide />
 
       <main>
         {/* ═══ HERO ═══ */}
@@ -171,8 +173,20 @@ export default function HomePage() {
                     <p style={{ fontFamily: "var(--font-sans)", fontSize: "16px", fontWeight: 300, lineHeight: 2, color: "var(--text-body)", letterSpacing: "0.02em" }}>
                       We once dreamed without limits. Before life opened our eyes to the weight of reality, there was innocence — a childlike trust in what could be. This chapter honors the space between who we were and who we are becoming.
                     </p>
-                    <div className="mt-8 flex items-center gap-3">
-                      <span style={{ fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 400, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--text-head)", opacity: 0.6 }}>
+                    <div className="mt-8">
+                      <span
+                        className="inline-block animate-pulse"
+                        style={{
+                          fontFamily: "var(--font-sans)", fontSize: "13px", fontWeight: 500,
+                          letterSpacing: "0.2em", textTransform: "uppercase",
+                          color: "var(--gold)",
+                          padding: "12px 24px",
+                          border: "1px solid var(--gold)",
+                          borderRadius: 4,
+                          transition: "all 0.3s",
+                          animationDuration: "3s",
+                        }}
+                      >
                         Enter Chapter →
                       </span>
                     </div>

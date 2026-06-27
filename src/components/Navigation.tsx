@@ -11,6 +11,7 @@ import { CartButton } from "./CartDrawer";
 const NAV_ITEMS = [
   { id: "brand", label: "The Brand", href: "/home#brand" },
   { id: "chapters", label: "Chapters", href: "/home#chapters" },
+  { id: "shop", label: "Shop", href: "/chapters/01#shop" },
   { id: "garden", label: "The Garden", href: "/the-garden" },
   { id: "lens", label: "The Lens", href: "/the-lens" },
 ];
@@ -51,7 +52,7 @@ export function Navigation() {
 
   const navigateTo = useCallback((item: typeof NAV_ITEMS[0]) => {
     setMobileOpen(false);
-    if (item.href.startsWith("/the-")) {
+    if (item.href.startsWith("/the-") || item.href.startsWith("/chapters/")) {
       router.push(item.href);
       return;
     }

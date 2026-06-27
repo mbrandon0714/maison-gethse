@@ -18,7 +18,7 @@ export interface CartItem {
 interface CartContextType {
   items: CartItem[];
   addItem: (item: Omit<CartItem, "quantity"> & { quantity?: number }, buttonRect?: DOMRect) => void;
-  flyFrom: { x: number; y: number } | null;
+  flyFrom: { x: number; y: number; image?: string } | null;
   removeItem: (id: string, size: string) => void;
   updateQuantity: (id: string, size: string, qty: number) => void;
   clearCart: () => void;
@@ -49,12 +49,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem("mg-cart", JSON.stringify(items));
   }, [items]);
 
-  const [flyFrom, setFlyFrom] = useState<{ x: number; y: number } | null>(null);
+  const [flyFrom, setFlyFrom] = useState<{ x: number; y: number; image?: string } | null>(null);
 
   const addItem = useCallback((item: Omit<CartItem, "quantity"> & { quantity?: number }, buttonRect?: DOMRect) => {
     if (buttonRect) {
-      setFlyFrom({ x: buttonRect.left + buttonRect.width / 2, y: buttonRect.top + buttonRect.height / 2 });
-      setTimeout(() => setFlyFrom(null), 800);
+      setFlyFrom({ x: buttonRect.left + buttonRect.width / 2, y: buttonRect.top + buttonRect.height / 2, image: item.image });
+      setTimeout(() => setFlyFrom(null), 1200);
     }
     setItems(prev => {
       const existing = prev.find(i => i.id === item.id && i.size === item.size);

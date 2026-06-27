@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
               customer_name: `${customer.firstName} ${customer.lastName}`,
               customer_email: customer.email,
               customer_phone: customer.phone,
-              shipping_address: `${customer.address}, ${customer.city}, ${customer.province} ${customer.zip}`,
+              shipping_address: `${customer.address}${customer.barangay ? `, Brgy. ${customer.barangay}` : ""}, ${customer.city}, ${customer.province} ${customer.zip}`,
               product: name,
               size: size,
               quantity: String(quantity),
@@ -78,7 +78,7 @@ export async function POST(req: NextRequest) {
       customer_last_name: customer.lastName,
       customer_email: customer.email,
       customer_phone: customer.phone,
-      shipping_address: customer.address,
+      shipping_address: `${customer.address}${customer.barangay ? `, Brgy. ${customer.barangay}` : ""}`,
       shipping_city: customer.city,
       shipping_province: customer.province,
       shipping_zip: customer.zip || "",
@@ -95,7 +95,7 @@ export async function POST(req: NextRequest) {
       subtotal: price * quantity,
       shippingFee: 80,
       total: price * quantity + 80,
-      shippingAddress: `${customer.address}, ${customer.city}, ${customer.province} ${customer.zip}`,
+      shippingAddress: `${customer.address}${customer.barangay ? `, Brgy. ${customer.barangay}` : ""}, ${customer.city}, ${customer.province} ${customer.zip}`,
     }).catch((err) => console.error("Email send failed:", err));
 
     return NextResponse.json({ checkout_url: checkoutUrl });

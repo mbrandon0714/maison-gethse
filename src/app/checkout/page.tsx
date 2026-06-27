@@ -144,7 +144,7 @@ export default function CheckoutPage() {
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     email: "", firstName: "", lastName: "", phone: "",
-    address: "", city: "", province: "", zip: "",
+    address: "", barangay: "", city: "", province: "", zip: "",
   });
 
   const total = subtotal + SHIPPING_FEE;
@@ -214,6 +214,7 @@ export default function CheckoutPage() {
             <div style={{ height: 8 }} />
 
             <FloatingInput label="Street address" value={form.address} onChange={v => setField("address", v)} autoComplete="street-address" />
+            <FloatingInput label="Barangay" value={form.barangay} onChange={v => setField("barangay", v)} autoComplete="address-level3" />
             <FloatingInput label="Postal code" value={form.zip} onChange={v => setField("zip", v)} autoComplete="postal-code" />
             <FloatingSelect label="Province / Region" value={form.province} onChange={v => { setField("province", v); setField("city", ""); }} options={PROVINCES} />
             <FloatingSelect label="City / Municipality" value={form.city} onChange={v => setField("city", v)} options={form.province ? (PROVINCE_CITIES[form.province] || []) : []} disabled={!form.province} />
