@@ -291,11 +291,13 @@ export function WelcomeGuide() {
     const bodyLines = step.body.split("\n\n");
 
     return (
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={tourStep}
-          className="fixed inset-0 z-[850] flex flex-col items-center justify-center overflow-hidden"
-          style={{ background: step.bg }}
+      <div className="contents">
+        <div className="fixed inset-0 z-[849]" style={{ background: "#050705" }} />
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={tourStep}
+            className="fixed inset-0 z-[850] flex flex-col items-center justify-center overflow-hidden"
+            style={{ background: step.bg }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -456,7 +458,8 @@ export function WelcomeGuide() {
             </div>
           </div>
         </motion.div>
-      </AnimatePresence>
+        </AnimatePresence>
+      </div>
     );
   }
 
