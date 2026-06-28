@@ -93,6 +93,10 @@
   --lens-closing: #0d160d;
 }
 
+[data-theme="light"] .section-bg {
+  display: none;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;

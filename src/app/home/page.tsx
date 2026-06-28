@@ -45,7 +45,7 @@ export default function HomePage() {
       <main>
         {/* ═══ HERO ═══ */}
         <section className="min-h-screen flex items-center justify-center relative overflow-hidden" style={{ paddingTop: "var(--nav-h)" }}>
-          <div className="absolute inset-0" style={{ backgroundImage: "url(/images/bg-hero.jpg)", backgroundSize: "cover", backgroundPosition: "center 40%", opacity: 0.07, filter: "saturate(0.2) contrast(1.1)" }} />
+          <div className="absolute inset-0 section-bg" style={{ backgroundImage: "url(/images/bg-hero.jpg)", backgroundSize: "cover", backgroundPosition: "center 40%", opacity: 0.07, filter: "saturate(0.2) contrast(1.1)" }} />
           <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at center, transparent 40%, var(--bg-body) 100%)" }} />
           <motion.div
             className="relative z-10 text-center max-w-2xl px-6"
@@ -71,7 +71,7 @@ export default function HomePage() {
 
         {/* ═══ THE BRAND ═══ */}
         <section id="brand" className="py-32 px-6 md:px-12 relative overflow-hidden" style={{ background: "var(--bg-surface)", transition: "background 0.5s" }}>
-          <div className="absolute inset-0" style={{ backgroundImage: "url(/images/bg-brand.jpg)", backgroundSize: "cover", backgroundPosition: "center", opacity: 0.08, filter: "saturate(0.2) contrast(1.2)" }} />
+          <div className="absolute inset-0 section-bg" style={{ backgroundImage: "url(/images/bg-brand.jpg)", backgroundSize: "cover", backgroundPosition: "center", opacity: 0.08, filter: "saturate(0.2) contrast(1.2)" }} />
           <div className="max-w-5xl mx-auto">
             <FadeIn>
               <p className="mb-4" style={{ fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 400, letterSpacing: "0.22em", textTransform: "uppercase", color: "var(--gold)" }}>
@@ -203,7 +203,7 @@ export default function HomePage() {
 
         {/* ═══ THE GARDEN ═══ */}
         <section id="garden" className="py-32 px-6 md:px-12 relative overflow-hidden" style={{ background: "var(--bg-deep)", transition: "background 0.5s" }}>
-          <div className="absolute inset-0" style={{ backgroundImage: "url(/images/bg-garden.jpg)", backgroundSize: "cover", backgroundPosition: "center 30%", opacity: 0.07, filter: "saturate(0.15) contrast(1.1)" }} />
+          <div className="absolute inset-0 section-bg" style={{ backgroundImage: "url(/images/bg-garden.jpg)", backgroundSize: "cover", backgroundPosition: "center 30%", opacity: 0.07, filter: "saturate(0.15) contrast(1.1)" }} />
           <div className="max-w-3xl mx-auto text-center">
             <FadeIn>
               <p className="mb-4" style={{ fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 400, letterSpacing: "0.22em", textTransform: "uppercase", color: "var(--gold)" }}>
@@ -324,7 +324,7 @@ export default function HomePage() {
 
         {/* ═══ COMMUNITY ═══ */}
         <section className="py-24 px-6 md:px-12 relative overflow-hidden" style={{ background: "var(--bg-mid)", transition: "background 0.5s" }}>
-          <div className="absolute inset-0" style={{ backgroundImage: "url(/images/bg-community.jpg)", backgroundSize: "cover", backgroundPosition: "center", opacity: 0.09, filter: "saturate(0.2) contrast(1.15)" }} />
+          <div className="absolute inset-0 section-bg" style={{ backgroundImage: "url(/images/bg-community.jpg)", backgroundSize: "cover", backgroundPosition: "center", opacity: 0.09, filter: "saturate(0.2) contrast(1.15)" }} />
           <div className="max-w-2xl mx-auto text-center">
             <FadeIn>
               <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "clamp(1.6rem, 3vw, 2.4rem)", fontWeight: 300, color: "var(--text-head)", lineHeight: 1.15, marginBottom: "0.6rem" }}>
