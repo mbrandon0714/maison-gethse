@@ -122,10 +122,9 @@ export function WelcomeGuide() {
   []);
 
   useEffect(() => {
-    const seen = localStorage.getItem("mg-welcome-seen");
+    const seen = sessionStorage.getItem("mg-welcome-seen");
     if (!seen) {
-      const timer = setTimeout(() => setMode("cinematic"), 800);
-      return () => clearTimeout(timer);
+      setMode("cinematic");
     }
   }, []);
 
@@ -146,7 +145,7 @@ export function WelcomeGuide() {
 
   const dismiss = useCallback(() => {
     setMode("done");
-    localStorage.setItem("mg-welcome-seen", "1");
+    sessionStorage.setItem("mg-welcome-seen", "1");
   }, []);
 
   const startTour = useCallback(() => {

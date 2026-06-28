@@ -15,7 +15,7 @@ export function CartDrawer() {
   const { items, removeItem, updateQuantity, isOpen, setIsOpen, justAdded, totalItems, subtotal } = useCart();
   const total = subtotal + (items.length > 0 ? SHIPPING_FEE : 0);
 
-  if (!isOpen) return null;
+  if (!isOpen) return <CartToast />;
 
   return (
     <>
@@ -130,66 +130,59 @@ export function CartDrawer() {
           </div>
         )}
       </div>
-
-      {/* Fly animation */}
-      <FlyAnimation />
     </>
   );
 }
 
-function FlyAnimation() {
-  const { flyFrom } = useCart();
-  if (!flyFrom) return null;
+export function CartToast() {
+  const { justAdded, setIsOpen } = useCart();
+  if (!justAdded) return null;
 
   return (
-    <>
-      {/* Thumbnail that flies to cart */}
+    <div
+      style={{
+        position: "fixed",
+        top: 80,
+        left: 0,
+        right: 0,
+        display: "flex",
+        justifyContent: "center",
+        zIndex: 9999,
+        pointerEvents: "none",
+      }}
+    >
       <div
-        className="fixed z-[600] pointer-events-none"
         style={{
-          left: flyFrom.x - 28,
-          top: flyFrom.y - 28,
-          width: 56,
-          height: 56,
-          borderRadius: 8,
-          overflow: "hidden",
-          border: "2px solid var(--gold)",
-          boxShadow: "0 0 30px rgba(200,146,42,0.5), 0 4px 20px rgba(0,0,0,0.3)",
-          animation: "flyThumbToCart 1s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+          display: "flex",
+          alignItems: "center",
+          gap: 12,
+          background: "rgba(20, 26, 20, 0.98)",
+          border: "1px solid rgba(200, 146, 42, 0.4)",
+          borderRadius: 10,
+          padding: "14px 22px",
+          boxShadow: "0 4px 24px rgba(0,0,0,0.5), 0 0 0 1px rgba(200,146,42,0.15), 0 0 40px rgba(200,146,42,0.08)",
+          backdropFilter: "blur(16px)",
+          cursor: "pointer",
+          whiteSpace: "nowrap",
+          pointerEvents: "auto",
         }}
+        onClick={() => setIsOpen(true)}
       >
-        {flyFrom.image && (
-          <img src={flyFrom.image} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-        )}
-        {!flyFrom.image && (
-          <div style={{ width: "100%", height: "100%", background: "var(--gold)" }} />
-        )}
+        <div style={{ width: 28, height: 28, borderRadius: "50%", background: "rgba(200,146,42,0.15)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#c8922a" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </div>
+        <div>
+          <p style={{ fontFamily: "var(--font-sans)", fontSize: 13, fontWeight: 500, color: "#f4f1ec", margin: 0, letterSpacing: "0.04em" }}>
+            Added to cart
+          </p>
+          <p style={{ fontFamily: "var(--font-sans)", fontSize: 11, color: "rgba(244,241,236,0.4)", margin: "2px 0 0" }}>
+            Tap to view cart
+          </p>
+        </div>
       </div>
-      {/* Gold burst at origin */}
-      <div
-        className="fixed z-[599] pointer-events-none"
-        style={{
-          left: flyFrom.x - 20,
-          top: flyFrom.y - 20,
-          width: 40,
-          height: 40,
-          borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(200,146,42,0.4) 0%, transparent 70%)",
-          animation: "burstFade 0.6s ease-out forwards",
-        }}
-      />
-      <style>{`
-        @keyframes flyThumbToCart {
-          0% { transform: scale(1) translate(0, 0); opacity: 1; }
-          40% { transform: scale(0.7) translate(10px, -60px); opacity: 0.9; }
-          100% { transform: scale(0.2) translate(calc(100vw - ${flyFrom.x}px - 60px), calc(-${flyFrom.y}px + 36px)); opacity: 0; }
-        }
-        @keyframes burstFade {
-          0% { transform: scale(1); opacity: 1; }
-          100% { transform: scale(3); opacity: 0; }
-        }
-      `}</style>
-    </>
+    </div>
   );
 }
 
@@ -197,7 +190,7 @@ export function CartButton() {
   const { totalItems, setIsOpen, justAdded } = useCart();
 
   return (
-    <button onClick={() => setIsOpen(true)} className="relative" style={{ background: "none", border: "none", cursor: "pointer", color: "var(--text-head)" }}>
+    <button onClick={() => setIsOpen(true)} data-cart-button className="relative" style={{ background: "none", border: "none", cursor: "pointer", color: "var(--text-head)" }}>
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
         <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0" />
       </svg>
