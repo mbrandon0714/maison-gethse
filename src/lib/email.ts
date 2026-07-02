@@ -231,7 +231,7 @@ export async function sendNewsletterWelcome({
       title: "You've left your address.",
       preheader: "When the next chapter opens, we'll write to you first.",
       bodyHtml: `
-        <p style="font-family:Georgia,'Times New Roman',serif;font-size:16px;font-style:italic;color:#564c45;margin:0 0 22px">Dear reader,</p>
+        <p style="font-family:Georgia,'Times New Roman',serif;font-size:16px;font-style:italic;color:#564c45;margin:0 0 22px">Dear Pathfinder,</p>
 
         <p style="font-size:15px;line-height:2;color:#564c45;margin:0 0 20px">
           This is not a mailing list. It is a correspondence — and you have just opened it.
