@@ -123,7 +123,7 @@ function ParallaxImage({
           alt={alt}
           fill
           className="object-cover"
-          style={{ filter: "saturate(0.9) brightness(0.95)", objectPosition }}
+          style={{ objectPosition }}
           sizes="100vw"
         />
       </motion.div>
@@ -355,7 +355,7 @@ export default function Chapter01Page() {
               loop
               playsInline
               className="w-full h-full object-cover"
-              style={{ filter: "saturate(0.8) brightness(0.9)" }}
+              style={{}}
             >
               <source src="/video/intro-film.mp4" type="video/mp4" />
             </video>
@@ -703,7 +703,7 @@ export default function Chapter01Page() {
                     alt={LOOKBOOK[0].alt}
                     fill
                     className="object-cover transition-transform duration-1000 group-hover:scale-[1.03]"
-                    style={{ filter: "saturate(0.9)" }}
+                    style={{}}
                     sizes="(max-width: 768px) 100vw, 800px"
                   />
                   {/* Hover overlay */}
@@ -735,7 +735,7 @@ export default function Chapter01Page() {
                         alt={img.alt}
                         fill
                         className="object-cover transition-transform duration-700 hover:scale-[1.05]"
-                        style={{ filter: "saturate(0.85)" }}
+                        style={{}}
                         sizes="20vw"
                       />
                     </div>
@@ -751,10 +751,9 @@ export default function Chapter01Page() {
                         alt={LOOKBOOK[5].alt}
                         fill
                         className="object-cover"
-                        style={{ filter: "saturate(0.7) brightness(0.5)" }}
                         sizes="20vw"
                       />
-                      <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="absolute inset-0 flex items-center justify-center" style={{ background: "rgba(0,0,0,0.55)" }}>
                         <span style={{ fontFamily: "var(--font-sans)", fontSize: "13px", fontWeight: 400, color: "var(--beige-light)", letterSpacing: "0.06em" }}>
                           +{LOOKBOOK.length - 5}
                         </span>
@@ -810,7 +809,7 @@ export default function Chapter01Page() {
                       alt={photo.alt}
                       fill
                       className="object-cover transition-all duration-700 group-hover:scale-[1.02]"
-                      style={{ filter: "saturate(0.9) brightness(0.97)" }}
+                      style={{}}
                       sizes="100vw"
                     />
                     <div className="absolute inset-0 transition-all duration-500 group-hover:bg-[rgba(25,33,20,0.06)]" />
@@ -830,7 +829,7 @@ export default function Chapter01Page() {
                         width={600}
                         height={800}
                         className="w-full block transition-all duration-700 group-hover:scale-[1.03]"
-                        style={{ filter: "saturate(0.9) brightness(0.97)" }}
+                        style={{}}
                         sizes="(max-width: 768px) 50vw, 33vw"
                       />
                       <div className="absolute inset-0 transition-all duration-500 group-hover:bg-[rgba(25,33,20,0.06)]" />

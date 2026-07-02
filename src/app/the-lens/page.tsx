@@ -233,7 +233,7 @@ export default function TheLensPage() {
                       height={photo.aspect === "portrait" ? 900 : photo.aspect === "square" ? 600 : 400}
                       className="w-full block transition-all duration-1000 group-hover:scale-[1.03]"
                       style={{
-                        filter: "saturate(0.85) contrast(1.05) brightness(0.95)",
+                        
                         transition: "filter 0.5s, transform 1s",
                       }}
                       sizes="(max-width: 768px) 50vw, 33vw"
@@ -316,7 +316,7 @@ export default function TheLensPage() {
                   width={1200}
                   height={1500}
                   className="object-contain max-h-[85vh] w-auto"
-                  style={{ filter: "saturate(0.9) contrast(1.05)" }}
+                  style={{}}
                   sizes="90vw"
                 />
               </motion.div>
