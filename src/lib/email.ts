@@ -23,37 +23,49 @@ interface ShellOptions {
 
 function emailShell({ title, bodyHtml, preheader, footerNote, unsubscribeUrl }: ShellOptions) {
   return `
-    <div style="background:#f4f1ec;padding:32px 12px">
+    <div style="background:#ece8e1;padding:44px 12px;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif">
       ${
         preheader
           ? `<span style="display:none;max-height:0;overflow:hidden;opacity:0">${preheader}</span>`
           : ""
       }
-      <div style="max-width:520px;margin:0 auto;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:#1a1a18;padding:40px 24px;background:#f4f1ec">
-        <div style="text-align:center;margin-bottom:32px">
-          <p style="font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:#c8922a;margin:0 0 8px">Maison Gethse</p>
-          <h1 style="font-family:Georgia,'Times New Roman',serif;font-size:24px;font-weight:400;font-style:italic;color:#303d30;margin:0;line-height:1.4">${title}</h1>
+      <div style="max-width:560px;margin:0 auto">
+
+        <!-- Gold hairline — the thread that opens every letter -->
+        <div style="height:2px;background:linear-gradient(90deg,rgba(200,146,42,0) 0%,#c8922a 50%,rgba(200,146,42,0) 100%);margin:0 0 26px"></div>
+
+        <p style="font-size:12px;letter-spacing:0.34em;text-transform:uppercase;color:#c8922a;text-align:center;margin:0 0 26px;font-weight:500">Maison&nbsp;Gethse</p>
+
+        <!-- The letter itself -->
+        <div style="background:#fbfaf7;border:1px solid #e3ded6;border-top:3px solid #303d30;padding:52px 44px 44px;box-shadow:0 2px 24px rgba(26,26,24,0.06)">
+
+          <!-- The Key — every story begins with one -->
+          <div style="text-align:center;margin-bottom:26px">
+            <img src="${SITE()}/images/mg-key-transparent.png" alt="" width="30" style="display:inline-block;opacity:0.9" />
+          </div>
+
+          <h1 style="font-family:Georgia,'Times New Roman',serif;font-size:27px;font-weight:400;font-style:italic;color:#303d30;margin:0 0 10px;line-height:1.45;text-align:center">${title}</h1>
+
+          <p style="text-align:center;color:#c8922a;font-size:13px;letter-spacing:0.3em;margin:0 0 34px">— &#10022; —</p>
+
+          ${bodyHtml}
         </div>
 
-        <div style="height:1px;background:#d8d4ce;margin:24px 0"></div>
-
-        ${bodyHtml}
-
-        <div style="height:1px;background:#d8d4ce;margin:24px 0"></div>
-
-        ${
-          footerNote
-            ? `<p style="font-size:13px;line-height:1.8;color:#564c45;text-align:center;margin:0 0 8px">${footerNote}</p>`
-            : ""
-        }
-        <p style="font-size:12px;color:#564c45;opacity:0.5;text-align:center;margin:0">
-          © 2026 Maison Gethse · A sanctuary of becoming.
-        </p>
-        ${
-          unsubscribeUrl
-            ? `<p style="font-size:11px;text-align:center;margin:12px 0 0"><a href="${unsubscribeUrl}" style="color:#564c45;opacity:0.5;text-decoration:underline">Release my address — no more letters</a></p>`
-            : ""
-        }
+        <!-- Beneath the letter -->
+        <div style="text-align:center;padding:30px 24px 0">
+          ${
+            footerNote
+              ? `<p style="font-size:13px;line-height:1.8;color:#564c45;margin:0 0 14px">${footerNote}</p>`
+              : ""
+          }
+          <p style="font-family:Georgia,'Times New Roman',serif;font-size:13px;font-style:italic;color:#564c45;opacity:0.75;margin:0 0 6px">A sanctuary of becoming.</p>
+          <p style="font-size:11px;letter-spacing:0.12em;color:#564c45;opacity:0.5;margin:0">© 2026 MAISON GETHSE</p>
+          ${
+            unsubscribeUrl
+              ? `<p style="font-size:11px;margin:16px 0 0"><a href="${unsubscribeUrl}" style="color:#564c45;opacity:0.55;text-decoration:underline">Release my address — no more letters</a></p>`
+              : ""
+          }
+        </div>
       </div>
     </div>
   `;
@@ -219,18 +231,31 @@ export async function sendNewsletterWelcome({
       title: "You've left your address.",
       preheader: "When the next chapter opens, we'll write to you first.",
       bodyHtml: `
-        <p style="font-size:15px;line-height:1.9;color:#564c45;margin:0 0 20px">
-          Thank you for letting us write to you. This is not a mailing list — it's a correspondence.
+        <p style="font-family:Georgia,'Times New Roman',serif;font-size:16px;font-style:italic;color:#564c45;margin:0 0 22px">Dear reader,</p>
+
+        <p style="font-size:15px;line-height:2;color:#564c45;margin:0 0 20px">
+          This is not a mailing list. It is a correspondence — and you have just opened it.
         </p>
-        <p style="font-size:15px;line-height:1.9;color:#564c45;margin:0 0 20px">
-          When the next chapter opens, you'll hear it here first — the story behind it, the person it honors, and the artifacts that carry it. Nothing more. No noise.
+
+        <p style="font-size:15px;line-height:2;color:#564c45;margin:0 0 20px">
+          When the next chapter opens, you will hear it here first: the person it honors, the story it carries, and the artifacts that hold it. Between chapters — silence. We only write when something is worth saying.
         </p>
-        <p style="font-family:Georgia,'Times New Roman',serif;font-size:16px;font-style:italic;line-height:1.9;color:#303d30;margin:0 0 28px;text-align:center">
-          "Every story begins with a key."
+
+        <p style="font-size:15px;line-height:2;color:#564c45;margin:0 0 30px">
+          Until then, the Garden is always open. Walk through the stories others have planted, or leave one of your own.
         </p>
-        <div style="text-align:center">
-          <a href="${SITE()}" style="display:inline-block;padding:13px 30px;background:#303d30;color:#fff;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;text-decoration:none">Return to the Maison</a>
+
+        <div style="text-align:center;margin-bottom:34px">
+          <a href="${SITE()}" style="display:inline-block;padding:14px 34px;background:#303d30;color:#ffffff;font-size:12px;letter-spacing:0.16em;text-transform:uppercase;text-decoration:none">Return to the Maison</a>
         </div>
+
+        <div style="border-top:1px solid #ece8e1;padding-top:24px">
+          <p style="font-family:Georgia,'Times New Roman',serif;font-size:15px;font-style:italic;line-height:1.9;color:#303d30;margin:0;text-align:center">
+            "Every story begins with a key.<br/>Yours has already turned."
+          </p>
+        </div>
+
+        <p style="font-family:Georgia,'Times New Roman',serif;font-size:16px;font-style:italic;color:#564c45;margin:26px 0 0;text-align:right">— The Maison</p>
       `,
       footerNote: "Letters arrive only when something is worth saying.",
       unsubscribeUrl,
