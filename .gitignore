@@ -38,3 +38,6 @@ next-env.d.ts
 # cloudflare / opennext
 .open-next/
 .wrangler/
+
+# local asset archive (too large to deploy)
+assets-archive/
