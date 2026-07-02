@@ -76,6 +76,39 @@ export default function TheLensPage() {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
   const [submitOpen, setSubmitOpen] = useState(false);
+  const [subName, setSubName] = useState("");
+  const [subPortfolio, setSubPortfolio] = useState("");
+  const [subCaption, setSubCaption] = useState("");
+  const [subState, setSubState] = useState<"idle" | "sending" | "done" | "error">("idle");
+  const [subError, setSubError] = useState("");
+
+  const handleSubmitWork = useCallback(async () => {
+    if (subState === "sending") return;
+    if (!subName.trim() || !subPortfolio.trim()) {
+      setSubState("error");
+      setSubError("Your name and a portfolio or Instagram link are required.");
+      return;
+    }
+    setSubState("sending");
+    try {
+      const res = await fetch("/api/photos", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: subName, portfolio: subPortfolio, caption: subCaption }),
+      });
+      if (res.ok) {
+        setSubState("done");
+        setSubName(""); setSubPortfolio(""); setSubCaption("");
+      } else {
+        const data = await res.json().catch(() => ({}));
+        setSubState("error");
+        setSubError(data.error || "Something went wrong. Please try again.");
+      }
+    } catch {
+      setSubState("error");
+      setSubError("Connection error. Please try again.");
+    }
+  }, [subName, subPortfolio, subCaption, subState]);
 
   const filteredPhotos = PHOTOS.filter((p) => {
     if (filter === "chapter") return !!p.chapter;
@@ -406,6 +439,23 @@ export default function TheLensPage() {
                     We accept photography that aligns with the Maison Gethse atmosphere — grounded, intentional, quiet, honest. Submissions are reviewed for narrative resonance, not popularity.
                   </p>
 
+                  {subState === "done" ? (
+                    <div className="text-center py-10">
+                      <p style={{ fontFamily: "var(--font-serif)", fontSize: "1.3rem", fontStyle: "italic", color: "var(--text-head)", marginBottom: 10 }}>
+                        Your lens has been received.
+                      </p>
+                      <p style={{ fontFamily: "var(--font-sans)", fontSize: "14px", fontWeight: 300, color: "var(--text-body)", opacity: 0.6, lineHeight: 1.8 }}>
+                        We review every submission for narrative resonance.<br />If your work aligns, we&rsquo;ll reach out through your portfolio or Instagram.
+                      </p>
+                      <button
+                        onClick={() => { setSubmitOpen(false); setSubState("idle"); }}
+                        className="mt-6 cursor-pointer"
+                        style={{ fontFamily: "var(--font-sans)", fontSize: "12px", letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--gold)", background: "none", border: "none" }}
+                      >
+                        Close
+                      </button>
+                    </div>
+                  ) : (
                   <div className="flex flex-col gap-4">
                     <div className="flex flex-col gap-1">
                       <label style={{ fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 400, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-body)" }}>
@@ -414,18 +464,25 @@ export default function TheLensPage() {
                       <input
                         type="text"
                         placeholder="Photographer name"
+                        value={subName}
+                        onChange={(e) => setSubName(e.target.value)}
                         style={{ fontFamily: "var(--font-sans)", fontSize: "14px", fontWeight: 300, color: "var(--text-head)", background: "var(--input-bg)", border: "1px solid var(--input-bd)", padding: "12px 14px", outline: "none" }}
                       />
                     </div>
                     <div className="flex flex-col gap-1">
                       <label style={{ fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 400, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-body)" }}>
-                        Instagram / Portfolio
+                        Instagram / Portfolio / Drive Link
                       </label>
                       <input
                         type="text"
-                        placeholder="@handle or URL"
+                        placeholder="@handle, URL, or shared album link"
+                        value={subPortfolio}
+                        onChange={(e) => setSubPortfolio(e.target.value)}
                         style={{ fontFamily: "var(--font-sans)", fontSize: "14px", fontWeight: 300, color: "var(--text-head)", background: "var(--input-bg)", border: "1px solid var(--input-bd)", padding: "12px 14px", outline: "none" }}
                       />
+                      <p style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 300, color: "var(--text-body)", opacity: 0.4, marginTop: 4 }}>
+                        Link us to the work you&rsquo;d like considered — a shared album, grid, or portfolio.
+                      </p>
                     </div>
                     <div className="flex flex-col gap-1">
                       <label style={{ fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 400, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-body)" }}>
@@ -434,29 +491,19 @@ export default function TheLensPage() {
                       <textarea
                         placeholder="What does this image carry?"
                         rows={3}
+                        value={subCaption}
+                        onChange={(e) => setSubCaption(e.target.value)}
                         style={{ fontFamily: "var(--font-sans)", fontSize: "14px", fontWeight: 300, color: "var(--text-head)", background: "var(--input-bg)", border: "1px solid var(--input-bd)", padding: "12px 14px", outline: "none", resize: "vertical" }}
                       />
                     </div>
-                    <div className="flex flex-col gap-1">
-                      <label style={{ fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 400, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-body)" }}>
-                        Upload Photos
-                      </label>
-                      <div
-                        className="flex items-center justify-center py-8 cursor-pointer"
-                        style={{ border: "1px dashed var(--input-bd)", background: "var(--input-bg)", transition: "border-color 0.2s" }}
-                      >
-                        <div className="text-center">
-                          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--text-body)" strokeWidth="1.2" className="mx-auto mb-2" opacity="0.4">
-                            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" />
-                          </svg>
-                          <p style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 300, color: "var(--text-body)", opacity: 0.4 }}>
-                            JPEG or WebP · Max 10MB per file
-                          </p>
-                        </div>
-                      </div>
-                    </div>
+
+                    {subState === "error" && (
+                      <p style={{ fontFamily: "var(--font-sans)", fontSize: "13px", color: "#e57373", margin: 0 }}>{subError}</p>
+                    )}
 
                     <button
+                      onClick={handleSubmitWork}
+                      disabled={subState === "sending"}
                       className="w-full cursor-pointer mt-2"
                       style={{
                         fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 400,
@@ -464,15 +511,17 @@ export default function TheLensPage() {
                         color: "var(--white)", background: "var(--green)",
                         border: "none", padding: "16px",
                         transition: "background 0.3s",
+                        opacity: subState === "sending" ? 0.6 : 1,
                       }}
                     >
-                      Submit for Review ✦
+                      {subState === "sending" ? "Sending…" : "Submit for Review ✦"}
                     </button>
                     <p className="text-center" style={{ fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 300, color: "var(--text-body)", opacity: 0.3, lineHeight: 1.7 }}>
                       Submissions are reviewed for aesthetic and narrative alignment.<br />
                       Access is open. Placement is earned through resonance.
                     </p>
                   </div>
+                  )}
                 </div>
               </motion.div>
             </motion.div>

@@ -154,12 +154,14 @@ export default function TheGardenPage() {
   }, []);
 
   const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   const handleSubmit = useCallback(async () => {
     if (!seedText.trim() || submitting) return;
     setSubmitting(true);
+    setSubmitError("");
     try {
-      await fetch("/api/garden", {
+      const res = await fetch("/api/garden", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -169,7 +171,17 @@ export default function TheGardenPage() {
           displayName: identityType === "anonymous" ? null : displayName,
         }),
       });
-    } catch {}
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        setSubmitError(data.error || "Your seed couldn't be planted. Please try again.");
+        setSubmitting(false);
+        return;
+      }
+    } catch {
+      setSubmitError("Connection error — your seed wasn't saved. Please try again.");
+      setSubmitting(false);
+      return;
+    }
     setFormOpen(false);
     setSubmitted(true);
     setTimeout(() => {
@@ -673,6 +685,9 @@ export default function TheGardenPage() {
                     </AnimatePresence>
 
                     {/* Submit */}
+                    {submitError && (
+                      <p style={{ fontFamily: "var(--font-sans)", fontSize: "13px", color: "#e57373", margin: "0 0 8px" }}>{submitError}</p>
+                    )}
                     <button
                       onClick={handleSubmit}
                       disabled={!seedText.trim()}

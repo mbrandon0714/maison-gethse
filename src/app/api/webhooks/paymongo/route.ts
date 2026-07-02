@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { supabase } from "@/lib/supabase";
-import { sendOrderConfirmation } from "@/lib/email";
+import { sendOrderConfirmation, sendAdminAlert } from "@/lib/email";
 
 // PayMongo signs webhooks with: Paymongo-Signature: t=<ts>,te=<test_sig>,li=<live_sig>
 // Signature = HMAC-SHA256(`${t}.${rawBody}`, PAYMONGO_WEBHOOK_SECRET)
@@ -74,6 +74,16 @@ export async function POST(req: NextRequest) {
         total: order.total,
         shippingAddress: `${order.shipping_address}, ${order.shipping_city}, ${order.shipping_province} ${order.shipping_zip}`,
       }).catch((err) => console.error("Confirmation email failed:", err));
+
+      sendAdminAlert(
+        `💰 New paid order — ${order.product_name} (₱${order.total.toLocaleString()})`,
+        `<p style="font-size:15px;line-height:1.8;color:#564c45;margin:0 0 12px">
+           <strong style="color:#303d30">${order.customer_first_name} ${order.customer_last_name}</strong> just paid
+           <strong style="color:#303d30">₱${order.total.toLocaleString()}</strong> for
+           ${order.product_name} · Size ${order.size} × ${order.quantity}.
+         </p>
+         <p style="font-size:13px;color:#564c45;margin:0">Ship to: ${order.shipping_address}, ${order.shipping_city}, ${order.shipping_province}</p>`
+      ).catch((err) => console.error("Admin alert failed:", err));
     }
   }
 

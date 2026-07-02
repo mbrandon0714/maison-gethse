@@ -16,6 +16,27 @@ interface OrderEmailData {
   shippingAddress: string;
 }
 
+// Notify the owner when something needs attention (new order, seed, submission).
+export async function sendAdminAlert(subject: string, bodyHtml: string) {
+  if (!process.env.RESEND_API_KEY) return;
+  const fromEmail = process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev";
+  const adminEmail = process.env.ADMIN_EMAIL || "maisongethse@gmail.com";
+
+  await getResend().emails.send({
+    from: `Maison Gethse <${fromEmail}>`,
+    to: adminEmail,
+    subject,
+    html: `
+      <div style="max-width:520px;margin:0 auto;font-family:Helvetica,Arial,sans-serif;padding:32px 24px;background:#f4f1ec;color:#1a1a18">
+        <p style="font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:#c8922a;margin:0 0 16px">Maison Gethse · Admin</p>
+        ${bodyHtml}
+        <div style="height:1px;background:#d8d4ce;margin:24px 0"></div>
+        <p style="font-size:12px;color:#564c45;opacity:0.6;margin:0">Manage this in your <a href="https://maison-gethse.marknitor.workers.dev/admin" style="color:#c8922a">admin panel</a>.</p>
+      </div>
+    `,
+  });
+}
+
 interface ShippingEmailData {
   customerName: string;
   customerEmail: string;
