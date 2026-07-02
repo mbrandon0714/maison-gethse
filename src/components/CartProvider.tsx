@@ -40,13 +40,13 @@ export function useCart() { return useContext(CartContext); }
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartItem[]>(() => {
     if (typeof window === "undefined") return [];
-    try { return JSON.parse(localStorage.getItem("mg-cart") || "[]"); } catch { return []; }
+    try { return JSON.parse(sessionStorage.getItem("mg-cart") || "[]"); } catch { return []; }
   });
   const [isOpen, setIsOpen] = useState(false);
   const [justAdded, setJustAdded] = useState(false);
 
   useEffect(() => {
-    localStorage.setItem("mg-cart", JSON.stringify(items));
+    sessionStorage.setItem("mg-cart", JSON.stringify(items));
   }, [items]);
 
   const [flyFrom, setFlyFrom] = useState<{ x: number; y: number; image?: string } | null>(null);
