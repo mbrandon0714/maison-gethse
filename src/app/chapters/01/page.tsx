@@ -319,6 +319,18 @@ export default function Chapter01Page() {
   const [productImg, setProductImg] = useState(0);
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
   const [sizeChartOpen, setSizeChartOpen] = useState(false);
+  const [shopInView, setShopInView] = useState(false);
+
+  useEffect(() => {
+    const el = document.getElementById("shop");
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => setShopInView(entry.isIntersecting),
+      { rootMargin: "0px 0px -20% 0px" }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
 
   const openLightbox = useCallback((index: number) => {
     setLightboxIndex(index);
@@ -880,7 +892,7 @@ export default function Chapter01Page() {
 
       {/* Floating shop button */}
       <motion.button
-        className="fixed bottom-6 left-4 right-4 md:left-8 md:right-auto z-50"
+        className="fixed bottom-6 left-16 right-4 md:left-24 md:right-auto z-50"
         style={{
           fontFamily: "var(--font-sans)", fontSize: "13px", fontWeight: 500,
           letterSpacing: "0.14em", textTransform: "uppercase",
@@ -888,11 +900,14 @@ export default function Chapter01Page() {
           padding: "16px 24px", border: "none", borderRadius: 6,
           boxShadow: "0 6px 30px rgba(0,0,0,0.4)", cursor: "pointer",
           textAlign: "center",
+          pointerEvents: shopInView ? "none" : "auto",
+          visibility: shopInView ? "hidden" : "visible",
+          transition: "visibility 0s 0.6s",
         }}
         onClick={() => { const el = document.getElementById("shop"); if (el) el.scrollIntoView({ behavior: "smooth" }); }}
         initial={{ y: 80, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 2, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        animate={shopInView ? { y: 80, opacity: 0 } : { y: 0, opacity: 1 }}
+        transition={{ delay: shopInView ? 0 : 2, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
       >
         Carry This Chapter — Shop
       </motion.button>
