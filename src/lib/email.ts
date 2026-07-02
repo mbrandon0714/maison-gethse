@@ -16,6 +16,55 @@ interface OrderEmailData {
   shippingAddress: string;
 }
 
+interface ShippingEmailData {
+  customerName: string;
+  customerEmail: string;
+  productName: string;
+  trackingNumber: string;
+}
+
+export async function sendShippingNotification(data: ShippingEmailData) {
+  if (!process.env.RESEND_API_KEY) {
+    console.warn("RESEND_API_KEY not set — skipping email");
+    return;
+  }
+
+  const fromEmail = process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev";
+
+  await getResend().emails.send({
+    from: `Maison Gethse <${fromEmail}>`,
+    to: data.customerEmail,
+    subject: `Your chapter is on its way — Order Shipped`,
+    html: `
+      <div style="max-width:520px;margin:0 auto;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:#1a1a18;padding:40px 24px;background:#f4f1ec">
+        <div style="text-align:center;margin-bottom:32px">
+          <p style="font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:#c8922a;margin:0 0 8px">Maison Gethse</p>
+          <h1 style="font-size:24px;font-weight:300;font-style:italic;color:#303d30;margin:0;line-height:1.4">Your chapter is on its way.</h1>
+        </div>
+
+        <div style="height:1px;background:#d8d4ce;margin:24px 0"></div>
+
+        <p style="font-size:15px;line-height:1.8;color:#564c45;margin:0 0 24px">
+          Good news, <strong style="color:#303d30">${data.customerName}</strong> — your <strong style="color:#303d30">${data.productName}</strong> has shipped and is travelling to you now.
+        </p>
+
+        <div style="background:#fff;border:1px solid #ece8e1;padding:20px;margin-bottom:24px;text-align:center">
+          <p style="font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#c8922a;margin:0 0 10px">Tracking Number</p>
+          <p style="font-size:20px;font-family:monospace;color:#303d30;margin:0 0 12px;letter-spacing:0.05em">${data.trackingNumber}</p>
+          <a href="https://www.jtexpress.ph/trajectoryQuery?waybillNo=${encodeURIComponent(data.trackingNumber)}" style="display:inline-block;padding:12px 28px;background:#303d30;color:#fff;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;text-decoration:none">Track My Order</a>
+        </div>
+
+        <p style="font-size:13px;line-height:1.8;color:#564c45;text-align:center;margin:0 0 8px">
+          Delivery via J&T Express · usually 3–5 business days.
+        </p>
+        <p style="font-size:12px;color:#564c45;opacity:0.5;text-align:center;margin:0">
+          © 2026 Maison Gethse · A sanctuary of becoming.
+        </p>
+      </div>
+    `,
+  });
+}
+
 export async function sendOrderConfirmation(data: OrderEmailData) {
   if (!process.env.RESEND_API_KEY) {
     console.warn("RESEND_API_KEY not set — skipping email");

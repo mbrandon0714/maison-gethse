@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
-import { sendOrderConfirmation } from "@/lib/email";
 
 export async function POST(req: NextRequest) {
   try {
@@ -35,7 +34,7 @@ export async function POST(req: NextRequest) {
           attributes: {
             line_items: lineItems,
             payment_method_types: ["gcash", "paymaya", "card", "qrph"],
-            success_url: `${origin}/order/success?session_id={CHECKOUT_SESSION_ID}`,
+            success_url: `${origin}/order/success`,
             cancel_url: `${origin}/chapters/01`,
             description: `Maison Gethse — ${name} (Size ${size} × ${quantity})`,
             send_email_receipt: true,
@@ -82,23 +81,11 @@ export async function POST(req: NextRequest) {
       shipping_city: customer.city,
       shipping_province: customer.province,
       shipping_zip: customer.zip || "",
-      status: "paid",
+      status: "pending",
     });
 
-    // Send confirmation email (non-blocking)
-    sendOrderConfirmation({
-      customerName: `${customer.firstName} ${customer.lastName}`,
-      customerEmail: customer.email,
-      productName: name,
-      size,
-      quantity,
-      subtotal: price * quantity,
-      shippingFee: 80,
-      total: price * quantity + 80,
-      shippingAddress: `${customer.address}${customer.barangay ? `, Brgy. ${customer.barangay}` : ""}, ${customer.city}, ${customer.province} ${customer.zip}`,
-    }).catch((err) => console.error("Email send failed:", err));
-
-    return NextResponse.json({ checkout_url: checkoutUrl });
+    // Confirmation email is sent by the PayMongo webhook once payment actually succeeds.
+    return NextResponse.json({ checkout_url: checkoutUrl, session_id: sessionId });
   } catch (error) {
     console.error("Checkout error:", error);
     return NextResponse.json({ error: "Something went wrong" }, { status: 500 });

@@ -168,7 +168,10 @@ export default function CheckoutPage() {
         }),
       });
       const data = await res.json();
-      if (data.checkout_url) { window.location.href = data.checkout_url; }
+      if (data.checkout_url) {
+        if (data.session_id) sessionStorage.setItem("mg-checkout-session", data.session_id);
+        window.location.href = data.checkout_url;
+      }
       else { alert(data.error || "Something went wrong."); setLoading(false); }
     } catch { alert("Connection error."); setLoading(false); }
   };

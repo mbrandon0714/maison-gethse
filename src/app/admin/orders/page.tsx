@@ -21,7 +21,7 @@ interface Order {
   created_at: string;
 }
 
-const STATUSES = ["paid", "processing", "packed", "shipped", "delivered"];
+const STATUSES = ["pending", "paid", "processing", "packed", "shipped", "delivered"];
 
 export default function AdminOrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);
