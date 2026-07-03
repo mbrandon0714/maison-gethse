@@ -7,6 +7,7 @@ import { CustomCursor } from "@/components/CustomCursor";
 import { CartProvider } from "@/components/CartProvider";
 import { CartDrawer } from "@/components/CartDrawer";
 import { LettersInvite } from "@/components/LettersInvite";
+import { FeedbackWidget } from "@/components/FeedbackWidget";
 import "./globals.css";
 
 const cormorant = Cormorant_Garamond({
@@ -79,6 +80,7 @@ export default function RootLayout({
                 {children}
                 <CartDrawer />
                 <LettersInvite />
+                <FeedbackWidget />
               </LenisProvider>
             </CartProvider>
           </AudioProvider>
