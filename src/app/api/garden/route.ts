@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { sendAdminAlert } from "@/lib/email";
+import { moderateSeed, MODERATION_MESSAGE } from "@/lib/moderation";
 
 export async function POST(req: NextRequest) {
   try {
@@ -18,12 +19,19 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Seeds are limited to 600 characters." }, { status: 400 });
     }
 
+    // Automated moderation — clean seeds publish instantly; harsh or
+    // offensive language is turned away gently, never saved.
+    const verdict = moderateSeed(trimmed);
+    if (!verdict.clean) {
+      return NextResponse.json({ error: MODERATION_MESSAGE }, { status: 422 });
+    }
+
     const { error } = await supabase.from("garden_seeds").insert({
       text: trimmed,
       prompt,
       identity_type: identityType || "anonymous",
       display_name: displayName ? String(displayName).trim().slice(0, 60) : null,
-      status: "pending",
+      status: "approved", // auto-published — the filter is the gatekeeper
     });
 
     if (error) {
@@ -31,9 +39,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Failed to save" }, { status: 500 });
     }
 
+    // FYI to the owner (not a review request) — Mark keeps visibility and
+    // can remove anything from the admin panel after the fact.
     sendAdminAlert(
-      "🌱 New Garden seed awaiting review",
-      `<p style="font-size:15px;line-height:1.8;color:#564c45;margin:0 0 12px">A new seed was planted:</p>
+      "🌱 A new seed was planted in the Garden",
+      `<p style="font-size:15px;line-height:1.8;color:#564c45;margin:0 0 12px">A new seed was just planted and is now live in the Garden:</p>
        <blockquote style="border-left:2px solid #c8922a;padding-left:14px;font-style:italic;color:#303d30;font-size:15px;line-height:1.7;margin:0 0 12px">${trimmed.replace(/</g, "&lt;")}</blockquote>
        <p style="font-size:13px;color:#564c45;margin:0">— ${displayName ? String(displayName).replace(/</g, "&lt;") : "Anonymous"} · “${String(prompt).replace(/</g, "&lt;")}”</p>`
     ).catch((e) => console.error("Admin alert failed:", e));

@@ -93,6 +93,12 @@
   --lens-closing: #0d160d;
 }
 
+/* Decorative background image layers — must never intercept clicks
+   on the content sitting above them. */
+.section-bg {
+  pointer-events: none;
+}
+
 [data-theme="light"] .section-bg {
   display: none;
 }

@@ -247,7 +247,7 @@ export default function HomePage() {
 
             <FadeIn delay={0.3}>
               <Link
-                href="/the-garden"
+                href="/the-garden?compose=1"
                 className="inline-block mt-12 no-underline"
                 style={{
                   fontFamily: "var(--font-sans)",
@@ -394,7 +394,7 @@ export default function HomePage() {
               {[
                 { title: "Navigate", links: [{ label: "The Brand", href: "#brand" }, { label: "Chapters", href: "#chapters" }, { label: "The Garden", href: "/the-garden" }, { label: "The Lens", href: "/the-lens" }] },
                 { title: "Chapters", links: [{ label: "01 — Before We Knew", href: "/chapters/01" }] },
-                { title: "Connect", links: [{ label: "Instagram", href: "https://www.instagram.com/maison.gethse/" }, { label: "Facebook", href: "#" }, { label: "TikTok", href: "https://www.tiktok.com/@maison.gethse" }, { label: "maisongethse@gmail.com", href: "mailto:maisongethse@gmail.com" }] },
+                { title: "Connect", links: [{ label: "Instagram", href: "https://www.instagram.com/maison.gethse/" }, { label: "Facebook", href: "https://www.facebook.com/maison.gethse/" }, { label: "TikTok", href: "https://www.tiktok.com/@maison.gethse" }, { label: "Email", href: "https://mail.google.com/mail/u/0/#inbox" }] },
               ].map((col) => (
                 <div key={col.title}>
                   <h5 className="mb-4" style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400, letterSpacing: "0.22em", textTransform: "uppercase", color: "var(--beige)", opacity: 0.45 }}>
@@ -403,8 +403,11 @@ export default function HomePage() {
                   <ul className="flex flex-col gap-3" style={{ listStyle: "none" }}>
                     {col.links.map((link) => {
                       const isInternal = link.href.startsWith("/");
+                      const isHash = link.href.startsWith("#");
+                      // In-page anchors and internal routes stay in the same tab;
+                      // only true external URLs open a new tab.
                       const Tag = isInternal ? Link : "a";
-                      const extra = isInternal ? {} : { target: "_blank", rel: "noopener noreferrer" };
+                      const extra = isInternal || isHash ? {} : { target: "_blank", rel: "noopener noreferrer" };
                       return (
                         <li key={link.label}>
                           <Tag

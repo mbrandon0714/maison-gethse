@@ -144,6 +144,14 @@ export default function TheGardenPage() {
     return () => clearInterval(interval);
   }, [fetchSeeds, submitted]);
 
+  // Deep-link: /the-garden?compose=1 opens the planting form straight away
+  // (used by the "Plant a Seed" button on the homepage).
+  useEffect(() => {
+    if (typeof window !== "undefined" && new URLSearchParams(window.location.search).get("compose") === "1") {
+      setFormOpen(true);
+    }
+  }, []);
+
   // Combine live seeds with sample seeds as fallback
   const allSeeds: Seed[] = liveSeeds.length > 0
     ? [...liveSeeds, ...SAMPLE_SEEDS.slice(0, Math.max(0, 8 - liveSeeds.length))]
@@ -381,7 +389,7 @@ export default function TheGardenPage() {
                   Plant Your Seed
                 </button>
                 <p className="mt-4" style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 300, color: "var(--text-body)", opacity: 0.3 }}>
-                  Your story will be reviewed before it enters the archive.
+                  Your seed enters the Garden the moment it&rsquo;s planted.
                 </p>
               </div>
             </FadeIn>
@@ -704,8 +712,8 @@ export default function TheGardenPage() {
                     </button>
 
                     <p className="mt-4 text-center" style={{ fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 300, color: "var(--text-body)", opacity: 0.3, lineHeight: 1.7 }}>
-                      Your story will be reviewed before it enters the archive.<br />
-                      This space is curated, not automated.
+                      Your seed enters the Garden the moment it&rsquo;s planted.<br />
+                      This space stays gentle — harmful language isn&rsquo;t allowed.
                     </p>
                   </div>
                 )}
