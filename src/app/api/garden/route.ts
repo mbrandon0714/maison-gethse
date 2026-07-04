@@ -8,9 +8,11 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { text, prompt, identityType, displayName } = body;
 
-    if (!text || !prompt) {
-      return NextResponse.json({ error: "Text and prompt are required" }, { status: 400 });
+    if (!text) {
+      return NextResponse.json({ error: "A seed needs a few words." }, { status: 400 });
     }
+    // Prompt is optional — a seed can be written straight from the heart.
+    const cleanPrompt = prompt ? String(prompt).trim() : "";
     const trimmed = String(text).trim();
     if (trimmed.length < 10) {
       return NextResponse.json({ error: "Your seed is a little short — give it a few more words." }, { status: 400 });
@@ -28,7 +30,7 @@ export async function POST(req: NextRequest) {
 
     const { error } = await supabase.from("garden_seeds").insert({
       text: trimmed,
-      prompt,
+      prompt: cleanPrompt,
       identity_type: identityType || "anonymous",
       display_name: displayName ? String(displayName).trim().slice(0, 60) : null,
       status: "approved", // auto-published — the filter is the gatekeeper
@@ -45,7 +47,7 @@ export async function POST(req: NextRequest) {
       "🌱 A new seed was planted in the Garden",
       `<p style="font-size:15px;line-height:1.8;color:#564c45;margin:0 0 12px">A new seed was just planted and is now live in the Garden:</p>
        <blockquote style="border-left:2px solid #c8922a;padding-left:14px;font-style:italic;color:#303d30;font-size:15px;line-height:1.7;margin:0 0 12px">${trimmed.replace(/</g, "&lt;")}</blockquote>
-       <p style="font-size:13px;color:#564c45;margin:0">— ${displayName ? String(displayName).replace(/</g, "&lt;") : "Anonymous"} · “${String(prompt).replace(/</g, "&lt;")}”</p>`
+       <p style="font-size:13px;color:#564c45;margin:0">— ${displayName ? String(displayName).replace(/</g, "&lt;") : "Anonymous"} · ${cleanPrompt ? `“${cleanPrompt.replace(/</g, "&lt;")}”` : "From the heart"}</p>`
     ).catch((e) => console.error("Admin alert failed:", e));
 
     return NextResponse.json({ success: true });

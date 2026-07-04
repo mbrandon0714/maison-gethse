@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useMemo, useCallback, useEffect } from "react";
+import { useRef, useState, useCallback, useEffect } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { Navigation } from "@/components/Navigation";
@@ -32,14 +32,23 @@ function FadeIn({
 }
 
 const PROMPTS = [
-  "What season are you currently walking through?",
-  "What is something you learned that changed you?",
+  "What season are you walking through right now?",
+  "What are you learning to let go of?",
+  "What dream did you have before the world taught you to be realistic?",
+  "What did someone teach you that you still carry?",
   "Who helped shape the person you are becoming?",
-  "What would you tell your younger self?",
+  "What are you becoming?",
+  "What did you believe as a child that you wish you still believed?",
+  "What have you outgrown?",
   "What are you carrying quietly?",
-  "Ano ang dala-dala mo na hindi mo masabi?",
-  "What lesson stayed with you the longest?",
+  "What is something you learned that changed you?",
   "What did you lose that taught you the most?",
+  "What lesson stayed with you the longest?",
+  "What are you hoping is on the other side of this season?",
+  "What would you tell your younger self?",
+  "What quietly changed you this year?",
+  "Ano ang dala-dala mo na hindi mo masabi?",
+  "Anong season ka ngayon, at kaya mo pa ba?",
 ];
 
 const SAMPLE_SEEDS = [
@@ -117,6 +126,9 @@ export default function TheGardenPage() {
   const [displayName, setDisplayName] = useState("");
   const [seedText, setSeedText] = useState("");
   const [liveSeeds, setLiveSeeds] = useState<Seed[]>([]);
+  // "prompted" = the Garden hands you a question · "open" = you bring your own seed
+  const [seedMode, setSeedMode] = useState<"prompted" | "open">("prompted");
+  const [promptIndex, setPromptIndex] = useState(0);
 
   // Fetch approved seeds + subscribe to real-time updates
   const fetchSeeds = useCallback(() => {
@@ -148,6 +160,8 @@ export default function TheGardenPage() {
   // (used by the "Plant a Seed" button on the homepage).
   useEffect(() => {
     if (typeof window !== "undefined" && new URLSearchParams(window.location.search).get("compose") === "1") {
+      setPromptIndex(Math.floor(Math.random() * PROMPTS.length));
+      setSeedMode("prompted");
       setFormOpen(true);
     }
   }, []);
@@ -157,8 +171,26 @@ export default function TheGardenPage() {
     ? [...liveSeeds, ...SAMPLE_SEEDS.slice(0, Math.max(0, 8 - liveSeeds.length))]
     : SAMPLE_SEEDS;
 
-  const currentPrompt = useMemo(() => {
-    return PROMPTS[Math.floor(Math.random() * PROMPTS.length)];
+  const currentPrompt = PROMPTS[promptIndex];
+  // What actually gets stored: a question if prompted, empty if written from the heart.
+  const effectivePrompt = seedMode === "open" ? "" : currentPrompt;
+
+  // Open the planting form fresh — new random question each time.
+  const openForm = useCallback(() => {
+    setPromptIndex(Math.floor(Math.random() * PROMPTS.length));
+    setSeedMode("prompted");
+    setSubmitError("");
+    setFormOpen(true);
+  }, []);
+
+  // Offer a different question without changing what they've written.
+  const shufflePrompt = useCallback(() => {
+    setPromptIndex((prev) => {
+      if (PROMPTS.length < 2) return prev;
+      let next = prev;
+      while (next === prev) next = Math.floor(Math.random() * PROMPTS.length);
+      return next;
+    });
   }, []);
 
   const [submitting, setSubmitting] = useState(false);
@@ -174,7 +206,7 @@ export default function TheGardenPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           text: seedText,
-          prompt: currentPrompt,
+          prompt: effectivePrompt,
           identityType,
           displayName: identityType === "anonymous" ? null : displayName,
         }),
@@ -198,7 +230,7 @@ export default function TheGardenPage() {
       setSeedText("");
       setDisplayName("");
     }, 6000);
-  }, [seedText, identityType, displayName, currentPrompt, submitting]);
+  }, [seedText, identityType, displayName, effectivePrompt, submitting]);
 
   return (
     <>
@@ -267,7 +299,7 @@ export default function TheGardenPage() {
 
             <motion.button
               className="mt-10 cursor-pointer"
-              onClick={() => setFormOpen(true)}
+              onClick={openForm}
               style={{
                 fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 400,
                 letterSpacing: "0.22em", textTransform: "uppercase",
@@ -351,10 +383,19 @@ export default function TheGardenPage() {
                   >
                     {/* Leaf vein line */}
                     <div className="absolute top-4 left-1/2 w-[1px] h-[40%] -translate-x-1/2 pointer-events-none" style={{ background: "linear-gradient(to bottom, rgba(200,146,42,0.15), transparent)" }} />
-                    {/* Prompt label */}
-                    <p className="mb-3" style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--gold)", opacity: 0.4 }}>
-                      {seed.prompt.length > 40 ? seed.prompt.slice(0, 40) + "..." : seed.prompt}
-                    </p>
+                    {/* Prompt label — or the Key motif for seeds brought from the heart */}
+                    {seed.prompt ? (
+                      <p className="mb-3" style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--gold)", opacity: 0.4 }}>
+                        {seed.prompt.length > 40 ? seed.prompt.slice(0, 40) + "..." : seed.prompt}
+                      </p>
+                    ) : (
+                      <div className="mb-3 flex items-center gap-2">
+                        <KeyIcon size={9} gold />
+                        <span style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--gold)", opacity: 0.4 }}>
+                          From the heart
+                        </span>
+                      </div>
+                    )}
 
                     {/* Seed text */}
                     <p style={{ fontFamily: "var(--font-hand)", fontSize: "clamp(1.05rem, 1.6vw, 1.25rem)", fontWeight: 400, color: "var(--beige-light)", lineHeight: 1.7, opacity: 0.85 }}>
@@ -376,7 +417,7 @@ export default function TheGardenPage() {
             <FadeIn delay={0.3}>
               <div className="mt-16 text-center">
                 <button
-                  onClick={() => setFormOpen(true)}
+                  onClick={openForm}
                   className="cursor-pointer"
                   style={{
                     fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 400,
@@ -486,10 +527,19 @@ export default function TheGardenPage() {
                   ×
                 </button>
 
-                {/* Prompt */}
-                <p className="mb-6" style={{ fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 500, letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--gold)", opacity: 0.5 }}>
-                  {previewSeed.prompt}
-                </p>
+                {/* Prompt — or the Key motif for seeds brought from the heart */}
+                {previewSeed.prompt ? (
+                  <p className="mb-6" style={{ fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 500, letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--gold)", opacity: 0.5 }}>
+                    {previewSeed.prompt}
+                  </p>
+                ) : (
+                  <div className="mb-6 flex items-center justify-center gap-2">
+                    <KeyIcon size={11} gold forceDark />
+                    <span style={{ fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 500, letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--gold)", opacity: 0.5 }}>
+                      From the heart
+                    </span>
+                  </div>
+                )}
 
                 {/* The seed text — large */}
                 <p style={{ fontFamily: "var(--font-hand)", fontSize: "clamp(1.5rem, 3.5vw, 2.2rem)", fontWeight: 400, color: "#f4f1ec", lineHeight: 1.7, opacity: 0.9 }}>
@@ -615,16 +665,75 @@ export default function TheGardenPage() {
                       Plant a Seed
                     </p>
 
-                    {/* Prompt */}
-                    <h3 className="mb-6" style={{ fontFamily: "var(--font-serif)", fontSize: "1.4rem", fontWeight: 300, fontStyle: "italic", color: "var(--text-head)", lineHeight: 1.5 }}>
-                      {currentPrompt}
+                    {/* The constant invitation — always here, whatever path you take */}
+                    <h3 className="mb-5" style={{ fontFamily: "var(--font-serif)", fontSize: "1.5rem", fontWeight: 300, fontStyle: "italic", color: "var(--text-head)", lineHeight: 1.4 }}>
+                      What are you carrying?
                     </h3>
+
+                    {/* Two paths — a question to guide you, or a seed of your own */}
+                    <div className="flex gap-6 mb-5" style={{ borderBottom: "1px solid var(--border-soft)" }}>
+                      {[
+                        { value: "prompted" as const, label: "Let the Garden ask me" },
+                        { value: "open" as const, label: "I already know" },
+                      ].map((opt) => (
+                        <button
+                          key={opt.value}
+                          onClick={() => setSeedMode(opt.value)}
+                          className="cursor-pointer bg-transparent"
+                          style={{
+                            fontFamily: "var(--font-sans)", fontSize: "12px", fontWeight: 400,
+                            letterSpacing: "0.1em", textTransform: "uppercase",
+                            padding: "0 0 10px", border: "none", marginBottom: "-1px",
+                            borderBottom: seedMode === opt.value ? "1px solid var(--gold)" : "1px solid transparent",
+                            color: seedMode === opt.value ? "var(--gold)" : "var(--text-body)",
+                            opacity: seedMode === opt.value ? 1 : 0.45,
+                            transition: "color 0.25s, opacity 0.25s, border-color 0.25s",
+                          }}
+                        >
+                          {opt.label}
+                        </button>
+                      ))}
+                    </div>
+
+                    {/* Prompted → the offered question + a way to ask for another.
+                        Open → a gentle reassurance that no question is needed. */}
+                    {seedMode === "prompted" ? (
+                      <motion.div
+                        key="prompted"
+                        initial={{ opacity: 0, y: 6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.25 }}
+                        className="mb-6"
+                      >
+                        <p style={{ fontFamily: "var(--font-serif)", fontSize: "1.15rem", fontWeight: 300, fontStyle: "italic", color: "var(--text-head)", lineHeight: 1.55, opacity: 0.9 }}>
+                          &ldquo;{currentPrompt}&rdquo;
+                        </p>
+                        <button
+                          onClick={shufflePrompt}
+                          className="mt-3 cursor-pointer bg-transparent border-none"
+                          style={{ fontFamily: "var(--font-sans)", fontSize: "11px", fontWeight: 400, letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--gold)", opacity: 0.6, transition: "opacity 0.2s" }}
+                        >
+                          ↻ Offer another question
+                        </button>
+                      </motion.div>
+                    ) : (
+                      <motion.p
+                        key="open"
+                        initial={{ opacity: 0, y: 6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.25 }}
+                        className="mb-6"
+                        style={{ fontFamily: "var(--font-sans)", fontSize: "13px", fontWeight: 300, fontStyle: "italic", color: "var(--text-body)", lineHeight: 1.85, opacity: 0.6 }}
+                      >
+                        No question — just what your heart already knows.<br />Write it the way it lives in you.
+                      </motion.p>
+                    )}
 
                     {/* Text area */}
                     <textarea
                       value={seedText}
                       onChange={(e) => setSeedText(e.target.value)}
-                      placeholder="Write what you carry..."
+                      placeholder={seedMode === "open" ? "Tell it in your own words..." : "Write what you carry..."}
                       rows={5}
                       className="w-full mb-6"
                       style={{

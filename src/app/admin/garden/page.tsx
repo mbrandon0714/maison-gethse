@@ -5,7 +5,7 @@ import { useState, useEffect, useCallback } from "react";
 interface Seed {
   id: string;
   text: string;
-  prompt: string;
+  prompt: string | null;
   identity_type: string;
   display_name: string | null;
   status: string;
@@ -78,9 +78,9 @@ export default function AdminGardenPage() {
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             {filtered.map(seed => (
               <div key={seed.id} style={{ padding: 20, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 8 }}>
-                {/* Prompt */}
-                <p style={{ fontSize: 11, letterSpacing: "0.12em", textTransform: "uppercase", color: "#c8922a", opacity: 0.6, marginBottom: 8 }}>
-                  {seed.prompt}
+                {/* Prompt — or a marker for seeds written from the heart */}
+                <p style={{ fontSize: 11, letterSpacing: "0.12em", textTransform: "uppercase", color: "#c8922a", opacity: 0.6, marginBottom: 8, fontStyle: seed.prompt ? "normal" : "italic" }}>
+                  {seed.prompt || "🔑 From the heart"}
                 </p>
 
                 {/* Text */}
