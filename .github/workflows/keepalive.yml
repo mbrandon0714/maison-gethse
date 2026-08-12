@@ -1,0 +1,62 @@
+name: Supabase Keep-Alive
+
+# Supabase pauses free-tier projects after 7 days with no activity.
+# This hits the database once a day so that never happens.
+# Daily (not weekly) on purpose: GitHub's scheduled runs are best-effort and
+# can be delayed or skipped under load. Daily leaves ~6 days of slack.
+
+on:
+  schedule:
+    - cron: "17 6 * * *" # 06:17 UTC daily (~2:17 PM Manila). Off-the-hour = less queueing.
+  workflow_dispatch: # lets you run it by hand from the Actions tab
+
+permissions:
+  contents: write # needed only for the 60-day repo-activity guard below
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase
+        env:
+          # This is the PUBLIC anon/publishable key — the same one already shipped
+          # in the site's browser bundle. Safe to commit. It is NOT the service_role key.
+          SUPABASE_URL: https://jzvokaxothxiivnmwdln.supabase.co
+          SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp6dm9rYXhvdGh4aWl2bm13ZGxuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxMzc2NTMsImV4cCI6MjA5NzcxMzY1M30.vzyjykvGJTJiFfXGTWPCiMEmT5D7f1TtCDnRn_7Z73k
+        run: |
+          code=$(curl -s -o /tmp/body.txt -w "%{http_code}" \
+            "$SUPABASE_URL/rest/v1/garden_seeds?select=id&limit=1" \
+            -H "apikey: $SUPABASE_ANON_KEY" \
+            -H "Authorization: Bearer $SUPABASE_ANON_KEY")
+
+          echo "HTTP $code"
+          echo "Response: $(cat /tmp/body.txt)"
+
+          if [ "$code" != "200" ]; then
+            echo "::error::Supabase ping failed with HTTP $code. The project may be paused, or the key/table changed."
+            exit 1
+          fi
+          echo "Database is awake."
+
+      # GitHub disables scheduled workflows in a repo with no commits for 60 days.
+      # Without this, the keep-alive would quietly die after two months.
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Keep the workflow itself alive
+        run: |
+          last=$(git log -1 --format=%ct)
+          age=$(( ( $(date +%s) - last ) / 86400 ))
+          echo "Last commit was $age days ago."
+
+          if [ "$age" -ge 45 ]; then
+            echo "Approaching GitHub's 60-day limit — pushing an empty commit."
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit --allow-empty -m "chore: keep scheduled workflow enabled"
+            git push
+          else
+            echo "Nothing to do."
+          fi
